@@ -1,7 +1,9 @@
 package github.com.hukuta94.delivery.core.domain.sharedkernel
 
-import org.assertj.core.api.Assertions.assertThatExceptionOfType
-import org.assertj.core.api.SoftAssertions
+import io.kotlintest.assertSoftly
+import io.kotlintest.shouldBe
+import io.kotlintest.shouldNotBe
+import io.kotlintest.shouldThrow
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
@@ -12,77 +14,73 @@ import java.util.stream.Stream
 internal class LocationTest {
 
     @Test
-    fun `location object is created with correct coordinates`() {
+    fun `location is created with correct coordinates`() {
         val x = MIN_COORDINATE_VALUE
         val y = MAX_COORDINATE_VALUE
 
         val location = Location(x, y)
 
-        assertEquals(x, location.abscissa)
-        assertEquals(y, location.ordinate)
+        location.abscissa shouldBe x
+        location.ordinate shouldBe y
     }
 
     @ParameterizedTest
-    @MethodSource("invalidMinimalCoordinatesProvider")
-    fun `location constructor throws error for invalid minimum coordinate value`(x: Int, y: Int) {
-        val invalidCoordinate = if (x < MIN_COORDINATE_VALUE) x else y
-
-        assertThatExceptionOfType(IllegalArgumentException::class.java)
-            .isThrownBy { Location(x, y) }
-            .withMessage(
-                "Expected coordinate should be between $MIN_COORDINATE_VALUE and $MAX_COORDINATE_VALUE. Actual coordinate is $invalidCoordinate."
-            )
+    @MethodSource("invalidMinimalCoordinates")
+    fun `invalid minimal value of coordinate is cause of error`(x: Int, y: Int) {
+        `invalid value of coordinate is cause of error`(x, y)
     }
 
     @ParameterizedTest
-    @MethodSource("invalidMaximalCoordinatesProvider")
-    fun `location constructor throws error for invalid maximum coordinate value`(x: Int, y: Int) {
-        val invalidCoordinate = if (x > MAX_COORDINATE_VALUE) x else y
+    @MethodSource("invalidMaximalCoordinates")
+    fun `invalid maximal value of coordinate is cause of error`(x: Int, y: Int) {
+        `invalid value of coordinate is cause of error`(x, y)
+    }
 
-        assertThatExceptionOfType(IllegalArgumentException::class.java)
-            .isThrownBy { Location(x, y) }
-            .withMessage(
-                "Expected coordinate should be between $MIN_COORDINATE_VALUE and $MAX_COORDINATE_VALUE. Actual coordinate is $invalidCoordinate."
-            )
+    private fun `invalid value of coordinate is cause of error`(x: Int, y: Int) {
+        val invalidCoordinate = if (x !in MIN_COORDINATE_VALUE..MAX_COORDINATE_VALUE) x else y
+
+        shouldThrow <IllegalArgumentException> { Location(x, y) }.message shouldBe
+            "Expected coordinate must be between $MIN_COORDINATE_VALUE and $MAX_COORDINATE_VALUE. Actual coordinate is $invalidCoordinate."
     }
 
     @ParameterizedTest
-    @MethodSource("equalCoordinatesProvider")
-    fun `two coordinates are equal if their X and Y are equal`(location1: Location, location2: Location) {
-        assertEquals(location1, location2)
+    @MethodSource("equalCoordinates")
+    fun `one location is equal to other location when their coordinates are equal`(
+        oneLocation: Location,
+        otherLocation: Location
+    ) {
+        oneLocation shouldBe otherLocation
     }
 
     @ParameterizedTest
-    @MethodSource("notEqualCoordinatesProvider")
-    fun `two coordinates are not equal if their X or Y are not equal`(location1: Location, location2: Location) {
-        assertNotEquals(location1, location2)
+    @MethodSource("notEqualCoordinates")
+    fun `one location is not equal to other location when their coordinates are not equal`(
+        oneLocation: Location,
+        otherLocation: Location
+    ) {
+        oneLocation shouldNotBe otherLocation
     }
 
     @Test
-    fun `distance to target location`() {
+    fun `one location computes distance to other location`() {
         val location1 = Location(4, 9)
         val location2 = Location(2, 6)
 
-        SoftAssertions().run {
-            assertThat( location1.distanceTo(location2) ).isEqualTo(5)
-            assertThat( location2.distanceTo(location1) ).isEqualTo(5)
+        assertSoftly {
+            // distance between different locations
+            location1 .distanceTo (location2) shouldBe 5
+            location2 .distanceTo (location1) shouldBe 5
 
-            assertThat( location1.distanceTo(location1) ).isEqualTo(0)
-            assertThat( location2.distanceTo(location2) ).isEqualTo(0)
-
-            assertAll()
+            // distance to same location
+            location1 .distanceTo (location1) shouldBe 0
+            location2 .distanceTo (location2) shouldBe 0
         }
-    }
-
-    @Test
-    fun `exists ability to create random coordinate`() {
-        Location.random()
     }
 
     companion object {
 
         @JvmStatic
-        fun equalCoordinatesProvider(): Stream<Arguments> {
+        fun equalCoordinates(): Stream<Arguments> {
             return (MIN_COORDINATE_VALUE..MAX_COORDINATE_VALUE).map { coordinate ->
                 Arguments.of(
                     Location(coordinate, coordinate),
@@ -92,7 +90,7 @@ internal class LocationTest {
         }
 
         @JvmStatic
-        fun notEqualCoordinatesProvider(): Stream<Arguments> {
+        fun notEqualCoordinates(): Stream<Arguments> {
             val combinations = mutableListOf<Arguments>()
             val coordinates = arrayOf(1, 2)
 
@@ -118,26 +116,34 @@ internal class LocationTest {
         }
 
         @JvmStatic
-        fun invalidMinimalCoordinatesProvider(): Stream<Arguments> {
-            return invalidCoordinatesProvider(MIN_COORDINATE_VALUE, MIN_COORDINATE_VALUE - 1)
+        fun invalidMinimalCoordinates(): Stream<Arguments> {
+            return createInvalidCoordinateCombinations(
+                validCoordinate = MIN_COORDINATE_VALUE,
+                invalidCoordinate = MIN_COORDINATE_VALUE - 1
+            )
         }
 
         @JvmStatic
-        fun invalidMaximalCoordinatesProvider(): Stream<Arguments> {
-            return invalidCoordinatesProvider(MAX_COORDINATE_VALUE, MAX_COORDINATE_VALUE + 1)
+        fun invalidMaximalCoordinates(): Stream<Arguments> {
+            return createInvalidCoordinateCombinations(
+                validCoordinate = MAX_COORDINATE_VALUE,
+                invalidCoordinate = MAX_COORDINATE_VALUE + 1
+            )
         }
 
-        private fun invalidCoordinatesProvider(
-            coordinate1: Int,
-            coordinate2: Int,
+        /**
+         * Creates coordinate combinations with one valid and one invalid coordinate value.
+         */
+        private fun createInvalidCoordinateCombinations(
+            validCoordinate: Int,
+            invalidCoordinate: Int,
         ): Stream<Arguments> {
             val combinations = mutableListOf<Arguments>()
-            val coordinates = arrayOf(coordinate1, coordinate2)
+            val coordinates = arrayOf(validCoordinate, invalidCoordinate)
 
             for (x in coordinates) {
                 for (y in coordinates) {
-                    if (x == coordinate1 && y == coordinate1 ||
-                        x == coordinate2 && y == coordinate2) {
+                    if (x == validCoordinate && y == validCoordinate) {
                         continue
                     }
                     combinations.add(Arguments.of(x, y))

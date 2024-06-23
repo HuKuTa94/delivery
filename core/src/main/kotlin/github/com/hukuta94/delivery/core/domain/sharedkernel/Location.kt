@@ -17,9 +17,9 @@ data class Location(
      * Расстояние между Location - это совокупное количество шагов по X и Y,
      * которое необходимо сделать курьеру, чтобы достигнуть точки.
      */
-    fun distanceTo(target: Location): Int {
-        val absAbscissaDelta = abs(this.abscissa - target.abscissa)
-        val absOrdinateDelta = abs(this.ordinate - target.ordinate)
+    fun distanceTo(other: Location): Int {
+        val absAbscissaDelta = abs(this.abscissa - other.abscissa)
+        val absOrdinateDelta = abs(this.ordinate - other.ordinate)
 
         return absAbscissaDelta + absOrdinateDelta
     }
@@ -36,7 +36,7 @@ data class Location(
         private fun validate(coordinate: Int) {
             if (coordinate < MIN_COORDINATE_VALUE || coordinate > MAX_COORDINATE_VALUE) {
                 throw IllegalArgumentException(
-                    "Expected coordinate should be between $MIN_COORDINATE_VALUE and $MAX_COORDINATE_VALUE. Actual coordinate is $coordinate."
+                    "Expected coordinate must be between $MIN_COORDINATE_VALUE and $MAX_COORDINATE_VALUE. Actual coordinate is $coordinate."
                 )
             }
         }
