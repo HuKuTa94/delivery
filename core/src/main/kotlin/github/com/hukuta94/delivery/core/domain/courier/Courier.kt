@@ -5,7 +5,7 @@ import java.util.UUID
 
 class Courier internal constructor(
     val id: UUID,
-    val name: String,
+    val name: CourierName,
     val transport: Transport,
     var location: Location,
 ) {
@@ -56,7 +56,7 @@ class Courier internal constructor(
 
     companion object {
         fun create(
-            name: String,
+            name: CourierName,
             transport: Transport,
             location: Location,
         ): Courier {

@@ -4,11 +4,11 @@ import github.com.hukuta94.delivery.core.domain.sharedkernel.Location
 import github.com.hukuta94.delivery.core.domain.sharedkernel.randomLocation
 
 fun newCourier(
-    name: String? = null,
+    name: CourierName? = null,
     transport: Transport? = null,
     location: Location? = null,
 ) = Courier.create(
-    name = name ?: "Courier Name",
+    name = name ?: courierName(),
     transport = transport ?: Transport.PEDESTRIAN,
     location = location ?: randomLocation(),
 )
