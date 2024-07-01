@@ -25,11 +25,11 @@ internal class CourierNameTest {
         val name = shortInvalidName()
 
         assertThrows<IllegalArgumentException> { CourierName(name) }.message shouldBe
-            "Courier name is too short. Minimal length must be ${CourierName.MIN_NAME_LENGTH}. Actual length of \"$name\" is ${name.length}"
+            "Courier name is too short. Minimal length must be $MIN_COURIER_NAME_LENGTH. Actual length of \"$name\" is ${name.length}"
     }
 
     private fun shortInvalidName(): String {
-        return "A".repeat(CourierName.MIN_NAME_LENGTH - 1)
+        return "A".repeat(MIN_COURIER_NAME_LENGTH - 1)
     }
 
     @Test
@@ -37,11 +37,11 @@ internal class CourierNameTest {
         val name = longInvalidName()
 
         assertThrows<IllegalArgumentException> { CourierName(name) }.message shouldBe
-            "Courier name is too long. Maximal length must be ${CourierName.MAX_NAME_LENGTH}. Actual length of \"$name\" is ${name.length}"
+            "Courier name is too long. Maximal length must be $MAX_COURIER_NAME_LENGTH. Actual length of \"$name\" is ${name.length}"
     }
 
     private fun longInvalidName(): String {
-        return "A".repeat(CourierName.MAX_NAME_LENGTH + 1)
+        return "A".repeat(MAX_COURIER_NAME_LENGTH + 1)
     }
 
     @Test
@@ -56,5 +56,5 @@ internal class CourierNameTest {
         return " $name "
     }
 
-    private fun longValidName() = "A".repeat(CourierName.MAX_NAME_LENGTH)
+    private fun longValidName() = "A".repeat(MAX_COURIER_NAME_LENGTH)
 }

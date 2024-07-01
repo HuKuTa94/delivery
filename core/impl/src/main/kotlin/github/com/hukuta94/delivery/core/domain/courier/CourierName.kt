@@ -27,11 +27,7 @@ data class CourierName private constructor(
             return CourierName(trimmedName)
         }
 
-        /*
-         internal, чтобы была возможность из одного и того же package генерировать валидные значения в тестах и fixtures,
-         повысив надежность тестов и снизив количество ложных срабатываний при рефакторинге класса
-         */
-        internal const val MIN_NAME_LENGTH = 2
-        internal const val MAX_NAME_LENGTH = 30
+        private const val MIN_NAME_LENGTH = 2
+        private const val MAX_NAME_LENGTH = 30
     }
 }

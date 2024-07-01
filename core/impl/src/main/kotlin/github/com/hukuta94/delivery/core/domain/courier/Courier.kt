@@ -9,7 +9,7 @@ class Courier internal constructor(
     val transport: Transport,
     var location: Location,
 ) {
-    lateinit var status: CourierStatus internal set
+    lateinit var status: CourierStatus private set
 
     fun busy() {
         status = CourierStatus.BUSY

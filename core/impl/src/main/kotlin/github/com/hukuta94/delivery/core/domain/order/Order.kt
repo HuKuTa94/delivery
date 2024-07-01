@@ -9,10 +9,10 @@ class Order internal constructor(
     val location: Location,
 ) {
     lateinit var status: OrderStatus
-        internal set
+        private set
 
     var courierId: UUID? = null
-        internal set
+        private set
 
     fun assignCourier(courier: Courier) {
         if (status != OrderStatus.CREATED) {

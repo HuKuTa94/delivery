@@ -1,5 +1,6 @@
 package github.com.hukuta94.delivery.core.domain.order
 
+import github.com.hukuta94.delivery.core.domain.courier.newCourier
 import github.com.hukuta94.delivery.core.domain.sharedkernel.Location
 import java.util.*
 
@@ -8,11 +9,10 @@ fun newOrder() = Order.create(
     location = Location.random(),
 )
 
-fun completedOrder() = newOrder().apply {
-    status = OrderStatus.COMPLETED
+fun assignedOrder() = newOrder().apply {
+    assignCourier(newCourier())
 }
 
-fun assignedOrder() = newOrder().apply {
-    status = OrderStatus.ASSIGNED
-    courierId = UUID.randomUUID()
+fun completedOrder() = assignedOrder().apply {
+    complete()
 }

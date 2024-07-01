@@ -17,8 +17,14 @@
     <dependencies>
         <dependency>
             <groupId>github.com.hukuta94.delivery</groupId>
-            <artifactId>delivery-core</artifactId>
+            <artifactId>delivery-core-impl</artifactId>
             <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>github.com.hukuta94.delivery</groupId>
+            <artifactId>delivery-core-test-fixtures</artifactId>
+            <version>${project.parent.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>
