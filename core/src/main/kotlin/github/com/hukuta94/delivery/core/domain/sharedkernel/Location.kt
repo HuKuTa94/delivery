@@ -33,6 +33,10 @@ data class Location(
             ordinate = (MIN_COORDINATE_VALUE .. MAX_COORDINATE_VALUE).random(),
         )
 
+        fun minimal() = Location(MIN_COORDINATE_VALUE, MIN_COORDINATE_VALUE)
+
+        fun maximal() = Location(MAX_COORDINATE_VALUE, MAX_COORDINATE_VALUE)
+
         private fun validate(coordinate: Int) {
             if (coordinate < MIN_COORDINATE_VALUE || coordinate > MAX_COORDINATE_VALUE) {
                 throw IllegalArgumentException(

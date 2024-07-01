@@ -18,7 +18,7 @@ internal class LocationTest {
         val x = MIN_COORDINATE_VALUE
         val y = MAX_COORDINATE_VALUE
 
-        val location = Location(x, y)
+        val location = newLocation(x, y)
 
         location.abscissa shouldBe x
         location.ordinate shouldBe y
@@ -39,7 +39,7 @@ internal class LocationTest {
     private fun `invalid value of coordinate is cause of error`(x: Int, y: Int) {
         val invalidCoordinate = if (x !in MIN_COORDINATE_VALUE..MAX_COORDINATE_VALUE) x else y
 
-        shouldThrow <IllegalArgumentException> { Location(x, y) }.message shouldBe
+        shouldThrow <IllegalArgumentException> { newLocation(x, y) }.message shouldBe
             "Expected coordinate must be between $MIN_COORDINATE_VALUE and $MAX_COORDINATE_VALUE. Actual coordinate is $invalidCoordinate."
     }
 
@@ -63,8 +63,8 @@ internal class LocationTest {
 
     @Test
     fun `one location computes distance to other location`() {
-        val location1 = Location(4, 9)
-        val location2 = Location(2, 6)
+        val location1 = newLocation(4, 9)
+        val location2 = newLocation(2, 6)
 
         assertSoftly {
             // distance between different locations
@@ -83,8 +83,8 @@ internal class LocationTest {
         fun equalCoordinates(): Stream<Arguments> {
             return (MIN_COORDINATE_VALUE..MAX_COORDINATE_VALUE).map { coordinate ->
                 Arguments.of(
-                    Location(coordinate, coordinate),
-                    Location(coordinate, coordinate)
+                    newLocation(coordinate, coordinate),
+                    newLocation(coordinate, coordinate)
                 )
             }.stream()
         }
@@ -103,8 +103,8 @@ internal class LocationTest {
                             }
                             combinations.add(
                                 Arguments.of(
-                                    Location(x1, y1),
-                                    Location(x2, y2),
+                                    newLocation(x1, y1),
+                                    newLocation(x2, y2),
                                 )
                             )
                         }
