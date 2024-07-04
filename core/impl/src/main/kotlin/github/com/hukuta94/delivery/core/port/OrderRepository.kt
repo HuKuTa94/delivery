@@ -9,9 +9,13 @@ interface OrderRepository {
 
     fun update(order: Order)
 
+    fun update(orders: List<Order>)
+
     fun getById(id: UUID): Order
 
     fun getAllCreated(): List<Order>
 
     fun getAllAssigned(): List<Order>
+
+    fun getAllNotCompleted(): List<Order>
 }
