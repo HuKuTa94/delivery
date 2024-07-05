@@ -2,11 +2,11 @@ package github.com.hukuta94.delivery.core.application.usecase.courier.query
 
 import java.util.*
 
-interface GetFreeCouriersQuery {
-    fun execute(): List<GetFreeCourierResponse>
+interface GetBusyCouriersQuery {
+    fun execute(): List<GetBusyCourierResponse>
 }
 
-data class GetFreeCourierResponse(
+data class GetBusyCourierResponse(
     val id: UUID,
     val name: String,
     val locationAbscissa: Int,
