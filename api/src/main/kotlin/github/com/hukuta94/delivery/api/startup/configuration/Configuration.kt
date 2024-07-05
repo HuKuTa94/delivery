@@ -13,6 +13,8 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc
 @EnableWebMvc
 @EnableAutoConfiguration
 @Import(
+    DomainServiceConfiguration::class,
+
     OrderRepositoryConfiguration::class,
     OrderUseCaseConfiguration::class,
 
