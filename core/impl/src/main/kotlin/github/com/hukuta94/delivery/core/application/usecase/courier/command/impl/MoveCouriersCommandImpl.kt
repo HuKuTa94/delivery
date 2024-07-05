@@ -2,12 +2,14 @@ package github.com.hukuta94.delivery.core.application.usecase.courier.command.im
 
 import github.com.hukuta94.delivery.core.application.usecase.courier.command.MoveCouriersCommand
 import github.com.hukuta94.delivery.core.domain.order.Order
+import github.com.hukuta94.delivery.core.domain.service.CompleteOrderService
 import github.com.hukuta94.delivery.core.port.CourierRepository
 import github.com.hukuta94.delivery.core.port.OrderRepository
 
 class MoveCouriersCommandImpl(
     private val orderRepository: OrderRepository,
     private val courierRepository: CourierRepository,
+    private val completeOrderService: CompleteOrderService,
 ) : MoveCouriersCommand {
     override fun execute() {
         val busyCouriers = courierRepository.getAllBusy().associateBy { it.id }
@@ -27,11 +29,9 @@ class MoveCouriersCommandImpl(
             // Move couriers to their orders
             courier.moveTo(order.location)
 
-            // Courier reached the order and can complete it
-            if (courier.location == order.location) {
-                courier.free()
-                order.complete()
-
+            // Try to complete the order
+            val isOrderCompleted = completeOrderService.execute(order, courier)
+            if (isOrderCompleted) {
                 ordersToUpdate.add(order)
             }
         }
