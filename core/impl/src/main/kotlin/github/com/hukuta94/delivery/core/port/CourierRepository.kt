@@ -9,7 +9,11 @@ interface CourierRepository {
 
     fun update(courier: Courier)
 
+    fun update(couriers: List<Courier>)
+
     fun getById(id: UUID): Courier
 
     fun getAllFree(): List<Courier>
+
+    fun getAllBusy(): List<Courier>
 }

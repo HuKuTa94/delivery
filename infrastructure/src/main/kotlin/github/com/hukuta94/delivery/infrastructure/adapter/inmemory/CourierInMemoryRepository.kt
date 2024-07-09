@@ -17,6 +17,12 @@ class CourierInMemoryRepository : CourierRepository {
         storage[courier.id] = courier
     }
 
+    override fun update(couriers: List<Courier>) {
+        couriers.forEach { courier ->
+            storage[courier.id] = courier
+        }
+    }
+
     override fun getById(id: UUID): Courier {
         return storage[id] ?: error("The courier with id=$id is not found")
     }
@@ -24,6 +30,12 @@ class CourierInMemoryRepository : CourierRepository {
     override fun getAllFree(): List<Courier> {
         return storage.values.filter { courier ->
             courier.status == CourierStatus.FREE
+        }
+    }
+
+    override fun getAllBusy(): List<Courier> {
+        return storage.values.filter { courier ->
+            courier.status == CourierStatus.BUSY
         }
     }
 }

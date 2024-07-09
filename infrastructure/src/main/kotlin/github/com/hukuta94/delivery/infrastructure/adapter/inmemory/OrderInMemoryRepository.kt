@@ -17,6 +17,12 @@ class OrderInMemoryRepository : OrderRepository {
         storage[order.id] = order
     }
 
+    override fun update(orders: List<Order>) {
+        orders.forEach { order ->
+            storage[order.id] = order
+        }
+    }
+
     override fun getById(id: UUID): Order {
         return storage[id] ?:  error("The order with id=$id is not found")
     }
@@ -30,6 +36,12 @@ class OrderInMemoryRepository : OrderRepository {
     override fun getAllAssigned(): List<Order> {
         return storage.values.filter { order ->
             order.status == OrderStatus.ASSIGNED
+        }
+    }
+
+    override fun getAllNotCompleted(): List<Order> {
+        return storage.values.filter { order ->
+            order.status != OrderStatus.COMPLETED
         }
     }
 }

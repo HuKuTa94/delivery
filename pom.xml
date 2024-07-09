@@ -106,6 +106,13 @@
             <version>${assertJ.version}</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- Logging -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-logging</artifactId>
+            <version>${spring.boot.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
