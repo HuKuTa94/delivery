@@ -1,9 +1,8 @@
 package github.com.hukuta94.delivery.api.startup.configuration
 
-import github.com.hukuta94.delivery.api.startup.configuration.courier.CourierRepositoryConfiguration
-import github.com.hukuta94.delivery.api.startup.configuration.courier.CourierUseCaseConfiguration
-import github.com.hukuta94.delivery.api.startup.configuration.order.OrderRepositoryConfiguration
-import github.com.hukuta94.delivery.api.startup.configuration.order.OrderUseCaseConfiguration
+import github.com.hukuta94.delivery.api.startup.configuration.courier.CourierConfiguration
+import github.com.hukuta94.delivery.api.startup.configuration.order.OrderConfiguration
+import github.com.hukuta94.delivery.api.startup.configuration.scheduler.SchedulerConfiguration
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
@@ -13,14 +12,9 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc
 @EnableWebMvc
 @EnableAutoConfiguration
 @Import(
+    OrderConfiguration::class,
+    CourierConfiguration::class,
     DomainServiceConfiguration::class,
-
-    OrderRepositoryConfiguration::class,
-    OrderUseCaseConfiguration::class,
-
-    CourierRepositoryConfiguration::class,
-    CourierUseCaseConfiguration::class,
+    SchedulerConfiguration::class,
 )
-open class Configuration {
-
-}
+open class Configuration
