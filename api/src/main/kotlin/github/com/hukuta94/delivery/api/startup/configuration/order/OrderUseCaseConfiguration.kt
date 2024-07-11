@@ -5,6 +5,7 @@ import github.com.hukuta94.delivery.core.application.usecase.order.command.impl.
 import github.com.hukuta94.delivery.core.application.usecase.order.query.impl.GetNotCompletedOrdersQueryImpl
 import github.com.hukuta94.delivery.core.domain.service.DispatchService
 import github.com.hukuta94.delivery.core.port.CourierRepository
+import github.com.hukuta94.delivery.core.port.GetLocationPort
 import github.com.hukuta94.delivery.core.port.OrderRepository
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -14,9 +15,11 @@ open class OrderUseCaseConfiguration {
 
     @Bean
     open fun createOrderCommand(
-        orderRepository: OrderRepository
+        orderRepository: OrderRepository,
+        getLocationPort: GetLocationPort,
     ) = CreateOrderCommandImpl(
-        orderRepository = orderRepository
+        orderRepository = orderRepository,
+        getLocationPort = getLocationPort,
     )
 
     @Bean
