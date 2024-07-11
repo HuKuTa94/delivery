@@ -22,6 +22,12 @@
         </dependency>
         <dependency>
             <groupId>github.com.hukuta94.delivery</groupId>
+            <artifactId>delivery-core-test-fixtures</artifactId>
+            <version>${project.parent.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>github.com.hukuta94.delivery</groupId>
             <artifactId>delivery-infrastructure</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
@@ -31,6 +37,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
             <version>${spring.boot.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <version>${spring.boot.version}</version>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>
