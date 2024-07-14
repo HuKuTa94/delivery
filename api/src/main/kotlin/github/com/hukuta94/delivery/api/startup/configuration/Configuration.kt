@@ -16,5 +16,6 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc
     CourierConfiguration::class,
     DomainServiceConfiguration::class,
     SchedulerConfiguration::class,
+    PortConfiguration::class,
 )
 open class Configuration
