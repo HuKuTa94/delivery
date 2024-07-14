@@ -1,0 +1,18 @@
+syntax = "proto3";
+package OrderStatusChanged;
+
+option java_multiple_files = true;
+option java_package = "github.com.hukuta94.delivery.infrastructure.adapter.kafka";
+option java_outer_classname = "OrderStatusChangedProtos";
+
+enum OrderStatus {
+  None = 0;
+  Created = 1;
+  Assigned = 2;
+  Completed = 3;
+}
+
+message OrderStatusChangedIntegrationEvent {
+  string orderId = 1;
+  OrderStatus orderStatus = 2;
+}
