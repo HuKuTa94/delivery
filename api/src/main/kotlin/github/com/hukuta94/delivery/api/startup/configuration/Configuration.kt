@@ -17,5 +17,6 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc
     DomainServiceConfiguration::class,
     SchedulerConfiguration::class,
     PortConfiguration::class,
+    DomainEventPublisherConfiguration::class,
 )
 open class Configuration
