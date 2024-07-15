@@ -16,6 +16,7 @@
     </modules>
 
     <properties>
+        <!-- Common dependencies -->
         <java.version>17</java.version>
         <kotlin.version>1.8.10</kotlin.version>
         <kotest.junit.version>5.0.0</kotest.junit.version>
@@ -25,13 +26,21 @@
         <junit.version>5.9.2</junit.version>
         <assertJ.version>3.26.0</assertJ.version>
         <mockito.kotlin.version>5.4.0</mockito.kotlin.version>
+
+        <!-- Adapter dependencies (versions can be described in root pom) -->
         <spring.boot.version>2.5.6</spring.boot.version>
+        <grpc.version>1.58.0</grpc.version>
+        <protobuf.version>3.23.4</protobuf.version>
+        <kafka.version>3.4.0</kafka.version>
 
         <!-- Plugins -->
         <maven.compiler.plugin.version>3.8.0</maven.compiler.plugin.version>
+        <protobuf-plugin.version>0.6.1</protobuf-plugin.version>
+        <os-maven-plugin.version>1.7.0</os-maven-plugin.version>
     </properties>
 
     <dependencies>
+        <!-- Common dependencies -->
         <!-- Kotlin -->
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
@@ -116,18 +125,34 @@
             <scope>test</scope>
         </dependency>
 
-
         <!-- Logging -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-logging</artifactId>
             <version>${spring.boot.version}</version>
         </dependency>
+
+
+        <!-- Adapter dependencies (must be in own submodules) -->
+        <!-- ProtoBuff Java 9+ compatibility - Do NOT update to 2.0.0 -->
+        <dependency>
+            <groupId>jakarta.annotation</groupId>
+            <artifactId>jakarta.annotation-api</artifactId>
+            <version>1.3.5</version>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 
     <build>
         <sourceDirectory>src/main/kotlin</sourceDirectory>
         <testSourceDirectory>src/test/kotlin</testSourceDirectory>
+        <extensions>
+            <extension>
+                <groupId>kr.motd.maven</groupId>
+                <artifactId>os-maven-plugin</artifactId>
+                <version>${os-maven-plugin.version}</version>
+            </extension>
+        </extensions>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -154,6 +179,26 @@
                         <id>test-compile</id>
                         <goals>
                             <goal>test-compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- ProtoBuff classes generator -->
+            <plugin>
+                <groupId>org.xolstice.maven.plugins</groupId>
+                <artifactId>protobuf-maven-plugin</artifactId>
+                <version>${protobuf-plugin.version}</version>
+                <configuration>
+                    <protocArtifact>com.google.protobuf:protoc:${protobuf.version}:exe:${os.detected.classifier}</protocArtifact>
+                    <pluginId>grpc-java</pluginId>
+                    <pluginArtifact>io.grpc:protoc-gen-grpc-java:${grpc.version}:exe:${os.detected.classifier}</pluginArtifact>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                            <goal>compile-custom</goal>
                         </goals>
                     </execution>
                 </executions>
