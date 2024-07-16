@@ -1,25 +1,30 @@
 package github.com.hukuta94.delivery.infrastructure.adapter.inmemory
 
+import github.com.hukuta94.delivery.core.application.event.DomainEventPublisher
 import github.com.hukuta94.delivery.core.domain.order.Order
 import github.com.hukuta94.delivery.core.domain.order.OrderStatus
 import github.com.hukuta94.delivery.core.port.OrderRepository
 import java.util.UUID
 
-class OrderInMemoryRepository : OrderRepository {
+class OrderInMemoryRepository(
+    domainEventPublisher: DomainEventPublisher
+) : OrderRepository(domainEventPublisher) {
 
     private val storage = mutableMapOf<UUID, Order>()
 
-    override fun add(order: Order) {
-        storage[order.id] = order
+    override fun add(domainEntity: Order) {
+        publishDomainEvents(domainEntity)
+        storage[domainEntity.id] = domainEntity
     }
 
-    override fun update(order: Order) {
-        storage[order.id] = order
+    override fun update(domainEntity: Order) {
+        publishDomainEvents(domainEntity)
+        storage[domainEntity.id] = domainEntity
     }
 
-    override fun update(orders: List<Order>) {
-        orders.forEach { order ->
-            storage[order.id] = order
+    override fun update(domainEntities: Collection<Order>) {
+        domainEntities.forEach { domainEntity ->
+            update(domainEntity)
         }
     }
 
@@ -27,19 +32,19 @@ class OrderInMemoryRepository : OrderRepository {
         return storage[id] ?:  error("The order with id=$id is not found")
     }
 
-    override fun getAllCreated(): List<Order> {
+    override fun getAllCreated(): Collection<Order> {
         return storage.values.filter { order ->
             order.status == OrderStatus.CREATED
         }
     }
 
-    override fun getAllAssigned(): List<Order> {
+    override fun getAllAssigned(): Collection<Order> {
         return storage.values.filter { order ->
             order.status == OrderStatus.ASSIGNED
         }
     }
 
-    override fun getAllNotCompleted(): List<Order> {
+    override fun getAllNotCompleted(): Collection<Order> {
         return storage.values.filter { order ->
             order.status != OrderStatus.COMPLETED
         }

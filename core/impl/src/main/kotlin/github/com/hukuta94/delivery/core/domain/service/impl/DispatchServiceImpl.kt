@@ -7,7 +7,7 @@ import github.com.hukuta94.delivery.core.domain.order.Order
 
 class DispatchServiceImpl : DispatchService {
 
-    override fun assignOrderToMostSuitableCourier(order: Order, couriers: List<Courier>) {
+    override fun assignOrderToMostSuitableCourier(order: Order, couriers: Collection<Courier>) {
         couriers
             .filter { it.status == CourierStatus.FREE }
             .minByOrNull { it.timeToLocation(order.location) }

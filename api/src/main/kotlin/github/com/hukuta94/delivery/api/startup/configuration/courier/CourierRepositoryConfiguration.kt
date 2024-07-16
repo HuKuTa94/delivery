@@ -1,5 +1,6 @@
 package github.com.hukuta94.delivery.api.startup.configuration.courier
 
+import github.com.hukuta94.delivery.core.application.event.DomainEventPublisher
 import github.com.hukuta94.delivery.infrastructure.adapter.inmemory.CourierInMemoryRepository
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -8,5 +9,9 @@ import org.springframework.context.annotation.Configuration
 open class CourierRepositoryConfiguration {
 
     @Bean
-    open fun courierRepository() = CourierInMemoryRepository()
+    open fun courierRepository(
+        domainEventPublisher: DomainEventPublisher
+    ) = CourierInMemoryRepository(
+        domainEventPublisher = domainEventPublisher
+    )
 }

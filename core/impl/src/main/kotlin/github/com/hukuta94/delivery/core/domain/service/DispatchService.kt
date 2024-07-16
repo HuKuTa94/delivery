@@ -5,5 +5,5 @@ import github.com.hukuta94.delivery.core.domain.order.Order
 
 interface DispatchService {
 
-    fun assignOrderToMostSuitableCourier(order: Order, couriers: List<Courier>)
+    fun assignOrderToMostSuitableCourier(order: Order, couriers: Collection<Courier>)
 }
