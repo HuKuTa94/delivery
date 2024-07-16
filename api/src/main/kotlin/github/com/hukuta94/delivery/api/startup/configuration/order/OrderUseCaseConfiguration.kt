@@ -1,5 +1,6 @@
 package github.com.hukuta94.delivery.api.startup.configuration.order
 
+import github.com.hukuta94.delivery.core.application.usecase.order.command.CreateOrderCommand
 import github.com.hukuta94.delivery.core.application.usecase.order.command.impl.AssignCourierToOrderCommandImpl
 import github.com.hukuta94.delivery.core.application.usecase.order.command.impl.CreateOrderCommandImpl
 import github.com.hukuta94.delivery.core.application.usecase.order.query.impl.GetNotCompletedOrdersQueryImpl
@@ -17,7 +18,7 @@ open class OrderUseCaseConfiguration {
     open fun createOrderCommand(
         orderRepository: OrderRepository,
         getLocationPort: GetLocationPort,
-    ) = CreateOrderCommandImpl(
+    ): CreateOrderCommand = CreateOrderCommandImpl(
         orderRepository = orderRepository,
         getLocationPort = getLocationPort,
     )

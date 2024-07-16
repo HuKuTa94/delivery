@@ -45,5 +45,11 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- JSON for protobuf -->
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java-util</artifactId>
+            <version>${protobuf.version}</version>
+        </dependency>
     </dependencies>
 </project>
