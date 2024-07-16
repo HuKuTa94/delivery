@@ -1,0 +1,19 @@
+syntax = "proto3";
+package BasketConfirmed;
+
+option java_multiple_files = true;
+option java_package = "github.com.hukuta94.delivery.api.adapter.kafka";
+option java_outer_classname = "BasketConfirmedProtos";
+
+message BasketConfirmedIntegrationEvent {
+  string BasketId = 1;
+  Address Address = 2;
+}
+
+message Address {
+  string Country = 1;
+  string City = 2;
+  string Street = 3;
+  string House = 4;
+  string Apartment = 5;
+}
