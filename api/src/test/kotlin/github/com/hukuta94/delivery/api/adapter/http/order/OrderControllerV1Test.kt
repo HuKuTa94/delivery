@@ -1,8 +1,8 @@
 package github.com.hukuta94.delivery.api.adapter.http.order
 
-import github.com.hukuta94.delivery.core.application.usecase.order.command.CreateOrderCommand
-import github.com.hukuta94.delivery.core.application.usecase.order.query.GetNotCompletedOrdersQuery
-import github.com.hukuta94.delivery.core.application.usecase.order.query.Response
+import github.com.hukuta94.delivery.core.application.usecase.order.CreateOrderUseCase
+import github.com.hukuta94.delivery.core.application.usecase.order.GetNotCompletedOrdersQuery
+import github.com.hukuta94.delivery.core.application.usecase.order.GetNotCompletedOrderResponse
 import github.com.hukuta94.delivery.core.domain.order.newOrder
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
@@ -27,7 +27,7 @@ internal class OrderControllerV1Test {
     lateinit var mockMvc: MockMvc
 
     @MockBean
-    lateinit var createOrderCommand: CreateOrderCommand
+    lateinit var createOrderUseCase: CreateOrderUseCase
 
     @MockBean
     lateinit var getNotCompletedOrdersQuery: GetNotCompletedOrdersQuery
@@ -55,7 +55,7 @@ internal class OrderControllerV1Test {
         given(getNotCompletedOrdersQuery.execute())
             .willReturn(
                 listOf(
-                    Response(
+                    GetNotCompletedOrderResponse(
                         orderId = order.id,
                         locationAbscissa = order.location.abscissa,
                         locationOrdinate = order.location.ordinate,

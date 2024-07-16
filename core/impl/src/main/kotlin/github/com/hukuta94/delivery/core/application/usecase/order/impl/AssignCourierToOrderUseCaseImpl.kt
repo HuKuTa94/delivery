@@ -1,17 +1,16 @@
-package github.com.hukuta94.delivery.core.application.usecase.order.command.impl
+package github.com.hukuta94.delivery.core.application.usecase.order.impl
 
-import github.com.hukuta94.delivery.core.application.usecase.courier.command.MoveCouriersCommand
-import github.com.hukuta94.delivery.core.application.usecase.order.command.AssignCourierToOrderCommand
+import github.com.hukuta94.delivery.core.application.usecase.order.AssignCourierToOrderUseCase
 import github.com.hukuta94.delivery.core.domain.service.DispatchService
 import github.com.hukuta94.delivery.core.port.CourierRepository
 import github.com.hukuta94.delivery.core.port.OrderRepository
 import org.slf4j.LoggerFactory
 
-class AssignCourierToOrderCommandImpl(
+class AssignCourierToOrderUseCaseImpl(
     private val orderRepository: OrderRepository,
     private val courierRepository: CourierRepository,
     private val dispatchService: DispatchService,
-) : AssignCourierToOrderCommand {
+) : AssignCourierToOrderUseCase {
     override fun execute() {
         LOG.info("Try to assign orders to free couriers")
 
@@ -27,6 +26,6 @@ class AssignCourierToOrderCommandImpl(
     }
 
     companion object {
-        private val LOG = LoggerFactory.getLogger(MoveCouriersCommand::class.java)
+        private val LOG = LoggerFactory.getLogger(AssignCourierToOrderUseCaseImpl::class.java)
     }
 }

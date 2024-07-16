@@ -1,4 +1,4 @@
-package github.com.hukuta94.delivery.core.application.usecase.courier.query
+package github.com.hukuta94.delivery.core.application.usecase.courier
 
 import java.util.*
 

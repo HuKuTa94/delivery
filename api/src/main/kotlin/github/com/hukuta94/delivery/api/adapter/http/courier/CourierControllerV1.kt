@@ -1,6 +1,6 @@
 package github.com.hukuta94.delivery.api.adapter.http.courier
 
-import github.com.hukuta94.delivery.core.application.usecase.courier.query.GetBusyCouriersQuery
+import github.com.hukuta94.delivery.core.application.usecase.courier.GetBusyCouriersQuery
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.util.*

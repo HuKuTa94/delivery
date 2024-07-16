@@ -1,8 +1,8 @@
 package github.com.hukuta94.delivery.api.startup.configuration.order
 
 import github.com.hukuta94.delivery.api.adapter.http.order.OrderControllerV1
-import github.com.hukuta94.delivery.core.application.usecase.order.command.CreateOrderCommand
-import github.com.hukuta94.delivery.core.application.usecase.order.query.GetNotCompletedOrdersQuery
+import github.com.hukuta94.delivery.core.application.usecase.order.CreateOrderUseCase
+import github.com.hukuta94.delivery.core.application.usecase.order.GetNotCompletedOrdersQuery
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -10,10 +10,10 @@ import org.springframework.context.annotation.Configuration
 open class OrderControllerConfiguration {
     @Bean
     open fun orderControllerV1(
-        createOrderCommand: CreateOrderCommand,
+        createOrderUseCase: CreateOrderUseCase,
         getNotCompletedOrdersQuery: GetNotCompletedOrdersQuery,
     ) = OrderControllerV1(
-        createOrderCommand = createOrderCommand,
+        createOrderUseCase = createOrderUseCase,
         getNotCompletedOrdersQuery = getNotCompletedOrdersQuery,
     )
 }

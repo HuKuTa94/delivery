@@ -1,16 +1,15 @@
 package github.com.hukuta94.delivery.api.adapter.kafka
 
-import github.com.hukuta94.delivery.core.application.usecase.order.command.Command
-import github.com.hukuta94.delivery.core.application.usecase.order.command.CreateOrderCommand
+import github.com.hukuta94.delivery.core.application.usecase.order.CreateOrderCommand
+import github.com.hukuta94.delivery.core.application.usecase.order.CreateOrderUseCase
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import java.util.*
 
-//TODO Почему спринг в private val createOrderCommand передает null, хотя бин создан?
 class BasketConfirmedIntegrationEventKafkaConsumer(
     bootstrapServersConfig: String,
     groupIdConfig: String,
     topic: String,
-    private val createOrderCommand: CreateOrderCommand,
+    private val createOrderUseCase: CreateOrderUseCase,
 ) : IntegrationEventKafkaConsumer(
     bootstrapServersConfig,
     groupIdConfig,
@@ -23,11 +22,11 @@ class BasketConfirmedIntegrationEventKafkaConsumer(
 
         val basketConfirmedEvent = basketConfirmedEventBuilder.build()
 
-        val command = Command(
+        val command = CreateOrderCommand(
             basketId = UUID.fromString(basketConfirmedEvent.basketId),
             street = basketConfirmedEvent.address.street,
         )
 
-        createOrderCommand.execute(command)
+        createOrderUseCase.execute(command)
     }
 }
