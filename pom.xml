@@ -32,7 +32,6 @@
         <spring.kafka.version>2.7.0</spring.kafka.version>
         <grpc.version>1.58.0</grpc.version>
         <protobuf.version>3.23.4</protobuf.version>
-        <kafka.version>3.4.0</kafka.version>
 
         <!-- Plugins -->
         <maven.compiler.plugin.version>3.8.0</maven.compiler.plugin.version>

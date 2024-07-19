@@ -2,11 +2,15 @@ package github.com.hukuta94.delivery.infrastructure.adapter.kafka
 
 import github.com.hukuta94.delivery.core.domain.order.OrderAssignedDomainEvent
 import github.com.hukuta94.delivery.core.domain.order.OrderCompletedDomainEvent
+import github.com.hukuta94.delivery.core.port.BusProducer
+import org.apache.kafka.clients.producer.ProducerRecord
+import org.slf4j.LoggerFactory
+import org.springframework.kafka.core.KafkaTemplate
 import java.util.*
 
-class OrderIntegrationEventKafkaProducer(
-    bootstrapServersConfig: String,
-) : IntegrationEventKafkaProducer(bootstrapServersConfig) {
+class OrderKafkaProducer(
+    private val kafkaTemplate: KafkaTemplate<UUID, ByteArray>,
+): BusProducer {
 
     override fun publishOrderAssignedDomainEvent(
         orderAssignedDomainEvent: OrderAssignedDomainEvent
@@ -32,11 +36,15 @@ class OrderIntegrationEventKafkaProducer(
             .setOrderStatus(orderStatus)
             .build()
 
-        sendMessage(
-            topic = TOPIC_ORDER_STATUS_CHANGED,
-            key = orderId,
-            value = integrationEvent.toByteArray(), //TODO Отправлять в формате JSON
+        val message = ProducerRecord(
+            TOPIC_ORDER_STATUS_CHANGED,
+            orderId,
+            integrationEvent.toByteArray() //TODO Отправлять в формате JSON
         )
+
+        kafkaTemplate.send(message)
+
+        LOG.info("Integration event OrderStatusChanged to \"${orderStatus.name}\" with key: $orderId was sent to topic: $TOPIC_ORDER_STATUS_CHANGED")
     }
 
     private fun github.com.hukuta94.delivery.core.domain.order.OrderStatus.toKafkaOrderStatus(): OrderStatus {
@@ -49,5 +57,7 @@ class OrderIntegrationEventKafkaProducer(
 
     companion object {
         private const val TOPIC_ORDER_STATUS_CHANGED = "order.status.changed"
+
+        private val LOG = LoggerFactory.getLogger(OrderKafkaProducer::class.java)
     }
 }

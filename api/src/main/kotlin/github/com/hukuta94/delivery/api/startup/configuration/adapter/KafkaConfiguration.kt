@@ -8,5 +8,6 @@ import org.springframework.kafka.annotation.EnableKafka
 @EnableKafka
 @Import(
     KafkaConsumerConfiguration::class,
+    KafkaProducerConfiguration::class,
 )
 open class KafkaConfiguration
