@@ -1,21 +1,15 @@
 package github.com.hukuta94.delivery.core.port
 
+import github.com.hukuta94.delivery.core.application.event.DomainEventPublisher
 import github.com.hukuta94.delivery.core.domain.order.Order
-import java.util.UUID
 
-interface OrderRepository {
+abstract class OrderRepository(
+    domainEventPublisher: DomainEventPublisher,
+) : Repository<Order>(domainEventPublisher) {
 
-    fun add(order: Order)
+    abstract fun getAllCreated(): Collection<Order>
 
-    fun update(order: Order)
+    abstract fun getAllAssigned(): Collection<Order>
 
-    fun update(orders: List<Order>)
-
-    fun getById(id: UUID): Order
-
-    fun getAllCreated(): List<Order>
-
-    fun getAllAssigned(): List<Order>
-
-    fun getAllNotCompleted(): List<Order>
+    abstract fun getAllNotCompleted(): Collection<Order>
 }

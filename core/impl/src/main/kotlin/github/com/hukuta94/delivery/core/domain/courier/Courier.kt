@@ -1,14 +1,15 @@
 package github.com.hukuta94.delivery.core.domain.courier
 
+import github.com.hukuta94.delivery.core.domain.Aggregate
 import github.com.hukuta94.delivery.core.domain.sharedkernel.Location
 import java.util.UUID
 
 class Courier internal constructor(
-    val id: UUID,
+    override val id: UUID,
     val name: CourierName,
     val transport: Transport,
     var location: Location,
-) {
+) : Aggregate<UUID>() {
     lateinit var status: CourierStatus private set
 
     fun busy() {

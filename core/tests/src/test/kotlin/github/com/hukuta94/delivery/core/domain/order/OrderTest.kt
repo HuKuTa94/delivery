@@ -68,6 +68,37 @@ internal class OrderTest {
 
         order.status shouldNotBe OrderStatus.COMPLETED
     }
+
+    @Test
+    fun `raise order assigned domain event when order is assigned courier`() {
+        // given
+        val order = assignedOrder()
+
+        // when
+        val actualDomainEvent = order.domainEvents().last() as OrderAssignedDomainEvent
+
+        // then
+        assertSoftly {
+            actualDomainEvent shouldBe OrderAssignedDomainEvent::class
+            actualDomainEvent.orderId shouldBe order.id
+            actualDomainEvent.courierId shouldBe order.courierId
+        }
+    }
+
+    @Test
+    fun `raise order completed domain event when order is completed`() {
+        // given
+        val order = completedOrder()
+
+        // when
+        val actualDomainEvent = order.domainEvents().last() as OrderCompletedDomainEvent
+
+        // then
+        assertSoftly {
+            actualDomainEvent shouldBe OrderCompletedDomainEvent::class
+            actualDomainEvent.orderId shouldBe order.id
+        }
+    }
 }
 
 

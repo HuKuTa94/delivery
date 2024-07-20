@@ -1,18 +1,17 @@
-package github.com.hukuta94.delivery.core.application.usecase.order.command.impl
+package github.com.hukuta94.delivery.core.application.usecase.order.impl
 
-import github.com.hukuta94.delivery.core.application.usecase.courier.command.MoveCouriersCommand
-import github.com.hukuta94.delivery.core.application.usecase.order.command.Command
-import github.com.hukuta94.delivery.core.application.usecase.order.command.CreateOrderCommand
+import github.com.hukuta94.delivery.core.application.usecase.order.CreateOrderCommand
+import github.com.hukuta94.delivery.core.application.usecase.order.CreateOrderUseCase
 import github.com.hukuta94.delivery.core.domain.order.Order
 import github.com.hukuta94.delivery.core.port.GetLocationPort
 import github.com.hukuta94.delivery.core.port.OrderRepository
 import org.slf4j.LoggerFactory
 
-class CreateOrderCommandImpl(
+class CreateOrderUseCaseImpl(
     private val orderRepository: OrderRepository,
     private val getLocationPort: GetLocationPort,
-) : CreateOrderCommand {
-    override fun execute(command: Command) {
+) : CreateOrderUseCase {
+    override fun execute(command: CreateOrderCommand) {
         LOG.info("Try to create new order with basket id: ${command.basketId}")
 
         val newOrder = Order.create(
@@ -24,6 +23,6 @@ class CreateOrderCommandImpl(
     }
 
     companion object {
-        private val LOG = LoggerFactory.getLogger(MoveCouriersCommand::class.java)
+        private val LOG = LoggerFactory.getLogger(CreateOrderUseCaseImpl::class.java)
     }
 }

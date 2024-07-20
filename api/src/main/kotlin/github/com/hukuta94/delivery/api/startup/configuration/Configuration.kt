@@ -1,5 +1,6 @@
 package github.com.hukuta94.delivery.api.startup.configuration
 
+import github.com.hukuta94.delivery.api.startup.configuration.adapter.KafkaConfiguration
 import github.com.hukuta94.delivery.api.startup.configuration.courier.CourierConfiguration
 import github.com.hukuta94.delivery.api.startup.configuration.order.OrderConfiguration
 import github.com.hukuta94.delivery.api.startup.configuration.scheduler.SchedulerConfiguration
@@ -17,5 +18,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc
     DomainServiceConfiguration::class,
     SchedulerConfiguration::class,
     PortConfiguration::class,
+    DomainEventHandlerConfiguration::class,
+    KafkaConfiguration::class,
 )
 open class Configuration

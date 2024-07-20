@@ -1,17 +1,17 @@
-package github.com.hukuta94.delivery.core.application.usecase.courier.command.impl
+package github.com.hukuta94.delivery.core.application.usecase.courier.impl
 
-import github.com.hukuta94.delivery.core.application.usecase.courier.command.MoveCouriersCommand
+import github.com.hukuta94.delivery.core.application.usecase.courier.MoveCouriersUseCase
 import github.com.hukuta94.delivery.core.domain.order.Order
 import github.com.hukuta94.delivery.core.domain.service.CompleteOrderService
 import github.com.hukuta94.delivery.core.port.CourierRepository
 import github.com.hukuta94.delivery.core.port.OrderRepository
 import org.slf4j.LoggerFactory
 
-class MoveCouriersCommandImpl(
+class MoveCouriersUseCaseImpl(
     private val orderRepository: OrderRepository,
     private val courierRepository: CourierRepository,
     private val completeOrderService: CompleteOrderService,
-) : MoveCouriersCommand {
+) : MoveCouriersUseCase {
 
     override fun execute() {
         val busyCouriers = courierRepository.getAllBusy().associateBy { it.id }
@@ -54,6 +54,6 @@ class MoveCouriersCommandImpl(
     }
 
     companion object {
-        private val LOG = LoggerFactory.getLogger(MoveCouriersCommand::class.java)
+        private val LOG = LoggerFactory.getLogger(MoveCouriersUseCaseImpl::class.java)
     }
 }

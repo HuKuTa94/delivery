@@ -1,8 +1,11 @@
 package github.com.hukuta94.delivery.api.startup.configuration.order
 
-import github.com.hukuta94.delivery.core.application.usecase.order.command.impl.AssignCourierToOrderCommandImpl
-import github.com.hukuta94.delivery.core.application.usecase.order.command.impl.CreateOrderCommandImpl
-import github.com.hukuta94.delivery.core.application.usecase.order.query.impl.GetNotCompletedOrdersQueryImpl
+import github.com.hukuta94.delivery.core.application.usecase.order.AssignCourierToOrderUseCase
+import github.com.hukuta94.delivery.core.application.usecase.order.CreateOrderUseCase
+import github.com.hukuta94.delivery.core.application.usecase.order.GetNotCompletedOrdersQuery
+import github.com.hukuta94.delivery.core.application.usecase.order.impl.AssignCourierToOrderUseCaseImpl
+import github.com.hukuta94.delivery.core.application.usecase.order.impl.CreateOrderUseCaseImpl
+import github.com.hukuta94.delivery.core.application.usecase.order.impl.GetNotCompletedOrdersQueryImpl
 import github.com.hukuta94.delivery.core.domain.service.DispatchService
 import github.com.hukuta94.delivery.core.port.CourierRepository
 import github.com.hukuta94.delivery.core.port.GetLocationPort
@@ -14,10 +17,10 @@ import org.springframework.context.annotation.Configuration
 open class OrderUseCaseConfiguration {
 
     @Bean
-    open fun createOrderCommand(
+    open fun createOrderUseCase(
         orderRepository: OrderRepository,
         getLocationPort: GetLocationPort,
-    ) = CreateOrderCommandImpl(
+    ): CreateOrderUseCase = CreateOrderUseCaseImpl(
         orderRepository = orderRepository,
         getLocationPort = getLocationPort,
     )
@@ -25,16 +28,16 @@ open class OrderUseCaseConfiguration {
     @Bean
     open fun getNotCompletedOrdersQuery(
         orderRepository: OrderRepository
-    ) = GetNotCompletedOrdersQueryImpl(
+    ): GetNotCompletedOrdersQuery = GetNotCompletedOrdersQueryImpl(
         orderRepository = orderRepository
     )
 
     @Bean
-    open fun assignCourierToOrderCommand(
+    open fun AssignCourierToOrderUseCase(
         orderRepository: OrderRepository,
         courierRepository: CourierRepository,
         dispatchService: DispatchService,
-    ) = AssignCourierToOrderCommandImpl(
+    ): AssignCourierToOrderUseCase = AssignCourierToOrderUseCaseImpl(
         orderRepository = orderRepository,
         courierRepository = courierRepository,
         dispatchService = dispatchService,
