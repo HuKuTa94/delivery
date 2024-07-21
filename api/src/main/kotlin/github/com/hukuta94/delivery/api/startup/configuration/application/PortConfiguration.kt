@@ -1,4 +1,4 @@
-package github.com.hukuta94.delivery.api.startup.configuration
+package github.com.hukuta94.delivery.api.startup.configuration.application
 
 import github.com.hukuta94.delivery.api.startup.configuration.adapter.grpc.GrpcConfiguration
 import github.com.hukuta94.delivery.infrastructure.adapter.grpc.GeoServiceGrpcClient
