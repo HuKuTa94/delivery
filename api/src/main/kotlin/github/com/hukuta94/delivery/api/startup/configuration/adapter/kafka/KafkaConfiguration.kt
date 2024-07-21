@@ -1,4 +1,4 @@
-package github.com.hukuta94.delivery.api.startup.configuration.adapter
+package github.com.hukuta94.delivery.api.startup.configuration.adapter.kafka
 
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import

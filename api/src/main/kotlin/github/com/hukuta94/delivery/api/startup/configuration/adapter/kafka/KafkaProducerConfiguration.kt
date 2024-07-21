@@ -1,4 +1,4 @@
-package github.com.hukuta94.delivery.api.startup.configuration.adapter
+package github.com.hukuta94.delivery.api.startup.configuration.adapter.kafka
 
 import github.com.hukuta94.delivery.core.port.BusProducer
 import github.com.hukuta94.delivery.infrastructure.adapter.kafka.OrderKafkaProducer
