@@ -1,4 +1,4 @@
-package github.com.hukuta94.delivery.api.startup.configuration.scheduler
+package github.com.hukuta94.delivery.api.startup.configuration.adapter.scheduler
 
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import

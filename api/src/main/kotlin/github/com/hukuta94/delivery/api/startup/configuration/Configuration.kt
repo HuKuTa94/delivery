@@ -8,7 +8,7 @@ import github.com.hukuta94.delivery.api.startup.configuration.application.PortCo
 import github.com.hukuta94.delivery.api.startup.configuration.courier.CourierConfiguration
 import github.com.hukuta94.delivery.api.startup.configuration.domain.DomainServiceConfiguration
 import github.com.hukuta94.delivery.api.startup.configuration.order.OrderConfiguration
-import github.com.hukuta94.delivery.api.startup.configuration.scheduler.SchedulerConfiguration
+import github.com.hukuta94.delivery.api.startup.configuration.adapter.scheduler.SchedulerConfiguration
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import

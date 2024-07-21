@@ -1,4 +1,4 @@
-package github.com.hukuta94.delivery.api.startup.configuration.scheduler
+package github.com.hukuta94.delivery.api.startup.configuration.adapter.scheduler
 
 import github.com.hukuta94.delivery.api.adapter.scheduler.courier.CourierScheduler
 import github.com.hukuta94.delivery.core.application.usecase.courier.MoveCouriersUseCase
