@@ -1,4 +1,4 @@
-package github.com.hukuta94.delivery.api.startup.configuration
+package github.com.hukuta94.delivery.api.startup.configuration.application
 
 import github.com.hukuta94.delivery.core.application.event.DomainEventPublisher
 import github.com.hukuta94.delivery.core.application.event.impl.DomainEventPublisherImpl

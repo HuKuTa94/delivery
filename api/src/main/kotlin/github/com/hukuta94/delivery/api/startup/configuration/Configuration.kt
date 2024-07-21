@@ -3,6 +3,7 @@ package github.com.hukuta94.delivery.api.startup.configuration
 import github.com.hukuta94.delivery.api.startup.configuration.adapter.kafka.KafkaConfiguration
 import github.com.hukuta94.delivery.api.startup.configuration.adapter.http.ControllerConfiguration
 import github.com.hukuta94.delivery.api.startup.configuration.adapter.orm.OrmRepositoryConfiguration
+import github.com.hukuta94.delivery.api.startup.configuration.application.DomainEventHandlerConfiguration
 import github.com.hukuta94.delivery.api.startup.configuration.application.PortConfiguration
 import github.com.hukuta94.delivery.api.startup.configuration.courier.CourierConfiguration
 import github.com.hukuta94.delivery.api.startup.configuration.domain.DomainServiceConfiguration
