@@ -6,6 +6,5 @@ import org.springframework.context.annotation.Import
 @Configuration
 @Import(
     CourierUseCaseConfiguration::class,
-    CourierControllerConfiguration::class,
 )
 open class CourierConfiguration

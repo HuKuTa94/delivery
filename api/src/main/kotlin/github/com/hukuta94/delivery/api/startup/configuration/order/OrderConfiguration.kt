@@ -6,6 +6,5 @@ import org.springframework.context.annotation.Import
 @Configuration
 @Import(
     OrderUseCaseConfiguration::class,
-    OrderControllerConfiguration::class,
 )
 open class OrderConfiguration

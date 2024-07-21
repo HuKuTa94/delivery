@@ -1,4 +1,4 @@
-package github.com.hukuta94.delivery.api.startup.configuration.courier
+package github.com.hukuta94.delivery.api.startup.configuration.adapter.http
 
 import github.com.hukuta94.delivery.api.adapter.http.courier.CourierControllerV1
 import github.com.hukuta94.delivery.core.application.usecase.courier.GetBusyCouriersQuery

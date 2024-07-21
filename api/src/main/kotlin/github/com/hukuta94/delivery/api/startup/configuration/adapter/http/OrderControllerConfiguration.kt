@@ -1,4 +1,4 @@
-package github.com.hukuta94.delivery.api.startup.configuration.order
+package github.com.hukuta94.delivery.api.startup.configuration.adapter.http
 
 import github.com.hukuta94.delivery.api.adapter.http.order.OrderControllerV1
 import github.com.hukuta94.delivery.core.application.usecase.order.CreateOrderUseCase
