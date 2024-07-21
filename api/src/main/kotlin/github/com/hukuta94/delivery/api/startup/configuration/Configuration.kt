@@ -4,6 +4,7 @@ import github.com.hukuta94.delivery.api.startup.configuration.adapter.kafka.Kafk
 import github.com.hukuta94.delivery.api.startup.configuration.adapter.http.ControllerConfiguration
 import github.com.hukuta94.delivery.api.startup.configuration.adapter.orm.OrmRepositoryConfiguration
 import github.com.hukuta94.delivery.api.startup.configuration.courier.CourierConfiguration
+import github.com.hukuta94.delivery.api.startup.configuration.domain.DomainServiceConfiguration
 import github.com.hukuta94.delivery.api.startup.configuration.order.OrderConfiguration
 import github.com.hukuta94.delivery.api.startup.configuration.scheduler.SchedulerConfiguration
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration

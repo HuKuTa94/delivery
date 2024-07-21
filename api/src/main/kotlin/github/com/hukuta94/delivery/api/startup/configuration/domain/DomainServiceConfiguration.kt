@@ -1,4 +1,4 @@
-package github.com.hukuta94.delivery.api.startup.configuration
+package github.com.hukuta94.delivery.api.startup.configuration.domain
 
 import github.com.hukuta94.delivery.core.domain.service.impl.CompleteOrderServiceImpl
 import github.com.hukuta94.delivery.core.domain.service.impl.DispatchServiceImpl
