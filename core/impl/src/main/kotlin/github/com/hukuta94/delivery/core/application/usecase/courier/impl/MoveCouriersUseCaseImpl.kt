@@ -16,11 +16,8 @@ class MoveCouriersUseCaseImpl(
     override fun execute() {
         val busyCouriers = courierRepository.getAllBusy().associateBy { it.id }
         if (busyCouriers.keys.isEmpty()) {
-            LOG.info("No busy couriers were found")
             return
         }
-
-        LOG.info("Move couriers to their orders")
 
         val assignedOrders = orderRepository.getAllAssigned()
 
@@ -37,7 +34,7 @@ class MoveCouriersUseCaseImpl(
             // Try to complete the order
             val isOrderCompleted = completeOrderService.execute(order, courier)
             if (isOrderCompleted) {
-                LOG.info("Order with id: ${order.id} was completed by courier with id ${courier.id}")
+                LOG.info("Order with id: ${order.id} was completed by courier with id: ${courier.id}")
                 ordersToUpdate.add(order)
             }
         }
@@ -51,6 +48,8 @@ class MoveCouriersUseCaseImpl(
         if (ordersToUpdate.isNotEmpty()) {
             orderRepository.update(ordersToUpdate)
         }
+
+        LOG.info("Moved couriers to their orders")
     }
 
     companion object {
