@@ -1,4 +1,4 @@
-package github.com.hukuta94.delivery.api.startup.configuration.courier
+package github.com.hukuta94.delivery.api.startup.configuration.application
 
 import github.com.hukuta94.delivery.core.application.usecase.courier.GetBusyCouriersQuery
 import github.com.hukuta94.delivery.core.application.usecase.courier.GetFreeCouriersQuery
