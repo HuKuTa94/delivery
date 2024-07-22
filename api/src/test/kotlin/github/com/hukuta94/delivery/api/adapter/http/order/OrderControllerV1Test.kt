@@ -1,8 +1,8 @@
 package github.com.hukuta94.delivery.api.adapter.http.order
 
 import github.com.hukuta94.delivery.core.application.usecase.order.CreateOrderUseCase
-import github.com.hukuta94.delivery.core.application.usecase.order.GetNotCompletedOrdersQuery
-import github.com.hukuta94.delivery.core.application.usecase.order.GetNotCompletedOrderResponse
+import github.com.hukuta94.delivery.core.application.query.order.GetNotCompletedOrdersQuery
+import github.com.hukuta94.delivery.core.application.query.order.GetNotCompletedOrderResponse
 import github.com.hukuta94.delivery.core.domain.order.newOrder
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given

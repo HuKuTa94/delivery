@@ -1,7 +1,7 @@
 package github.com.hukuta94.delivery.core.application.usecase.order.impl
 
-import github.com.hukuta94.delivery.core.application.usecase.order.GetNotCompletedOrdersQuery
-import github.com.hukuta94.delivery.core.application.usecase.order.GetNotCompletedOrderResponse
+import github.com.hukuta94.delivery.core.application.query.order.GetNotCompletedOrdersQuery
+import github.com.hukuta94.delivery.core.application.query.order.GetNotCompletedOrderResponse
 import github.com.hukuta94.delivery.core.port.OrderRepository
 
 //TODO Query use case должен получать необходимые данные в обход полного восстановления агрегата.

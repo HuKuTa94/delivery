@@ -2,7 +2,7 @@ package github.com.hukuta94.delivery.api.startup.configuration.application
 
 import github.com.hukuta94.delivery.core.application.usecase.order.AssignCourierToOrderUseCase
 import github.com.hukuta94.delivery.core.application.usecase.order.CreateOrderUseCase
-import github.com.hukuta94.delivery.core.application.usecase.order.GetNotCompletedOrdersQuery
+import github.com.hukuta94.delivery.core.application.query.order.GetNotCompletedOrdersQuery
 import github.com.hukuta94.delivery.core.application.usecase.order.impl.AssignCourierToOrderUseCaseImpl
 import github.com.hukuta94.delivery.core.application.usecase.order.impl.CreateOrderUseCaseImpl
 import github.com.hukuta94.delivery.core.application.usecase.order.impl.GetNotCompletedOrdersQueryImpl

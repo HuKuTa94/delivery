@@ -1,7 +1,7 @@
 package github.com.hukuta94.delivery.core.application.usecase.courier.impl
 
-import github.com.hukuta94.delivery.core.application.usecase.courier.GetFreeCouriersQuery
-import github.com.hukuta94.delivery.core.application.usecase.courier.GetFreeCourierResponse
+import github.com.hukuta94.delivery.core.application.query.courier.GetFreeCouriersQuery
+import github.com.hukuta94.delivery.core.application.query.courier.GetFreeCourierResponse
 import github.com.hukuta94.delivery.core.port.CourierRepository
 
 //TODO Query use case должен получать необходимые данные в обход полного восстановления агрегата.

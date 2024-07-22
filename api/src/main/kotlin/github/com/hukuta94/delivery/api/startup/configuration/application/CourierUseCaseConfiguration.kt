@@ -1,7 +1,7 @@
 package github.com.hukuta94.delivery.api.startup.configuration.application
 
-import github.com.hukuta94.delivery.core.application.usecase.courier.GetBusyCouriersQuery
-import github.com.hukuta94.delivery.core.application.usecase.courier.GetFreeCouriersQuery
+import github.com.hukuta94.delivery.core.application.query.courier.GetBusyCouriersQuery
+import github.com.hukuta94.delivery.core.application.query.courier.GetFreeCouriersQuery
 import github.com.hukuta94.delivery.core.application.usecase.courier.MoveCouriersUseCase
 import github.com.hukuta94.delivery.core.application.usecase.courier.impl.MoveCouriersUseCaseImpl
 import github.com.hukuta94.delivery.core.application.usecase.courier.impl.GetBusyCouriersQueryImpl

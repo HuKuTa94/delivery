@@ -1,4 +1,4 @@
-package github.com.hukuta94.delivery.core.application.usecase.order
+package github.com.hukuta94.delivery.core.application.query.order
 
 import java.util.*
 
