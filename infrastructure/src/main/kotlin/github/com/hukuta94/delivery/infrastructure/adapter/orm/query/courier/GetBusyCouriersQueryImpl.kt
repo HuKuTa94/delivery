@@ -3,7 +3,7 @@ package github.com.hukuta94.delivery.infrastructure.adapter.orm.query.courier
 import github.com.hukuta94.delivery.core.application.query.courier.GetBusyCouriersQuery
 import github.com.hukuta94.delivery.core.application.query.courier.response.Courier
 import github.com.hukuta94.delivery.core.application.query.courier.response.GetCouriersResponse
-import github.com.hukuta94.delivery.core.application.query.courier.response.Location
+import github.com.hukuta94.delivery.core.application.query.common.Location
 import github.com.hukuta94.delivery.core.domain.courier.CourierStatus
 import github.com.hukuta94.delivery.core.domain.courier.Transport
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.converter.LocationConverter

@@ -3,7 +3,7 @@ package github.com.hukuta94.delivery.api.adapter.http.courier
 import github.com.hukuta94.delivery.core.application.query.courier.GetBusyCouriersQuery
 import github.com.hukuta94.delivery.core.application.query.courier.response.Courier
 import github.com.hukuta94.delivery.core.application.query.courier.response.GetCouriersResponse
-import github.com.hukuta94.delivery.core.application.query.courier.response.Location
+import github.com.hukuta94.delivery.core.application.query.common.Location
 import github.com.hukuta94.delivery.core.domain.courier.newCourier
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
