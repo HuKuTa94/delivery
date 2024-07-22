@@ -1,16 +1,16 @@
 package github.com.hukuta94.delivery.api.startup.configuration.application
 
 import github.com.hukuta94.delivery.core.application.query.courier.GetBusyCouriersQuery
-import github.com.hukuta94.delivery.core.application.query.courier.GetFreeCouriersQuery
 import github.com.hukuta94.delivery.core.application.usecase.courier.MoveCouriersUseCase
 import github.com.hukuta94.delivery.core.application.usecase.courier.impl.MoveCouriersUseCaseImpl
-import github.com.hukuta94.delivery.core.application.usecase.courier.impl.GetBusyCouriersQueryImpl
-import github.com.hukuta94.delivery.core.application.usecase.courier.impl.GetFreeCouriersQueryImpl
 import github.com.hukuta94.delivery.core.domain.service.CompleteOrderService
 import github.com.hukuta94.delivery.core.port.CourierRepository
 import github.com.hukuta94.delivery.core.port.OrderRepository
+import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.converter.LocationConverter
+import github.com.hukuta94.delivery.infrastructure.adapter.orm.query.courier.GetBusyCouriersQueryImpl
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 
 @Configuration
 open class CourierUseCaseConfiguration {
@@ -27,16 +27,14 @@ open class CourierUseCaseConfiguration {
     )
 
     @Bean
-    open fun getFreeCouriersQuery(
-        courierRepository: CourierRepository
-    ): GetFreeCouriersQuery = GetFreeCouriersQueryImpl(
-        courierRepository = courierRepository
-    )
+    open fun locationConverter() = LocationConverter()
 
     @Bean
     open fun getBusyCouriersQuery(
-        courierRepository: CourierRepository
+        jdbcTemplate: NamedParameterJdbcTemplate,
+        locationConverter: LocationConverter,
     ): GetBusyCouriersQuery = GetBusyCouriersQueryImpl(
-        courierRepository = courierRepository
+        jdbcTemplate = jdbcTemplate,
+        locationConverter = locationConverter,
     )
 }
