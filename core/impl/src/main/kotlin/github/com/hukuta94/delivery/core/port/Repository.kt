@@ -4,6 +4,7 @@ import github.com.hukuta94.delivery.core.application.event.DomainEventPublisher
 import github.com.hukuta94.delivery.core.domain.Aggregate
 import java.util.*
 
+//TODO Переименовать дженерик в DOMAIN_AGGREGATE и параметры в domainAggregate
 abstract class Repository<DOMAIN_ENTITY : Aggregate<*>> (
     private val domainEventPublisher: DomainEventPublisher,
 ) {
