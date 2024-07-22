@@ -1,24 +1,29 @@
 package github.com.hukuta94.delivery.api.startup.configuration
 
-import github.com.hukuta94.delivery.api.startup.configuration.adapter.KafkaConfiguration
-import github.com.hukuta94.delivery.api.startup.configuration.courier.CourierConfiguration
-import github.com.hukuta94.delivery.api.startup.configuration.order.OrderConfiguration
-import github.com.hukuta94.delivery.api.startup.configuration.scheduler.SchedulerConfiguration
+import github.com.hukuta94.delivery.api.startup.configuration.adapter.http.ControllerConfiguration
+import github.com.hukuta94.delivery.api.startup.configuration.adapter.kafka.KafkaConfiguration
+import github.com.hukuta94.delivery.api.startup.configuration.adapter.orm.OrmRepositoryConfiguration
+import github.com.hukuta94.delivery.api.startup.configuration.adapter.scheduler.SchedulerConfiguration
+import github.com.hukuta94.delivery.api.startup.configuration.application.CourierUseCaseConfiguration
+import github.com.hukuta94.delivery.api.startup.configuration.application.DomainEventHandlerConfiguration
+import github.com.hukuta94.delivery.api.startup.configuration.application.OrderUseCaseConfiguration
+import github.com.hukuta94.delivery.api.startup.configuration.application.PortConfiguration
+import github.com.hukuta94.delivery.api.startup.configuration.domain.DomainServiceConfiguration
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
-import org.springframework.web.servlet.config.annotation.EnableWebMvc
 
 @Configuration
-@EnableWebMvc
 @EnableAutoConfiguration
 @Import(
-    OrderConfiguration::class,
-    CourierConfiguration::class,
+    OrderUseCaseConfiguration::class,
+    CourierUseCaseConfiguration::class,
     DomainServiceConfiguration::class,
     SchedulerConfiguration::class,
     PortConfiguration::class,
     DomainEventHandlerConfiguration::class,
     KafkaConfiguration::class,
+    OrmRepositoryConfiguration::class,
+    ControllerConfiguration::class,
 )
 open class Configuration

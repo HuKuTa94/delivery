@@ -12,10 +12,12 @@ class AssignCourierToOrderUseCaseImpl(
     private val dispatchService: DispatchService,
 ) : AssignCourierToOrderUseCase {
     override fun execute() {
-        LOG.info("Try to assign orders to free couriers")
-
         val orders = orderRepository.getAllCreated()
         val couriers = courierRepository.getAllFree()
+
+        if (orders.isEmpty() || couriers.isEmpty()) {
+            return
+        }
 
         orders.forEach { order ->
             dispatchService.assignOrderToMostSuitableCourier(order, couriers)
@@ -23,6 +25,8 @@ class AssignCourierToOrderUseCaseImpl(
 
         orderRepository.update(orders)
         courierRepository.update(couriers)
+
+        LOG.info("Orders were assigned to free couriers")
     }
 
     companion object {
