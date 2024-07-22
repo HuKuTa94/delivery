@@ -1,14 +1,7 @@
 package github.com.hukuta94.delivery.core.application.query.courier
 
-import java.util.*
+import github.com.hukuta94.delivery.core.application.query.courier.response.GetCouriersResponse
 
 interface GetBusyCouriersQuery {
-    fun execute(): List<GetBusyCourierResponse>
+    fun execute(): GetCouriersResponse
 }
-
-data class GetBusyCourierResponse(
-    val id: UUID,
-    val name: String,
-    val locationAbscissa: Int,
-    val locationOrdinate: Int,
-)
