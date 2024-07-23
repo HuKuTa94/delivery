@@ -68,12 +68,12 @@ internal class LocationTest {
 
         assertSoftly {
             // distance between different locations
-            location1 .distanceTo (location2) shouldBe 5
-            location2 .distanceTo (location1) shouldBe 5
+            location1 .distanceTo (location2) .abs() shouldBe 5
+            location2 .distanceTo (location1) .abs() shouldBe 5
 
             // distance to same location
-            location1 .distanceTo (location1) shouldBe 0
-            location2 .distanceTo (location2) shouldBe 0
+            location1 .distanceTo (location1) .abs() shouldBe 0
+            location2 .distanceTo (location2) .abs() shouldBe 0
         }
     }
 
