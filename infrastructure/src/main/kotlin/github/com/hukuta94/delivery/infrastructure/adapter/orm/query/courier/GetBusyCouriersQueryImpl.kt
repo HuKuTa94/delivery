@@ -8,6 +8,7 @@ import github.com.hukuta94.delivery.core.domain.courier.CourierStatus
 import github.com.hukuta94.delivery.core.domain.courier.Transport
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.converter.LocationConverter
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.entity.CourierJpaEntity
+import github.com.hukuta94.delivery.infrastructure.adapter.orm.query.AbstractQuery
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.sql.ResultSet
 import java.util.*
@@ -15,16 +16,16 @@ import java.util.*
 class GetBusyCouriersQueryImpl(
     private val jdbcTemplate: NamedParameterJdbcTemplate,
     private val locationConverter: LocationConverter,
-) : GetBusyCouriersQuery {
+) : AbstractQuery<Courier>(), GetBusyCouriersQuery {
 
     override fun execute(): GetCouriersResponse {
-        val couriers = jdbcTemplate.query(SQL, PARAMETERS) { rs, _ -> mapRowToCourier(rs) }
+        val couriers = jdbcTemplate.query(SQL, PARAMETERS) { rs, _ -> mapRowToResponseDto(rs) }
         return GetCouriersResponse(
             couriers = couriers
         )
     }
 
-    private fun mapRowToCourier(rs: ResultSet): Courier {
+    override fun mapRowToResponseDto(rs: ResultSet): Courier {
         val location = locationConverter.convertToEntityAttribute(
             rs.getString(CourierJpaEntity::location.name)
         )
