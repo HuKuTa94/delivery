@@ -104,7 +104,7 @@ internal class CourierTest {
             val endLocation = maximalLocation()
 
             return Transport.values().map { transport ->
-                val expectedTime = startLocation.distanceTo(endLocation) / transport.speed.toDouble()
+                val expectedTime = startLocation.distanceTo(endLocation).abs() / transport.speed.toDouble()
 
                 Arguments.of(
                     startLocation,
@@ -117,27 +117,14 @@ internal class CourierTest {
 
         @JvmStatic
         fun courierMovesToOrderLocationsOnEachTransport(): Stream<Arguments> {
-            val orderLocations = orderLocationsFromCourier(distanceToOrder = 4)
+            val maxTransportSpeed = Transport.values().maxOf { it.speed }
+            val orderLocations = allPossibleLocationsWithShiftsFromCourier(
+                shift = maxTransportSpeed, // shift by max possible value of transport speed
+            )
 
             return Transport.values().flatMap { transport ->
-                val courierStep = transport.speed
-                val expectedCourierLocationsAfterMovement = listOf(
-                    newLocation(
-                        abscissa = COURIER_START_LOCATION.abscissa,
-                        ordinate = COURIER_START_LOCATION.ordinate - courierStep
-                    ),
-                    newLocation(
-                        abscissa = COURIER_START_LOCATION.abscissa + courierStep,
-                        ordinate = COURIER_START_LOCATION.ordinate
-                    ),
-                    newLocation(
-                        abscissa = COURIER_START_LOCATION.abscissa,
-                        ordinate = COURIER_START_LOCATION.abscissa + courierStep
-                    ),
-                    newLocation(
-                        abscissa = COURIER_START_LOCATION.abscissa - courierStep,
-                        ordinate = COURIER_START_LOCATION.ordinate
-                    ),
+                val expectedCourierLocationsAfterMovement = allPossibleLocationsWithShiftsFromCourier(
+                    shift = transport.speed,
                 )
                 orderAndExpectedCourierLocationsForTransport(
                     transport = transport,
@@ -149,7 +136,7 @@ internal class CourierTest {
 
         @JvmStatic
         fun courierReachesOrderLocationsOnEachTransport(): Stream<Arguments> {
-            val orderLocations = orderLocationsFromCourier(distanceToOrder = 1)
+            val orderLocations = allPossibleLocationsWithShiftsFromCourier(shift = 1)
 
             return Transport.values().flatMap { transport ->
                 orderAndExpectedCourierLocationsForTransport(
@@ -160,25 +147,21 @@ internal class CourierTest {
             }.stream()
         }
 
-        private fun orderLocationsFromCourier(distanceToOrder: Int): List<Location> {
-            return listOf(
-                newLocation(
-                    abscissa = COURIER_START_LOCATION.abscissa,
-                    ordinate = COURIER_START_LOCATION.ordinate - distanceToOrder
-                ),
-                newLocation(
-                    abscissa = COURIER_START_LOCATION.abscissa + distanceToOrder,
-                    ordinate = COURIER_START_LOCATION.ordinate
-                ),
-                newLocation(
-                    abscissa = COURIER_START_LOCATION.abscissa,
-                    ordinate = COURIER_START_LOCATION.ordinate + distanceToOrder
-                ),
-                newLocation(
-                    abscissa = COURIER_START_LOCATION.abscissa - distanceToOrder,
-                    ordinate = COURIER_START_LOCATION.ordinate
-                ),
+        private fun allPossibleLocationsWithShiftsFromCourier(shift: Int): List<Location> {
+            val shifts = listOf(
+                0, // same location
+                shift,
+                -shift
             )
+
+            return shifts.flatMap { xShift ->
+                shifts.map { yShift ->
+                    newLocation(
+                        abscissa = COURIER_START_LOCATION.abscissa + xShift,
+                        ordinate = COURIER_START_LOCATION.ordinate + yShift
+                    )
+                }
+            }
         }
 
         private fun orderAndExpectedCourierLocationsForTransport(
