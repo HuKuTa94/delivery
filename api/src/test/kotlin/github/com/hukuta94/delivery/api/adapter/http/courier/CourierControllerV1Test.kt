@@ -64,14 +64,14 @@ internal class CourierControllerV1Test {
                                 x = courier.location.abscissa,
                                 y = courier.location.ordinate,
                             ),
-                            transport = courier.transport,
+                            transportId = courier.transport.id,
                         )
                     )
                 )
             )
 
         //TODO Вынести ожидаемый результат в файл json
-        val expected = "{\"couriers\":[{\"id\":\"${courier.id}\",\"name\":\"${courier.name.value}\",\"location\":{\"x\":${courier.location.abscissa},\"y\":${courier.location.ordinate}},\"transport\":\"${courier.transport}\"}]}"
+        val expected = "{\"couriers\":[{\"id\":\"${courier.id}\",\"name\":\"${courier.name.value}\",\"location\":{\"x\":${courier.location.abscissa},\"y\":${courier.location.ordinate}},\"transportId\":${courier.transport.id}}]}"
 
         mockMvc.get("/api/v1/couriers/")
             .andExpect {

@@ -20,7 +20,7 @@ class OrderJpaEntity : JpaEntity<Order>() {
     @Id
     var id: UUID? = null
 
-    @Column(name = "status")
+    @Column(name = STATUS_ID)
     @Convert(converter = OrderStatusConverter::class)
     var status: OrderStatus? = null
 
@@ -28,11 +28,13 @@ class OrderJpaEntity : JpaEntity<Order>() {
     @Convert(converter = LocationConverter::class)
     var location: Location? = null
 
-    @Column(name = "courier_id")
+    @Column(name = COURIER_ID)
     var courierId: UUID? = null
 
     companion object {
         const val TABLE_NAME = "dlv_order"
+        const val STATUS_ID = "status_id"
+        const val COURIER_ID = "courier_id"
 
         fun fromDomain(domain: Order) = OrderJpaEntity().apply {
             id = domain.id

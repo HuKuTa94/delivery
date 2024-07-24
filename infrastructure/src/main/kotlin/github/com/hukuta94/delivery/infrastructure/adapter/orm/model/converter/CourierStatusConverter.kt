@@ -5,13 +5,13 @@ import javax.persistence.AttributeConverter
 import javax.persistence.Converter
 
 @Converter
-class CourierStatusConverter : AttributeConverter<CourierStatus, String> {
+class CourierStatusConverter : AttributeConverter<CourierStatus, Int> {
 
-    override fun convertToDatabaseColumn(attribute: CourierStatus): String {
-        return attribute.name
+    override fun convertToDatabaseColumn(courierStatus: CourierStatus): Int {
+        return courierStatus.id
     }
 
-    override fun convertToEntityAttribute(dbData: String): CourierStatus {
-        return CourierStatus.valueOf(dbData)
+    override fun convertToEntityAttribute(courierStatusId: Int): CourierStatus {
+        return CourierStatus.from(courierStatusId)
     }
 }

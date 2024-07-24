@@ -38,14 +38,14 @@ class GetNotCompletedOrdersQueryImpl(
     }
 
     companion object {
-        private val STATUS = OrderJpaEntity::status.name
         private val PARAMETERS = mapOf(
-            "status1" to OrderStatus.CREATED.name,
-            "status2" to OrderStatus.ASSIGNED.name,
+            "status1" to OrderStatus.CREATED.id,
+            "status2" to OrderStatus.ASSIGNED.id,
         )
         private val SQL = """
-            SELECT * FROM ${OrderJpaEntity.TABLE_NAME}
-            WHERE $STATUS IN (:status1, :status2)
+            SELECT * 
+            FROM ${OrderJpaEntity.TABLE_NAME}
+            WHERE ${OrderJpaEntity.STATUS_ID} IN (:status1, :status2)
         """.trimIndent()
     }
 }
