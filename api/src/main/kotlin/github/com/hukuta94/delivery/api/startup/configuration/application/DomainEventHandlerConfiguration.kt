@@ -1,6 +1,7 @@
 package github.com.hukuta94.delivery.api.startup.configuration.application
 
 import github.com.hukuta94.delivery.core.application.event.DomainEventPublisher
+import github.com.hukuta94.delivery.core.application.event.DomainEventSerializer
 import github.com.hukuta94.delivery.core.application.event.impl.DomainEventPublisherImpl
 import github.com.hukuta94.delivery.core.application.event.impl.OrderAssignedDomainEventHandler
 import github.com.hukuta94.delivery.core.application.event.impl.OrderCompletedDomainEventHandler
@@ -20,4 +21,7 @@ open class DomainEventHandlerConfiguration {
           registerListener(OrderCompletedDomainEventHandler(busProducer))
       }
     }
+
+    @Bean
+    open fun domainEventSerializer() = DomainEventSerializer()
 }
