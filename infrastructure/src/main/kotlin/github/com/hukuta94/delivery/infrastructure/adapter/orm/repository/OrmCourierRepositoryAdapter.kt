@@ -7,7 +7,7 @@ import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.entity.Cour
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
 
-class CourierRepositoryAdapter(
+class OrmCourierRepositoryAdapter(
     private val courierJpaRepository: CourierJpaRepository,
 ) : CourierRepository {
 

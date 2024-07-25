@@ -7,7 +7,7 @@ import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.entity.Orde
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
 
-class OrderRepositoryAdapter(
+class OrmOrderRepositoryAdapter(
     private val orderJpaRepository: OrderJpaRepository,
 ) : OrderRepository {
 
