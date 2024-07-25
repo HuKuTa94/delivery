@@ -8,7 +8,7 @@ import github.com.hukuta94.delivery.core.domain.sharedkernel.Location
 import github.com.hukuta94.delivery.core.port.CourierRepository
 import java.util.*
 
-class CourierInMemoryRepository : CourierRepository() {
+class CourierInMemoryRepository : CourierRepository {
 
     private val storage = mutableMapOf<UUID, Courier>().also {
         val courierId = UUID.randomUUID()

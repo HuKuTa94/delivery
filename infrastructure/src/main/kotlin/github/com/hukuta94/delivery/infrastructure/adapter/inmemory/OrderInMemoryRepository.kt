@@ -5,7 +5,7 @@ import github.com.hukuta94.delivery.core.domain.order.OrderStatus
 import github.com.hukuta94.delivery.core.port.OrderRepository
 import java.util.*
 
-class OrderInMemoryRepository : OrderRepository() {
+class OrderInMemoryRepository : OrderRepository {
 
     private val storage = mutableMapOf<UUID, Order>()
 

@@ -9,7 +9,7 @@ import kotlin.jvm.optionals.getOrNull
 
 class CourierRepositoryAdapter(
     private val courierJpaRepository: CourierJpaRepository,
-) : CourierRepository() {
+) : CourierRepository {
 
     override fun add(aggregate: Courier) {
         val jpaEntity = CourierJpaEntity.fromDomain(aggregate)

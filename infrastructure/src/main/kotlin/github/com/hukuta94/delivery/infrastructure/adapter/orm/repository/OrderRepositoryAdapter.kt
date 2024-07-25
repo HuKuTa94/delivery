@@ -9,7 +9,7 @@ import kotlin.jvm.optionals.getOrNull
 
 class OrderRepositoryAdapter(
     private val orderJpaRepository: OrderJpaRepository,
-) : OrderRepository() {
+) : OrderRepository {
 
     override fun add(aggregate: Order) {
         val jpaEntity = OrderJpaEntity.fromDomain(aggregate)
