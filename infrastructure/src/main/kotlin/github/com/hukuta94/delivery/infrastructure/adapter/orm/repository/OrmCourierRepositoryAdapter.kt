@@ -4,6 +4,7 @@ import github.com.hukuta94.delivery.core.domain.courier.Courier
 import github.com.hukuta94.delivery.core.domain.courier.CourierStatus
 import github.com.hukuta94.delivery.core.port.CourierRepository
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.entity.CourierJpaEntity
+import github.com.hukuta94.delivery.infrastructure.adapter.orm.repository.jpa.CourierJpaRepository
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
 

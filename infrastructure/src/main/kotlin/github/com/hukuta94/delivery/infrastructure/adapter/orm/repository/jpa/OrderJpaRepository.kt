@@ -1,4 +1,4 @@
-package github.com.hukuta94.delivery.infrastructure.adapter.orm.repository
+package github.com.hukuta94.delivery.infrastructure.adapter.orm.repository.jpa
 
 import github.com.hukuta94.delivery.core.domain.order.OrderStatus
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.entity.OrderJpaEntity
