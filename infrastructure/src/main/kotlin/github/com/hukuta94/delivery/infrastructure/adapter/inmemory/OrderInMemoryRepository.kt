@@ -12,19 +12,19 @@ class OrderInMemoryRepository(
 
     private val storage = mutableMapOf<UUID, Order>()
 
-    override fun add(domainEntity: Order) {
-        publishDomainEvents(domainEntity)
-        storage[domainEntity.id] = domainEntity
+    override fun add(aggregate: Order) {
+        publishDomainEvents(aggregate)
+        storage[aggregate.id] = aggregate
     }
 
-    override fun update(domainEntity: Order) {
-        publishDomainEvents(domainEntity)
-        storage[domainEntity.id] = domainEntity
+    override fun update(aggregate: Order) {
+        publishDomainEvents(aggregate)
+        storage[aggregate.id] = aggregate
     }
 
-    override fun update(domainEntities: Collection<Order>) {
-        domainEntities.forEach { domainEntity ->
-            update(domainEntity)
+    override fun update(aggregates: Collection<Order>) {
+        aggregates.forEach { aggregate ->
+            update(aggregate)
         }
     }
 

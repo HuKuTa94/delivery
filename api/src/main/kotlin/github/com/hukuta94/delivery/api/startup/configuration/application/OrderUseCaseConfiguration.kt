@@ -8,6 +8,7 @@ import github.com.hukuta94.delivery.core.domain.service.DispatchService
 import github.com.hukuta94.delivery.core.port.CourierRepository
 import github.com.hukuta94.delivery.core.port.GetLocationPort
 import github.com.hukuta94.delivery.core.port.OrderRepository
+import github.com.hukuta94.delivery.core.port.UnitOfWork
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -28,9 +29,11 @@ open class OrderUseCaseConfiguration {
         orderRepository: OrderRepository,
         courierRepository: CourierRepository,
         dispatchService: DispatchService,
+        unitOfWork: UnitOfWork,
     ): AssignCourierToOrderUseCase = AssignCourierToOrderUseCaseImpl(
         orderRepository = orderRepository,
         courierRepository = courierRepository,
         dispatchService = dispatchService,
+        unitOfWork = unitOfWork,
     )
 }

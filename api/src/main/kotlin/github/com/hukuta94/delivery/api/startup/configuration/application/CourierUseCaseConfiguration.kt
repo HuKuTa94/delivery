@@ -5,6 +5,7 @@ import github.com.hukuta94.delivery.core.application.usecase.courier.impl.MoveCo
 import github.com.hukuta94.delivery.core.domain.service.CompleteOrderService
 import github.com.hukuta94.delivery.core.port.CourierRepository
 import github.com.hukuta94.delivery.core.port.OrderRepository
+import github.com.hukuta94.delivery.core.port.UnitOfWork
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -16,9 +17,11 @@ open class CourierUseCaseConfiguration {
         orderRepository: OrderRepository,
         courierRepository: CourierRepository,
         completeOrderService: CompleteOrderService,
+        unitOfWork: UnitOfWork,
     ): MoveCouriersUseCase = MoveCouriersUseCaseImpl(
         orderRepository = orderRepository,
         courierRepository = courierRepository,
         completeOrderService = completeOrderService,
+        unitOfWork = unitOfWork,
     )
 }

@@ -13,21 +13,24 @@ class CourierRepositoryAdapter(
     private val courierJpaRepository: CourierJpaRepository,
 ) : CourierRepository(domainEventPublisher) {
 
-    override fun add(domainEntity: Courier) {
-        val jpaEntity = CourierJpaEntity.fromDomain(domainEntity)
-        courierJpaRepository.saveAndFlush(jpaEntity)
+    override fun add(aggregate: Courier) {
+        publishDomainEvents(aggregate)
+        val jpaEntity = CourierJpaEntity.fromDomain(aggregate)
+        courierJpaRepository.save(jpaEntity)
     }
 
-    override fun update(domainEntity: Courier) {
-        val jpaEntity = CourierJpaEntity.fromDomain(domainEntity)
-        courierJpaRepository.saveAndFlush(jpaEntity)
+    override fun update(aggregate: Courier) {
+        publishDomainEvents(aggregate)
+        val jpaEntity = CourierJpaEntity.fromDomain(aggregate)
+        courierJpaRepository.save(jpaEntity)
     }
 
-    override fun update(domainEntities: Collection<Courier>) {
-        val jpaEntities = domainEntities.map {
+    override fun update(aggregates: Collection<Courier>) {
+        publishDomainEvents(aggregates)
+        val jpaEntities = aggregates.map {
             CourierJpaEntity.fromDomain(it)
         }
-        courierJpaRepository.saveAllAndFlush(jpaEntities)
+        courierJpaRepository.saveAll(jpaEntities)
     }
 
     override fun getById(id: UUID): Courier {

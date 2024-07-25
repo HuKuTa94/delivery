@@ -5,51 +5,58 @@ import github.com.hukuta94.delivery.core.domain.order.Order
 import github.com.hukuta94.delivery.core.domain.service.CompleteOrderService
 import github.com.hukuta94.delivery.core.port.CourierRepository
 import github.com.hukuta94.delivery.core.port.OrderRepository
+import github.com.hukuta94.delivery.core.port.UnitOfWork
 import org.slf4j.LoggerFactory
 
 class MoveCouriersUseCaseImpl(
     private val orderRepository: OrderRepository,
     private val courierRepository: CourierRepository,
     private val completeOrderService: CompleteOrderService,
+    private val unitOfWork: UnitOfWork,
 ) : MoveCouriersUseCase {
 
     override fun execute() {
-        val busyCouriers = courierRepository.getAllBusy().associateBy { it.id }
-        if (busyCouriers.keys.isEmpty()) {
-            return
-        }
+        unitOfWork.executeInTransaction {
+            val busyCouriers = courierRepository.getAllBusy().associateBy { it.id }
+            if (busyCouriers.keys.isEmpty()) {
+                return@executeInTransaction
+            }
 
-        val assignedOrders = orderRepository.getAllAssigned()
+            val courierByOrderMap = orderRepository.getAllAssigned().associateBy {
+                requireNotNull(
+                    busyCouriers[it.courierId]
+                )
+            }
+            if (courierByOrderMap.isEmpty()) {
+                return@executeInTransaction
+            }
 
-        val courierByOrderMap = assignedOrders.associateBy {
-            requireNotNull(busyCouriers[it.courierId])
-        }
+            LOG.info("Move couriers to their orders")
 
-        val ordersToUpdate = mutableListOf<Order>()
+            val ordersToUpdate = mutableListOf<Order>()
 
-        courierByOrderMap.forEach { (courier, order) ->
-            // Move couriers to their orders
-            courier.moveTo(order.location)
+            courierByOrderMap.forEach { (courier, order) ->
+                // Move couriers to their orders
+                courier.moveTo(order.location)
 
-            // Try to complete the order
-            val isOrderCompleted = completeOrderService.execute(order, courier)
-            if (isOrderCompleted) {
-                LOG.info("Order with id: ${order.id} was completed by courier with id: ${courier.id}")
-                ordersToUpdate.add(order)
+                // Try to complete the order
+                val isOrderCompleted = completeOrderService.execute(order, courier)
+                if (isOrderCompleted) {
+                    LOG.info("Order with id: ${order.id} was completed by courier with id: ${courier.id}")
+                    ordersToUpdate.add(order)
+                }
+            }
+
+            // Always update couriers after movement
+            courierRepository.update(
+                courierByOrderMap.keys.toList()
+            )
+
+            // Update completed orders
+            if (ordersToUpdate.isNotEmpty()) {
+                orderRepository.update(ordersToUpdate)
             }
         }
-
-        // Always update couriers after movement
-        courierRepository.update(
-            courierByOrderMap.keys.toList()
-        )
-
-        // Update completed orders
-        if (ordersToUpdate.isNotEmpty()) {
-            orderRepository.update(ordersToUpdate)
-        }
-
-        LOG.info("Moved couriers to their orders")
     }
 
     companion object {
