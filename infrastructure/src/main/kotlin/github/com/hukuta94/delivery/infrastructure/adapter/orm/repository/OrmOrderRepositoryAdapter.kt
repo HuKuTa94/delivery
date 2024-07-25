@@ -10,16 +10,19 @@ import kotlin.jvm.optionals.getOrNull
 
 class OrmOrderRepositoryAdapter(
     private val orderJpaRepository: OrderJpaRepository,
+    private val outboxRepository: OrmOutboxRepository,
 ) : OrderRepository {
 
     override fun add(aggregate: Order) {
         val jpaEntity = OrderJpaEntity.fromDomain(aggregate)
         orderJpaRepository.save(jpaEntity)
+        outboxRepository.saveDomainEvents(aggregate.popDomainEvents())
     }
 
     override fun update(aggregate: Order) {
         val jpaEntity = OrderJpaEntity.fromDomain(aggregate)
         orderJpaRepository.save(jpaEntity)
+        outboxRepository.saveDomainEvents(aggregate.popDomainEvents())
     }
 
     override fun update(aggregates: Collection<Order>) {
@@ -27,6 +30,9 @@ class OrmOrderRepositoryAdapter(
             OrderJpaEntity.fromDomain(it)
         }
         orderJpaRepository.saveAll(jpaEntities)
+
+        val domainEvents = aggregates.flatMap { it.popDomainEvents() }
+        outboxRepository.saveDomainEvents(domainEvents)
     }
 
     override fun getById(id: UUID): Order {

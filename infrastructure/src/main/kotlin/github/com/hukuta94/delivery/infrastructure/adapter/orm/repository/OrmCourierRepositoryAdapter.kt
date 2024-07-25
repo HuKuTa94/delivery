@@ -10,16 +10,19 @@ import kotlin.jvm.optionals.getOrNull
 
 class OrmCourierRepositoryAdapter(
     private val courierJpaRepository: CourierJpaRepository,
+    private val outboxRepository: OrmOutboxRepository,
 ) : CourierRepository {
 
     override fun add(aggregate: Courier) {
         val jpaEntity = CourierJpaEntity.fromDomain(aggregate)
         courierJpaRepository.save(jpaEntity)
+        outboxRepository.saveDomainEvents(aggregate.popDomainEvents())
     }
 
     override fun update(aggregate: Courier) {
         val jpaEntity = CourierJpaEntity.fromDomain(aggregate)
         courierJpaRepository.save(jpaEntity)
+        outboxRepository.saveDomainEvents(aggregate.popDomainEvents())
     }
 
     override fun update(aggregates: Collection<Courier>) {
@@ -27,6 +30,9 @@ class OrmCourierRepositoryAdapter(
             CourierJpaEntity.fromDomain(it)
         }
         courierJpaRepository.saveAll(jpaEntities)
+
+        val domainEvents = aggregates.flatMap { it.popDomainEvents() }
+        outboxRepository.saveDomainEvents(domainEvents)
     }
 
     override fun getById(id: UUID): Courier {
