@@ -1,6 +1,5 @@
 package github.com.hukuta94.delivery.infrastructure.adapter.orm.repository
 
-import github.com.hukuta94.delivery.core.application.event.DomainEventPublisher
 import github.com.hukuta94.delivery.core.domain.order.Order
 import github.com.hukuta94.delivery.core.domain.order.OrderStatus
 import github.com.hukuta94.delivery.core.port.OrderRepository
@@ -9,24 +8,20 @@ import java.util.*
 import kotlin.jvm.optionals.getOrNull
 
 class OrderRepositoryAdapter(
-    domainEventPublisher: DomainEventPublisher,
     private val orderJpaRepository: OrderJpaRepository,
-) : OrderRepository(domainEventPublisher) {
+) : OrderRepository() {
 
     override fun add(aggregate: Order) {
-        publishDomainEvents(aggregate)
         val jpaEntity = OrderJpaEntity.fromDomain(aggregate)
         orderJpaRepository.save(jpaEntity)
     }
 
     override fun update(aggregate: Order) {
-        publishDomainEvents(aggregate)
         val jpaEntity = OrderJpaEntity.fromDomain(aggregate)
         orderJpaRepository.save(jpaEntity)
     }
 
     override fun update(aggregates: Collection<Order>) {
-        publishDomainEvents(aggregates)
         val jpaEntities = aggregates.map {
             OrderJpaEntity.fromDomain(it)
         }

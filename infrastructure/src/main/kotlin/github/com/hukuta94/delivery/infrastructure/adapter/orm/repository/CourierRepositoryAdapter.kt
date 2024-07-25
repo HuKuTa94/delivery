@@ -1,6 +1,5 @@
 package github.com.hukuta94.delivery.infrastructure.adapter.orm.repository
 
-import github.com.hukuta94.delivery.core.application.event.DomainEventPublisher
 import github.com.hukuta94.delivery.core.domain.courier.Courier
 import github.com.hukuta94.delivery.core.domain.courier.CourierStatus
 import github.com.hukuta94.delivery.core.port.CourierRepository
@@ -9,24 +8,20 @@ import java.util.*
 import kotlin.jvm.optionals.getOrNull
 
 class CourierRepositoryAdapter(
-    domainEventPublisher: DomainEventPublisher,
     private val courierJpaRepository: CourierJpaRepository,
-) : CourierRepository(domainEventPublisher) {
+) : CourierRepository() {
 
     override fun add(aggregate: Courier) {
-        publishDomainEvents(aggregate)
         val jpaEntity = CourierJpaEntity.fromDomain(aggregate)
         courierJpaRepository.save(jpaEntity)
     }
 
     override fun update(aggregate: Courier) {
-        publishDomainEvents(aggregate)
         val jpaEntity = CourierJpaEntity.fromDomain(aggregate)
         courierJpaRepository.save(jpaEntity)
     }
 
     override fun update(aggregates: Collection<Courier>) {
-        publishDomainEvents(aggregates)
         val jpaEntities = aggregates.map {
             CourierJpaEntity.fromDomain(it)
         }

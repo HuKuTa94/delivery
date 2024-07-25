@@ -1,6 +1,5 @@
 package github.com.hukuta94.delivery.infrastructure.adapter.inmemory
 
-import github.com.hukuta94.delivery.core.application.event.DomainEventPublisher
 import github.com.hukuta94.delivery.core.domain.courier.CourierStatus
 import github.com.hukuta94.delivery.core.domain.courier.newCourier
 import io.kotlintest.matchers.types.shouldBeSameInstanceAs
@@ -8,19 +7,15 @@ import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito.mock
 
 internal class CourierInMemoryRepositoryTest {
 
     // System Under Testing (sut)
     private lateinit var sut: CourierInMemoryRepository
 
-    // Mocks
-    private val domainEventPublisher: DomainEventPublisher = mock()
-
     @BeforeEach
     fun init() {
-        sut = CourierInMemoryRepository(domainEventPublisher)
+        sut = CourierInMemoryRepository()
     }
 
     @Test

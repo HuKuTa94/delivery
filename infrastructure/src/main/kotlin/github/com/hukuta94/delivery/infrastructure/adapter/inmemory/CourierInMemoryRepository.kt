@@ -1,17 +1,14 @@
 package github.com.hukuta94.delivery.infrastructure.adapter.inmemory
 
-import github.com.hukuta94.delivery.core.application.event.DomainEventPublisher
 import github.com.hukuta94.delivery.core.domain.courier.Courier
 import github.com.hukuta94.delivery.core.domain.courier.CourierName
 import github.com.hukuta94.delivery.core.domain.courier.CourierStatus
 import github.com.hukuta94.delivery.core.domain.courier.Transport
 import github.com.hukuta94.delivery.core.domain.sharedkernel.Location
 import github.com.hukuta94.delivery.core.port.CourierRepository
-import java.util.UUID
+import java.util.*
 
-class CourierInMemoryRepository(
-    domainEventPublisher: DomainEventPublisher,
-) : CourierRepository(domainEventPublisher) {
+class CourierInMemoryRepository : CourierRepository() {
 
     private val storage = mutableMapOf<UUID, Courier>().also {
         val courierId = UUID.randomUUID()
@@ -23,12 +20,10 @@ class CourierInMemoryRepository(
     }
 
     override fun add(aggregate: Courier) {
-        publishDomainEvents(aggregate)
         storage[aggregate.id] = aggregate
     }
 
     override fun update(aggregate: Courier) {
-        publishDomainEvents(aggregate)
         storage[aggregate.id] = aggregate
     }
 
