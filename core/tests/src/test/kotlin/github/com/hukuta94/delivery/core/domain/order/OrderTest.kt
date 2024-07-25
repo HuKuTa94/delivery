@@ -75,7 +75,7 @@ internal class OrderTest {
         val order = assignedOrder()
 
         // when
-        val actualDomainEvent = order.domainEvents().last() as OrderAssignedDomainEvent
+        val actualDomainEvent = order.popDomainEvents().last() as OrderAssignedDomainEvent
 
         // then
         assertSoftly {
@@ -91,7 +91,7 @@ internal class OrderTest {
         val order = completedOrder()
 
         // when
-        val actualDomainEvent = order.domainEvents().last() as OrderCompletedDomainEvent
+        val actualDomainEvent = order.popDomainEvents().last() as OrderCompletedDomainEvent
 
         // then
         assertSoftly {

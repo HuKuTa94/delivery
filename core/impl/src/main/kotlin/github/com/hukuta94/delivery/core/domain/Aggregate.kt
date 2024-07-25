@@ -6,9 +6,11 @@ abstract class Aggregate<ID> {
 
     private val domainEvents: MutableList<DomainEvent> = mutableListOf()
 
-    fun domainEvents() = domainEvents.toList()
-
-    fun clearDomainEvents() = domainEvents.clear()
+    fun popDomainEvents(): List<DomainEvent> {
+        val popEvents = domainEvents.toList()
+        domainEvents.clear()
+        return popEvents
+    }
 
     fun raiseDomainEvent(domainEvent: DomainEvent) {
         domainEvents.add(domainEvent)
