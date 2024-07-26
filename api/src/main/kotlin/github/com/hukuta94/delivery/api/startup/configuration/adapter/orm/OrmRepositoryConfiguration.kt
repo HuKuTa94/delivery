@@ -1,7 +1,9 @@
 package github.com.hukuta94.delivery.api.startup.configuration.adapter.orm
 
+import github.com.hukuta94.delivery.core.application.event.DomainEventPublisher
 import github.com.hukuta94.delivery.core.application.event.DomainEventSerializer
 import github.com.hukuta94.delivery.core.port.UnitOfWork
+import github.com.hukuta94.delivery.infrastructure.adapter.orm.job.PollToPublishOutboxMessagesJob
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.converter.DomainEventConverter
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.repository.OrmOutboxRepository
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.repository.OrmUnitOfWork
@@ -11,8 +13,10 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
+import org.springframework.scheduling.annotation.EnableScheduling
 
 @Configuration
+@EnableScheduling
 @EntityScan(
     basePackages = [
         "github.com.hukuta94.delivery.infrastructure.adapter.orm.model.entity"
@@ -48,5 +52,16 @@ open class OrmRepositoryConfiguration {
     ) = OrmOutboxRepository(
         outboxJpaRepository = outboxJpaRepository,
         domainEventConverter = domainEventConverter,
+    )
+
+    @Bean
+    open fun pollToPublishOutboxMessagesJob(
+        outboxJpaRepository: OutboxJpaRepository,
+        domainEventPublisher: DomainEventPublisher,
+        domainEventSerializer: DomainEventSerializer,
+    ) = PollToPublishOutboxMessagesJob(
+        outboxJpaRepository = outboxJpaRepository,
+        domainEventPublisher = domainEventPublisher,
+        domainEventSerializer = domainEventSerializer,
     )
 }
