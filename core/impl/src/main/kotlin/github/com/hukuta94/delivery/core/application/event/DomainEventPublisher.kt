@@ -4,5 +4,5 @@ import github.com.hukuta94.delivery.core.domain.DomainEvent
 
 interface DomainEventPublisher {
 
-    fun publish(domainEvents: Collection<DomainEvent>)
+    fun publish(domainEvent: DomainEvent)
 }

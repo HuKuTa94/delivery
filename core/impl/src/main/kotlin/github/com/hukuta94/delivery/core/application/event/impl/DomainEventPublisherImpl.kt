@@ -17,16 +17,14 @@ class DomainEventPublisherImpl : DomainEventPublisher {
     }
 
     @Suppress("UNCHECKED_CAST")
-    override fun publish(domainEvents: Collection<DomainEvent>) {
-        domainEvents.forEach { domainEvent ->
-            LOG.info("Processing domain event: $domainEvent")
+    override fun publish(domainEvent: DomainEvent) {
+        LOG.info("Processing domain event: $domainEvent")
 
-            listenerMap[domainEvent::class]?.let { listeners ->
-                handleDomainEvents(
-                    listeners as List<DomainEventListener<in DomainEvent>>,
-                    domainEvent
-                )
-            }
+        listenerMap[domainEvent::class]?.let { listeners ->
+            handleDomainEvents(
+                listeners as List<DomainEventListener<in DomainEvent>>,
+                domainEvent
+            )
         }
     }
 
