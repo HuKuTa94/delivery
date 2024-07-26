@@ -21,7 +21,10 @@ class Courier internal constructor(
     }
 
     fun timeToLocation(location: Location): Double {
-        val distance = this.location.distanceTo(location)
+        val distance = this.location
+            .distanceTo(location)
+            .abs()
+
         return distance.toDouble() / transport.speed
     }
 
@@ -32,24 +35,25 @@ class Courier internal constructor(
         val abscissaDifference = location.abscissa - this.location.abscissa
         val ordinateDifference = location.ordinate - this.location.ordinate
 
+        val isSameLocation = abscissaDifference == 0 && ordinateDifference == 0
+        if (isSameLocation) {
+            return
+        }
+
         val distanceToLocation = this.location.distanceTo(location)
-        val courierMovementStep = minOf(distanceToLocation, transport.speed)
+        val courierMovementAbscissaStep = minOf(distanceToLocation.absBetweenAbscissa(), transport.speed)
+        val courierMovementOrdinateStep = minOf(distanceToLocation.absBetweenOrdinate(), transport.speed)
 
         val newAbscissa = when {
-            abscissaDifference < 0 -> this.location.abscissa - courierMovementStep // Moves up
-            abscissaDifference > 0 -> this.location.abscissa + courierMovementStep // Moves down
+            abscissaDifference < 0 -> this.location.abscissa - courierMovementAbscissaStep // Moves up
+            abscissaDifference > 0 -> this.location.abscissa + courierMovementAbscissaStep // Moves down
             else -> this.location.abscissa
         }
 
         val newOrdinate = when {
-            ordinateDifference < 0 -> this.location.ordinate - courierMovementStep // Moves left
-            ordinateDifference > 0 -> this.location.ordinate + courierMovementStep // Moves right
+            ordinateDifference < 0 -> this.location.ordinate - courierMovementOrdinateStep // Moves left
+            ordinateDifference > 0 -> this.location.ordinate + courierMovementOrdinateStep // Moves right
             else -> this.location.ordinate
-        }
-
-        val isSameLocation = this.location.abscissa == newAbscissa && this.location.ordinate == newOrdinate
-        if (isSameLocation) {
-            return
         }
 
         this.location = Location(newAbscissa, newOrdinate)

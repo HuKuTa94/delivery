@@ -2,7 +2,7 @@ package github.com.hukuta94.delivery.api.startup.configuration.adapter.http
 
 import github.com.hukuta94.delivery.api.adapter.http.order.OrderControllerV1
 import github.com.hukuta94.delivery.core.application.usecase.order.CreateOrderUseCase
-import github.com.hukuta94.delivery.core.application.usecase.order.GetNotCompletedOrdersQuery
+import github.com.hukuta94.delivery.core.application.query.order.GetNotCompletedOrdersQuery
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 

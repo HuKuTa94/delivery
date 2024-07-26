@@ -1,8 +1,18 @@
 package github.com.hukuta94.delivery.core.domain.courier
 
-enum class Transport(val speed: Int) {
-    PEDESTRIAN(speed = 1),
-    BICYCLE(speed = 2),
-    CAR(speed = 3),
-    DRONE(speed = 4),
+enum class Transport(
+    val id: Int,
+    val speed: Int,
+) {
+    PEDESTRIAN(id = 1, speed = 1),
+    BICYCLE(id = 2, speed = 2),
+    CAR(id = 3, speed = 3),
+    DRONE(id = 4, speed = 4),
+    ;
+
+    companion object {
+        fun from(id: Int): Transport = Transport.values()
+            .firstOrNull { it.id == id }
+            ?: throw IllegalArgumentException("Enum value is not found by id: $id")
+    }
 }

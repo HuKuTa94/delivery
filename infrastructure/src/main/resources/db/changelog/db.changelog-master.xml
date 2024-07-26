@@ -4,40 +4,83 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-    <changeSet id="module-4_infrastructure_postgres_adapter_1" author="Nikita Koshelev">
+    <changeSet id="create_courier_status_table" author="Nikita Koshelev">
         <preConditions onFail="MARK_RAN">
             <not>
-                <sqlCheck expectedResult="0">
-                    SELECT count(*) FROM pg_database WHERE datname = 'delivery'
-                </sqlCheck>
+                <tableExists tableName="dlv_courier_status"/>
             </not>
         </preConditions>
 
-        <sqlFile path="sql/00_create_delivery_db.sql" relativeToChangelogFile="true"/>
-    </changeSet>
-
-    <changeSet id="module-4_infrastructure_postgres_adapter_2" author="Nikita Koshelev">
-        <preConditions onFail="MARK_RAN">
-            <not>
-                <tableExists tableName="dlv_order"/>
-            </not>
-        </preConditions>
-
-        <createTable tableName="dlv_order">
-            <column name="id" type="uuid">
-                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_order"/>
+        <createTable tableName="dlv_courier_status">
+            <column name="id" type="int">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_courier_status"/>
             </column>
-            <column name="status" type="varchar(16)"/>
-            <column name="location" type="varchar(64)"/>
-            <column name="courier_id" type="uuid"/>
+            <column name="code" type="varchar(16)">
+                <constraints unique="true"/>
+            </column>
         </createTable>
-
-        <createIndex indexName="idx_dlv_order_id" tableName="dlv_order">
-            <column name="id"/>
-        </createIndex>
     </changeSet>
 
-    <changeSet id="module-4_infrastructure_postgres_adapter_3" author="Nikita Koshelev">
+    <changeSet id="insert_statuses_into_courier_status_table" author="Nikita Koshelev">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT count(*) FROM dlv_courier_status WHERE id in (1, 2)
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="dlv_courier_status">
+            <column name="id" value="1"/>
+            <column name="code" value="FREE"/>
+        </insert>
+        <insert tableName="dlv_courier_status">
+            <column name="id" value="2"/>
+            <column name="code" value="BUSY"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="create_courier_transport_table" author="Nikita Koshelev">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="dlv_courier_transport"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="dlv_courier_transport">
+            <column name="id" type="int">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_courier_transport"/>
+            </column>
+            <column name="code" type="varchar(16)">
+                <constraints unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="insert_transports_into_courier_transport_table" author="Nikita Koshelev">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT count(*) FROM dlv_courier_transport WHERE id in (1, 2, 3, 4)
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="dlv_courier_transport">
+            <column name="id" value="1"/>
+            <column name="code" value="PEDESTRIAN"/>
+        </insert>
+        <insert tableName="dlv_courier_transport">
+            <column name="id" value="2"/>
+            <column name="code" value="BICYCLE"/>
+        </insert>
+        <insert tableName="dlv_courier_transport">
+            <column name="id" value="3"/>
+            <column name="code" value="CAR"/>
+        </insert>
+        <insert tableName="dlv_courier_transport">
+            <column name="id" value="4"/>
+            <column name="code" value="DRONE"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="create_courier_table" author="Nikita Koshelev">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="dlv_courier"/>
@@ -49,14 +92,145 @@
                 <constraints primaryKey="true" nullable="false" primaryKeyName="pk_courier"/>
             </column>
             <column name="name" type="varchar(30)"/>
-            <column name="status" type="varchar(16)"/>
             <column name="location" type="varchar(64)"/>
-            <column name="transport" type="varchar(16)"/>
+            <column name="status_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="transport_id" type="int">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
 
         <createIndex indexName="idx_dlv_courier_id" tableName="dlv_courier">
             <column name="id"/>
         </createIndex>
+
+        <addForeignKeyConstraint
+                baseTableName="dlv_courier"
+                baseColumnNames="status_id"
+                constraintName="fk_dlv_courier_status_id"
+                referencedTableName="dlv_courier_status"
+                referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint
+                baseTableName="dlv_courier"
+                baseColumnNames="transport_id"
+                constraintName="fk_dlv_transport_id"
+                referencedTableName="dlv_courier_transport"
+                referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="module-4_infrastructure_postgres_adapter_7" author="Nikita Koshelev">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT count(*)
+                FROM dlv_courier
+                WHERE id in (
+                     '00000000-0000-0000-0000-000000000001',
+                     '00000000-0000-0000-0000-000000000002',
+                     '00000000-0000-0000-0000-000000000003'
+                )
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="dlv_courier">
+            <column name="id" value="00000000-0000-0000-0000-000000000001"/>
+            <column name="name" value="Вася Пешков"/>
+            <column name="location" value="5,5"/>
+            <column name="status_id" value="1"/>
+            <column name="transport_id" value="1"/>
+        </insert>
+
+        <insert tableName="dlv_courier">
+            <column name="id" value="00000000-0000-0000-0000-000000000002"/>
+            <column name="location" value="1,5"/>
+            <column name="name" value="Петя Велосипедкин"/>
+            <column name="status_id" value="1"/>
+            <column name="transport_id" value="2"/>
+        </insert>
+
+        <insert tableName="dlv_courier">
+            <column name="id" value="00000000-0000-0000-0000-000000000003"/>
+            <column name="name" value="Артур Машинин"/>
+            <column name="location" value="9,9"/>
+            <column name="status_id" value="1"/>
+            <column name="transport_id" value="3"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="create_order_status_table" author="Nikita Koshelev">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="dlv_order_status"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="dlv_order_status">
+            <column name="id" type="int">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_order_status"/>
+            </column>
+            <column name="code" type="varchar(16)">
+                <constraints unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="insert_statuses_into_order_status_table" author="Nikita Koshelev">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT count(*) FROM dlv_order_status WHERE id in (1, 2, 3)
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="dlv_order_status">
+            <column name="id" value="1"/>
+            <column name="code" value="CREATED"/>
+        </insert>
+        <insert tableName="dlv_order_status">
+            <column name="id" value="2"/>
+            <column name="code" value="ASSIGNED"/>
+        </insert>
+        <insert tableName="dlv_order_status">
+            <column name="id" value="3"/>
+            <column name="code" value="COMPLETED"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="create_order_table" author="Nikita Koshelev">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="dlv_order"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="dlv_order">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_order"/>
+            </column>
+            <column name="status_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="courier_id" type="uuid"/>
+            <column name="location" type="varchar(64)"/>
+        </createTable>
+
+        <createIndex indexName="idx_dlv_order_id" tableName="dlv_order">
+            <column name="id"/>
+        </createIndex>
+
+        <addForeignKeyConstraint
+                baseTableName="dlv_order"
+                baseColumnNames="status_id"
+                constraintName="fk_dlv_order_status_id"
+                referencedTableName="dlv_order_status"
+                referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint
+                baseTableName="dlv_order"
+                baseColumnNames="courier_id"
+                constraintName="fk_dlv_order_courier_id"
+                referencedTableName="dlv_courier"
+                referencedColumnNames="id"/>
     </changeSet>
 
 </databaseChangeLog>

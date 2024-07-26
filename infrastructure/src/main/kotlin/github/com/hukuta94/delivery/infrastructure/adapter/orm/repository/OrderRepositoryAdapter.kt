@@ -13,21 +13,24 @@ class OrderRepositoryAdapter(
     private val orderJpaRepository: OrderJpaRepository,
 ) : OrderRepository(domainEventPublisher) {
 
-    override fun add(domainEntity: Order) {
-        val jpaEntity = OrderJpaEntity.fromDomain(domainEntity)
-        orderJpaRepository.saveAndFlush(jpaEntity)
+    override fun add(aggregate: Order) {
+        publishDomainEvents(aggregate)
+        val jpaEntity = OrderJpaEntity.fromDomain(aggregate)
+        orderJpaRepository.save(jpaEntity)
     }
 
-    override fun update(domainEntity: Order) {
-        val jpaEntity = OrderJpaEntity.fromDomain(domainEntity)
-        orderJpaRepository.saveAndFlush(jpaEntity)
+    override fun update(aggregate: Order) {
+        publishDomainEvents(aggregate)
+        val jpaEntity = OrderJpaEntity.fromDomain(aggregate)
+        orderJpaRepository.save(jpaEntity)
     }
 
-    override fun update(domainEntities: Collection<Order>) {
-        val jpaEntities = domainEntities.map {
+    override fun update(aggregates: Collection<Order>) {
+        publishDomainEvents(aggregates)
+        val jpaEntities = aggregates.map {
             OrderJpaEntity.fromDomain(it)
         }
-        orderJpaRepository.saveAllAndFlush(jpaEntities)
+        orderJpaRepository.saveAll(jpaEntities)
     }
 
     override fun getById(id: UUID): Order {

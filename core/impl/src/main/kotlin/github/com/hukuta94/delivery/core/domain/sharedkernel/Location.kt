@@ -1,7 +1,5 @@
 package github.com.hukuta94.delivery.core.domain.sharedkernel
 
-import kotlin.math.abs
-
 data class Location(
     val abscissa: Int,
     val ordinate: Int,
@@ -17,11 +15,11 @@ data class Location(
      * Расстояние между Location - это совокупное количество шагов по X и Y,
      * которое необходимо сделать курьеру, чтобы достигнуть точки.
      */
-    fun distanceTo(other: Location): Int {
-        val absAbscissaDelta = abs(this.abscissa - other.abscissa)
-        val absOrdinateDelta = abs(this.ordinate - other.ordinate)
-
-        return absAbscissaDelta + absOrdinateDelta
+    fun distanceTo(other: Location): Distance {
+        return Distance(
+            from = this,
+            to = other,
+        )
     }
 
     companion object {

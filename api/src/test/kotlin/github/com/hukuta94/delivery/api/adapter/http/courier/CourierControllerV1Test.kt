@@ -1,7 +1,9 @@
 package github.com.hukuta94.delivery.api.adapter.http.courier
 
-import github.com.hukuta94.delivery.core.application.usecase.courier.GetBusyCourierResponse
-import github.com.hukuta94.delivery.core.application.usecase.courier.GetBusyCouriersQuery
+import github.com.hukuta94.delivery.core.application.query.courier.GetBusyCouriersQuery
+import github.com.hukuta94.delivery.core.application.query.courier.response.Courier
+import github.com.hukuta94.delivery.core.application.query.courier.response.GetCouriersResponse
+import github.com.hukuta94.delivery.core.application.query.common.Location
 import github.com.hukuta94.delivery.core.domain.courier.newCourier
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
@@ -29,8 +31,11 @@ internal class CourierControllerV1Test {
     lateinit var getBusyCouriersQuery: GetBusyCouriersQuery
 
     @Test
-    fun `response ok if no couriers`() {
-        given(getBusyCouriersQuery.execute()).willReturn(emptyList())
+    fun `response ok if no busy couriers`() {
+        given(getBusyCouriersQuery.execute())
+            .willReturn(
+                GetCouriersResponse.empty()
+            )
 
         mockMvc.get("/api/v1/couriers/")
             .andExpect {
@@ -38,29 +43,35 @@ internal class CourierControllerV1Test {
                     status { isOk() }
                     content {
                         contentType(MediaType.APPLICATION_JSON)
-                        json("[]")
+                        json("{\"couriers\":[]}")
                     }
                 }
             }
     }
 
     @Test
-    fun `response ok if found couriers`() {
+    fun `response ok if found busy couriers`() {
         val courier = newCourier()
 
         given(getBusyCouriersQuery.execute())
             .willReturn(
-                listOf(
-                    GetBusyCourierResponse(
-                        id = courier.id,
-                        name = courier.name.value,
-                        locationAbscissa = courier.location.abscissa,
-                        locationOrdinate = courier.location.ordinate,
+                GetCouriersResponse(
+                    couriers = listOf(
+                        Courier(
+                            id = courier.id,
+                            name = courier.name.value,
+                            location = Location(
+                                x = courier.location.abscissa,
+                                y = courier.location.ordinate,
+                            ),
+                            transportId = courier.transport.id,
+                        )
                     )
+                )
             )
-        )
 
-        val expected = "[{\"id\":\"${courier.id}\",\"name\":\"${courier.name.value}\"}]"
+        //TODO Вынести ожидаемый результат в файл json
+        val expected = "{\"couriers\":[{\"id\":\"${courier.id}\",\"name\":\"${courier.name.value}\",\"location\":{\"x\":${courier.location.abscissa},\"y\":${courier.location.ordinate}},\"transportId\":${courier.transport.id}}]}"
 
         mockMvc.get("/api/v1/couriers/")
             .andExpect {

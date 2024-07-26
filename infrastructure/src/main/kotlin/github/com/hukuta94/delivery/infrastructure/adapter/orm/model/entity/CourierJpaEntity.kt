@@ -9,12 +9,13 @@ import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.converter.C
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.converter.CourierStatusConverter
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.converter.LocationConverter
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.converter.TransportConverter
+import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.entity.CourierJpaEntity.Companion.TABLE_NAME
 import java.util.*
 import javax.persistence.*
 import kotlin.reflect.KClass
 
 @Entity
-@Table(name = "dlv_courier")
+@Table(name = TABLE_NAME)
 class CourierJpaEntity : JpaEntity<Courier>() {
 
     override val domainAggregateClass: KClass<Courier>
@@ -31,15 +32,19 @@ class CourierJpaEntity : JpaEntity<Courier>() {
     @Convert(converter = LocationConverter::class)
     var location: Location? = null
 
-    @Column(name = "transport")
+    @Column(name = TRANSPORT_ID)
     @Convert(converter = TransportConverter::class)
     var transport: Transport? = null
 
-    @Column(name = "status")
+    @Column(name = STATUS_ID)
     @Convert(converter = CourierStatusConverter::class)
     var status: CourierStatus? = null
 
     companion object {
+        const val TABLE_NAME = "dlv_courier"
+        const val TRANSPORT_ID = "transport_id"
+        const val STATUS_ID = "status_id"
+
         fun fromDomain(domain: Courier) = CourierJpaEntity().apply {
             id = domain.id
             name = domain.name

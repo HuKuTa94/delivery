@@ -22,19 +22,19 @@ class CourierInMemoryRepository(
         )
     }
 
-    override fun add(domainEntity: Courier) {
-        publishDomainEvents(domainEntity)
-        storage[domainEntity.id] = domainEntity
+    override fun add(aggregate: Courier) {
+        publishDomainEvents(aggregate)
+        storage[aggregate.id] = aggregate
     }
 
-    override fun update(domainEntity: Courier) {
-        publishDomainEvents(domainEntity)
-        storage[domainEntity.id] = domainEntity
+    override fun update(aggregate: Courier) {
+        publishDomainEvents(aggregate)
+        storage[aggregate.id] = aggregate
     }
 
-    override fun update(domainEntities: Collection<Courier>) {
-        domainEntities.forEach { domainEntity ->
-            update(domainEntity)
+    override fun update(aggregates: Collection<Courier>) {
+        aggregates.forEach { aggregate ->
+            update(aggregate)
         }
     }
 
