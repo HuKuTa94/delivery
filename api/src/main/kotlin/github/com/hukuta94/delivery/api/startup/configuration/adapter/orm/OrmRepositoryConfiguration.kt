@@ -2,9 +2,11 @@ package github.com.hukuta94.delivery.api.startup.configuration.adapter.orm
 
 import github.com.hukuta94.delivery.core.application.event.DomainEventPublisher
 import github.com.hukuta94.delivery.core.application.event.DomainEventSerializer
+import github.com.hukuta94.delivery.core.application.event.integration.IntegrationEventPublisher
 import github.com.hukuta94.delivery.core.application.event.integration.IntegrationEventSerializer
 import github.com.hukuta94.delivery.core.port.UnitOfWork
 import github.com.hukuta94.delivery.core.port.repository.box.InboxRepository
+import github.com.hukuta94.delivery.infrastructure.adapter.orm.job.PollToPublishInboxMessagesJob
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.job.PollToPublishOutboxMessagesJob
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.converter.DomainEventConverter
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.converter.IntegrationEventConverter
@@ -87,4 +89,15 @@ open class OrmRepositoryConfiguration {
             integrationEventConverter = integrationEventConverter,
         )
     }
+
+    @Bean
+    open fun pollToPublishInboxMessagesJob(
+        inboxJpaRepository: InboxJpaRepository,
+        integrationEventPublisher: IntegrationEventPublisher,
+        integrationEventSerializer: IntegrationEventSerializer,
+    ) = PollToPublishInboxMessagesJob(
+        inboxJpaRepository = inboxJpaRepository,
+        integrationEventPublisher = integrationEventPublisher,
+        integrationEventSerializer = integrationEventSerializer,
+    )
 }
