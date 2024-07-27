@@ -259,4 +259,30 @@
         </createTable>
     </changeSet>
 
+    <changeSet id="create_inbox_table" author="Nikita Koshelev">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="dlv_inbox"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="dlv_inbox">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_dlv_inbox"/>
+            </column>
+            <column name="type" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="content" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="processed_at" type="timestamp">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
 </databaseChangeLog>

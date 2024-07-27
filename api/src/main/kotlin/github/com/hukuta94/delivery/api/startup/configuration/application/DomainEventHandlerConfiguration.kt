@@ -5,6 +5,7 @@ import github.com.hukuta94.delivery.core.application.event.DomainEventSerializer
 import github.com.hukuta94.delivery.core.application.event.impl.DomainEventPublisherImpl
 import github.com.hukuta94.delivery.core.application.event.impl.OrderAssignedDomainEventHandler
 import github.com.hukuta94.delivery.core.application.event.impl.OrderCompletedDomainEventHandler
+import github.com.hukuta94.delivery.core.application.event.integration.IntegrationEventSerializer
 import github.com.hukuta94.delivery.core.port.BusProducer
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -24,4 +25,7 @@ open class DomainEventHandlerConfiguration {
 
     @Bean
     open fun domainEventSerializer() = DomainEventSerializer()
+
+    @Bean
+    open fun integrationEventSerializer() = IntegrationEventSerializer()
 }

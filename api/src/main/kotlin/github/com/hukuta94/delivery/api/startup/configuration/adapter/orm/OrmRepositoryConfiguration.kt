@@ -2,11 +2,16 @@ package github.com.hukuta94.delivery.api.startup.configuration.adapter.orm
 
 import github.com.hukuta94.delivery.core.application.event.DomainEventPublisher
 import github.com.hukuta94.delivery.core.application.event.DomainEventSerializer
+import github.com.hukuta94.delivery.core.application.event.integration.IntegrationEventSerializer
 import github.com.hukuta94.delivery.core.port.UnitOfWork
+import github.com.hukuta94.delivery.core.port.repository.box.InboxRepository
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.job.PollToPublishOutboxMessagesJob
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.converter.DomainEventConverter
+import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.converter.IntegrationEventConverter
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.repository.OrmOutboxRepository
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.repository.OrmUnitOfWork
+import github.com.hukuta94.delivery.infrastructure.adapter.orm.repository.box.OrmInboxRepository
+import github.com.hukuta94.delivery.infrastructure.adapter.orm.repository.jpa.InboxJpaRepository
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.repository.jpa.OutboxJpaRepository
 import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.context.annotation.Bean
@@ -64,4 +69,22 @@ open class OrmRepositoryConfiguration {
         domainEventPublisher = domainEventPublisher,
         domainEventSerializer = domainEventSerializer,
     )
+
+    @Bean
+    open fun integrationEventConverter(
+        integrationEventSerializer: IntegrationEventSerializer,
+    ) = IntegrationEventConverter(
+        integrationEventSerializer = integrationEventSerializer,
+    )
+
+    @Bean
+    open fun ormInboxRepository(
+        inboxJpaRepository: InboxJpaRepository,
+        integrationEventConverter: IntegrationEventConverter,
+    ): InboxRepository {
+        return OrmInboxRepository(
+            inboxJpaRepository = inboxJpaRepository,
+            integrationEventConverter = integrationEventConverter,
+        )
+    }
 }
