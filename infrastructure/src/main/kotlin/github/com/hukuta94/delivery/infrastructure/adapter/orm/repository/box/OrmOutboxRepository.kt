@@ -1,4 +1,4 @@
-package github.com.hukuta94.delivery.infrastructure.adapter.orm.repository
+package github.com.hukuta94.delivery.infrastructure.adapter.orm.repository.box
 
 import github.com.hukuta94.delivery.core.application.event.domain.DomainEventSerializer
 import github.com.hukuta94.delivery.core.domain.DomainEvent

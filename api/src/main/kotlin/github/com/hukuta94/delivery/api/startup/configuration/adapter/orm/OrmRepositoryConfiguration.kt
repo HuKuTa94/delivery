@@ -10,7 +10,7 @@ import github.com.hukuta94.delivery.core.port.UnitOfWork
 import github.com.hukuta94.delivery.core.port.repository.box.InboxRepository
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.job.PollToPublishInboxMessagesJob
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.job.PollToPublishOutboxMessagesJob
-import github.com.hukuta94.delivery.infrastructure.adapter.orm.repository.OrmOutboxRepository
+import github.com.hukuta94.delivery.infrastructure.adapter.orm.repository.box.OrmOutboxRepository
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.repository.OrmUnitOfWork
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.repository.box.OrmInboxRepository
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.repository.jpa.InboxJpaRepository

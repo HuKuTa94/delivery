@@ -4,6 +4,7 @@ import github.com.hukuta94.delivery.core.domain.order.Order
 import github.com.hukuta94.delivery.core.domain.order.OrderStatus
 import github.com.hukuta94.delivery.core.port.OrderRepository
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.entity.OrderJpaEntity
+import github.com.hukuta94.delivery.infrastructure.adapter.orm.repository.box.OrmOutboxRepository
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.repository.jpa.OrderJpaRepository
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
