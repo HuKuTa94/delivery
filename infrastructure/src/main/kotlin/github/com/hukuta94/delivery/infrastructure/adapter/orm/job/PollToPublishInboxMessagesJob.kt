@@ -2,8 +2,8 @@ package github.com.hukuta94.delivery.infrastructure.adapter.orm.job
 
 import github.com.hukuta94.delivery.core.application.event.integration.IntegrationEventDeserializer
 import github.com.hukuta94.delivery.core.application.event.integration.IntegrationEventPublisher
-import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.entity.box.InboxJpaEntity
-import github.com.hukuta94.delivery.infrastructure.adapter.orm.repository.jpa.InboxJpaRepository
+import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.entity.event.InboxEventJpaEntity
+import github.com.hukuta94.delivery.infrastructure.adapter.orm.repository.event.InboxEventJpaRepository
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
@@ -11,7 +11,7 @@ import org.springframework.scheduling.annotation.Scheduled
 import java.time.LocalDateTime
 
 class PollToPublishInboxMessagesJob(
-    private val inboxJpaRepository: InboxJpaRepository,
+    private val inboxJpaRepository: InboxEventJpaRepository,
     private val integrationEventPublisher: IntegrationEventPublisher,
     private val integrationEventDeserializer: IntegrationEventDeserializer,
 ) {
@@ -32,9 +32,9 @@ class PollToPublishInboxMessagesJob(
     }
 
     /**
-     * @return successfully processed inbox message [InboxJpaEntity] or null if it was processed with error
+     * @return successfully processed inbox message [InboxEventJpaEntity] or null if it was processed with error
      */
-    private fun processIntegrationEventOfInboxMessage(inboxMessage: InboxJpaEntity): InboxJpaEntity? {
+    private fun processIntegrationEventOfInboxMessage(inboxMessage: InboxEventJpaEntity): InboxEventJpaEntity? {
         val domainEvent = inboxMessage.toEvent(integrationEventDeserializer)
 
         return try {
@@ -55,7 +55,7 @@ class PollToPublishInboxMessagesJob(
         private val LIMITED_COUNT_OF_INBOX_MESSAGES = PageRequest.of(
             0,
             INBOX_MESSAGES_LIMIT,
-            Sort.by(Sort.Direction.ASC, InboxJpaEntity::createdAt.name)
+            Sort.by(Sort.Direction.ASC, InboxEventJpaEntity::createdAt.name)
         )
 
         private val LOG = LoggerFactory.getLogger(PollToPublishInboxMessagesJob::class.java)

@@ -1,34 +1,22 @@
-package github.com.hukuta94.delivery.infrastructure.adapter.orm.model.entity.box
+package github.com.hukuta94.delivery.infrastructure.adapter.orm.model.entity.event
 
 import github.com.hukuta94.delivery.core.application.event.domain.DomainEventClassType
 import github.com.hukuta94.delivery.core.application.event.domain.DomainEventDeserializer
 import github.com.hukuta94.delivery.core.application.event.domain.DomainEventSerializer
 import github.com.hukuta94.delivery.core.domain.DomainEvent
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.converter.DomainEventClassTypeConverter
-import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.entity.box.OutboxJpaEntity.Companion.TABLE_NAME
+import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.entity.event.OutboxEventJpaEntity.Companion.TABLE_NAME
 import java.time.LocalDateTime
-import java.util.*
-import javax.persistence.*
+import javax.persistence.Convert
+import javax.persistence.Entity
+import javax.persistence.Table
 
 @Entity
 @Table(name = TABLE_NAME)
-class OutboxJpaEntity {
+class OutboxEventJpaEntity: BoxEventJpaEntity<DomainEvent, DomainEventClassType>() {
 
-    @Id
-    var id: UUID? = null
-
-    @Column(name = "event_type")
     @Convert(converter = DomainEventClassTypeConverter::class)
-    lateinit var eventType: DomainEventClassType
-
-    @Column(name = "payload")
-    lateinit var payload: String
-
-    @Column(name = "created_at")
-    lateinit var createdAt: LocalDateTime
-
-    @Column(name = "processed_at")
-    var processedAt: LocalDateTime? = null
+    override lateinit var eventType: DomainEventClassType
 
     fun toEvent(
         eventDeserializer: DomainEventDeserializer
@@ -45,7 +33,7 @@ class OutboxJpaEntity {
         fun fromEvent(
             event: DomainEvent,
             eventSerializer: DomainEventSerializer
-        ) = OutboxJpaEntity().apply {
+        ) = OutboxEventJpaEntity().apply {
             id = event.id
             eventType = DomainEventClassType(event::class)
             payload = eventSerializer.serialize(event)

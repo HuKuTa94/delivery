@@ -4,11 +4,11 @@ import github.com.hukuta94.delivery.core.application.usecase.order.CreateOrderCo
 import github.com.hukuta94.delivery.core.application.usecase.order.CreateOrderUseCase
 import github.com.hukuta94.delivery.core.domain.order.Order
 import github.com.hukuta94.delivery.core.port.GetLocationPort
-import github.com.hukuta94.delivery.core.port.OrderRepository
+import github.com.hukuta94.delivery.core.port.repository.domain.OrderRepositoryPort
 import org.slf4j.LoggerFactory
 
 class CreateOrderUseCaseImpl(
-    private val orderRepository: OrderRepository,
+    private val orderRepository: OrderRepositoryPort,
     private val getLocationPort: GetLocationPort,
 ) : CreateOrderUseCase {
     override fun execute(command: CreateOrderCommand) {

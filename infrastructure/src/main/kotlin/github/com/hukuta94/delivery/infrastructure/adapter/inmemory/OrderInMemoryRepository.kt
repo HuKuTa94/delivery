@@ -2,10 +2,10 @@ package github.com.hukuta94.delivery.infrastructure.adapter.inmemory
 
 import github.com.hukuta94.delivery.core.domain.order.Order
 import github.com.hukuta94.delivery.core.domain.order.OrderStatus
-import github.com.hukuta94.delivery.core.port.OrderRepository
+import github.com.hukuta94.delivery.core.port.repository.domain.OrderRepositoryPort
 import java.util.*
 
-class OrderInMemoryRepository : OrderRepository {
+class OrderInMemoryRepository : OrderRepositoryPort {
 
     private val storage = mutableMapOf<UUID, Order>()
 

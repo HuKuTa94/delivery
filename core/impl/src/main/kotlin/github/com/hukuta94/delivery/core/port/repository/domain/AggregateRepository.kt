@@ -1,9 +1,9 @@
-package github.com.hukuta94.delivery.core.port
+package github.com.hukuta94.delivery.core.port.repository.domain
 
 import github.com.hukuta94.delivery.core.domain.Aggregate
 import java.util.*
 
-interface Repository<AGGREGATE : Aggregate<*>> {
+sealed interface AggregateRepository<AGGREGATE : Aggregate<*>> {
 
     fun add(aggregate: AGGREGATE)
 

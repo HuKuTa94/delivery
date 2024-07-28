@@ -1,14 +1,14 @@
 package github.com.hukuta94.delivery.api.adapter.kafka
 
 import com.google.protobuf.util.JsonFormat
-import github.com.hukuta94.delivery.core.port.repository.box.InboxRepository
+import github.com.hukuta94.delivery.core.port.repository.event.InboxEventRepositoryPort
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.slf4j.LoggerFactory
 import org.springframework.kafka.annotation.KafkaListener
 import java.util.*
 
 class BasketKafkaConsumer(
-    private val inboxRepository: InboxRepository,
+    private val inboxEventRepository: InboxEventRepositoryPort,
 ) {
     @KafkaListener(
         groupId = "basket-consumer-group",
@@ -29,7 +29,7 @@ class BasketKafkaConsumer(
             street = basketConfirmedEvent.address.street,
         )
 
-        inboxRepository.saveIntegrationEvent(integrationEvent)
+        inboxEventRepository.saveIntegrationEvent(integrationEvent)
 
         LOG.info("Finish handling message with key: ${message.key()}")
     }

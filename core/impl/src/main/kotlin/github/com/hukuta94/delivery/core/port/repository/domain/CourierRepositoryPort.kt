@@ -1,8 +1,8 @@
-package github.com.hukuta94.delivery.core.port
+package github.com.hukuta94.delivery.core.port.repository.domain
 
 import github.com.hukuta94.delivery.core.domain.courier.Courier
 
-interface CourierRepository : Repository<Courier> {
+interface CourierRepositoryPort : AggregateRepository<Courier> {
 
     fun getAllFree(): Collection<Courier>
 

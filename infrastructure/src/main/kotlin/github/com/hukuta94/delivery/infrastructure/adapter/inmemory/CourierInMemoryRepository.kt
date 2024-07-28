@@ -5,10 +5,10 @@ import github.com.hukuta94.delivery.core.domain.courier.CourierName
 import github.com.hukuta94.delivery.core.domain.courier.CourierStatus
 import github.com.hukuta94.delivery.core.domain.courier.Transport
 import github.com.hukuta94.delivery.core.domain.sharedkernel.Location
-import github.com.hukuta94.delivery.core.port.CourierRepository
+import github.com.hukuta94.delivery.core.port.repository.domain.CourierRepositoryPort
 import java.util.*
 
-class CourierInMemoryRepository : CourierRepository {
+class CourierInMemoryRepository : CourierRepositoryPort {
 
     private val storage = mutableMapOf<UUID, Courier>().also {
         val courierId = UUID.randomUUID()

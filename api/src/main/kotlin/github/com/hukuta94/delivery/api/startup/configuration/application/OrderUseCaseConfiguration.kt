@@ -5,10 +5,10 @@ import github.com.hukuta94.delivery.core.application.usecase.order.CreateOrderUs
 import github.com.hukuta94.delivery.core.application.usecase.order.impl.AssignCourierToOrderUseCaseImpl
 import github.com.hukuta94.delivery.core.application.usecase.order.impl.CreateOrderUseCaseImpl
 import github.com.hukuta94.delivery.core.domain.service.DispatchService
-import github.com.hukuta94.delivery.core.port.CourierRepository
+import github.com.hukuta94.delivery.core.port.repository.domain.CourierRepositoryPort
 import github.com.hukuta94.delivery.core.port.GetLocationPort
-import github.com.hukuta94.delivery.core.port.OrderRepository
-import github.com.hukuta94.delivery.core.port.UnitOfWork
+import github.com.hukuta94.delivery.core.port.repository.domain.OrderRepositoryPort
+import github.com.hukuta94.delivery.core.port.repository.UnitOfWorkPort
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -17,7 +17,7 @@ open class OrderUseCaseConfiguration {
 
     @Bean
     open fun createOrderUseCase(
-        orderRepository: OrderRepository,
+        orderRepository: OrderRepositoryPort,
         getLocationPort: GetLocationPort,
     ): CreateOrderUseCase = CreateOrderUseCaseImpl(
         orderRepository = orderRepository,
@@ -26,10 +26,10 @@ open class OrderUseCaseConfiguration {
 
     @Bean
     open fun AssignCourierToOrderUseCase(
-        orderRepository: OrderRepository,
-        courierRepository: CourierRepository,
+        orderRepository: OrderRepositoryPort,
+        courierRepository: CourierRepositoryPort,
         dispatchService: DispatchService,
-        unitOfWork: UnitOfWork,
+        unitOfWork: UnitOfWorkPort,
     ): AssignCourierToOrderUseCase = AssignCourierToOrderUseCaseImpl(
         orderRepository = orderRepository,
         courierRepository = courierRepository,

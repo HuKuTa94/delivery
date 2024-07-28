@@ -1,18 +1,17 @@
-package github.com.hukuta94.delivery.infrastructure.adapter.orm.repository
+package github.com.hukuta94.delivery.infrastructure.adapter.orm.repository.domain
 
 import github.com.hukuta94.delivery.core.domain.order.Order
 import github.com.hukuta94.delivery.core.domain.order.OrderStatus
-import github.com.hukuta94.delivery.core.port.OrderRepository
+import github.com.hukuta94.delivery.core.port.repository.domain.OrderRepositoryPort
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.entity.OrderJpaEntity
-import github.com.hukuta94.delivery.infrastructure.adapter.orm.repository.box.OrmOutboxRepository
-import github.com.hukuta94.delivery.infrastructure.adapter.orm.repository.jpa.OrderJpaRepository
+import github.com.hukuta94.delivery.infrastructure.adapter.orm.repository.event.OrmOutboxEventRepositoryAdapter
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
 
 class OrmOrderRepositoryAdapter(
     private val orderJpaRepository: OrderJpaRepository,
-    private val outboxRepository: OrmOutboxRepository,
-) : OrderRepository {
+    private val outboxRepository: OrmOutboxEventRepositoryAdapter,
+) : OrderRepositoryPort {
 
     override fun add(aggregate: Order) {
         val jpaEntity = OrderJpaEntity.fromDomain(aggregate)

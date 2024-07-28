@@ -1,18 +1,17 @@
-package github.com.hukuta94.delivery.infrastructure.adapter.orm.repository
+package github.com.hukuta94.delivery.infrastructure.adapter.orm.repository.domain
 
 import github.com.hukuta94.delivery.core.domain.courier.Courier
 import github.com.hukuta94.delivery.core.domain.courier.CourierStatus
-import github.com.hukuta94.delivery.core.port.CourierRepository
+import github.com.hukuta94.delivery.core.port.repository.domain.CourierRepositoryPort
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.entity.CourierJpaEntity
-import github.com.hukuta94.delivery.infrastructure.adapter.orm.repository.box.OrmOutboxRepository
-import github.com.hukuta94.delivery.infrastructure.adapter.orm.repository.jpa.CourierJpaRepository
+import github.com.hukuta94.delivery.infrastructure.adapter.orm.repository.event.OrmOutboxEventRepositoryAdapter
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
 
 class OrmCourierRepositoryAdapter(
     private val courierJpaRepository: CourierJpaRepository,
-    private val outboxRepository: OrmOutboxRepository,
-) : CourierRepository {
+    private val outboxRepository: OrmOutboxEventRepositoryAdapter,
+) : CourierRepositoryPort {
 
     override fun add(aggregate: Courier) {
         val jpaEntity = CourierJpaEntity.fromDomain(aggregate)

@@ -1,4 +1,4 @@
-package github.com.hukuta94.delivery.infrastructure.adapter.orm.model.entity.box
+package github.com.hukuta94.delivery.infrastructure.adapter.orm.model.entity.event
 
 import github.com.hukuta94.delivery.core.application.event.domain.DomainEventSerializer
 import github.com.hukuta94.delivery.core.domain.order.OrderAssignedDomainEvent
@@ -28,7 +28,7 @@ class OutboxJpaEntityTest {
             .thenReturn(serializedDomainEvent)
 
         // When
-        val outboxEntity = OutboxJpaEntity.fromEvent(domainEvent, domainEventSerializer)
+        val outboxEntity = OutboxEventJpaEntity.fromEvent(domainEvent, domainEventSerializer)
 
         // Then
         assertSoftly {

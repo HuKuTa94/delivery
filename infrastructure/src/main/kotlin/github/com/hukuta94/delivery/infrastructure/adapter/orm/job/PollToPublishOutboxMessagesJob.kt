@@ -2,8 +2,8 @@ package github.com.hukuta94.delivery.infrastructure.adapter.orm.job
 
 import github.com.hukuta94.delivery.core.application.event.domain.DomainEventDeserializer
 import github.com.hukuta94.delivery.core.application.event.domain.DomainEventPublisher
-import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.entity.box.OutboxJpaEntity
-import github.com.hukuta94.delivery.infrastructure.adapter.orm.repository.jpa.OutboxJpaRepository
+import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.entity.event.OutboxEventJpaEntity
+import github.com.hukuta94.delivery.infrastructure.adapter.orm.repository.event.OutboxEventJpaRepository
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
@@ -11,14 +11,14 @@ import org.springframework.scheduling.annotation.Scheduled
 import java.time.LocalDateTime
 
 class PollToPublishOutboxMessagesJob(
-    private val outboxJpaRepository: OutboxJpaRepository,
+    private val outboxEventJpaRepository: OutboxEventJpaRepository,
     private val domainEventPublisher: DomainEventPublisher,
     private val domainEventDeserializer: DomainEventDeserializer,
 ) {
 
     @Scheduled(fixedDelay = 5000)
     fun execute() {
-        val outboxMessages = outboxJpaRepository.findAllByProcessedAtIsNull(LIMITED_COUNT_OF_OUTBOX_MESSAGES).content
+        val outboxMessages = outboxEventJpaRepository.findAllByProcessedAtIsNull(LIMITED_COUNT_OF_OUTBOX_MESSAGES).content
 
         val processedOutboxMessages = outboxMessages.mapNotNull { outboxMessage ->
             processDomainEventOfOutboxMessage(outboxMessage)
@@ -28,13 +28,13 @@ class PollToPublishOutboxMessagesJob(
             return
         }
 
-        outboxJpaRepository.saveAll(processedOutboxMessages)
+        outboxEventJpaRepository.saveAll(processedOutboxMessages)
     }
 
     /**
-     * @return successfully processed outbox message [OutboxJpaEntity] or null if it was processed with error
+     * @return successfully processed outbox message [OutboxEventJpaEntity] or null if it was processed with error
      */
-    private fun processDomainEventOfOutboxMessage(outboxMessage: OutboxJpaEntity): OutboxJpaEntity? {
+    private fun processDomainEventOfOutboxMessage(outboxMessage: OutboxEventJpaEntity): OutboxEventJpaEntity? {
         val domainEvent = outboxMessage.toEvent(domainEventDeserializer)
 
         return try {
@@ -55,7 +55,7 @@ class PollToPublishOutboxMessagesJob(
         private val LIMITED_COUNT_OF_OUTBOX_MESSAGES = PageRequest.of(
             0,
             OUTBOX_MESSAGES_LIMIT,
-            Sort.by(Sort.Direction.ASC, OutboxJpaEntity::createdAt.name)
+            Sort.by(Sort.Direction.ASC, OutboxEventJpaEntity::createdAt.name)
         )
 
         private val LOG = LoggerFactory.getLogger(PollToPublishOutboxMessagesJob::class.java)
