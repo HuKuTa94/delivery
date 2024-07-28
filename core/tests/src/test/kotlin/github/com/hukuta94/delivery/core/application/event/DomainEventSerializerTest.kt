@@ -1,6 +1,7 @@
 package github.com.hukuta94.delivery.core.application.event
 
-import github.com.hukuta94.delivery.core.application.event.DomainEventSerializer.Companion.DOMAIN_EVENT_PACKAGE
+import github.com.hukuta94.delivery.core.application.event.domain.DomainEventSerializer
+import github.com.hukuta94.delivery.core.application.event.domain.DomainEventSerializer.Companion.DOMAIN_EVENT_PACKAGE
 import github.com.hukuta94.delivery.core.domain.order.OrderAssignedDomainEvent
 import github.com.hukuta94.delivery.core.domain.order.OrderCompletedDomainEvent
 import io.kotlintest.assertSoftly

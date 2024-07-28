@@ -1,7 +1,7 @@
 package github.com.hukuta94.delivery.infrastructure.adapter.orm.job
 
-import github.com.hukuta94.delivery.core.application.event.DomainEventPublisher
-import github.com.hukuta94.delivery.core.application.event.DomainEventSerializer
+import github.com.hukuta94.delivery.core.application.event.domain.DomainEventSerializer
+import github.com.hukuta94.delivery.core.application.event.domain.DomainEventPublisher
 import github.com.hukuta94.delivery.core.domain.DomainEvent
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.entity.box.OutboxJpaEntity
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.repository.jpa.OutboxJpaRepository

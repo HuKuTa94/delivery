@@ -18,7 +18,7 @@ import org.springframework.context.annotation.Import
     DomainServiceConfiguration::class,
     SchedulerConfiguration::class,
     PortConfiguration::class,
-    DomainEventHandlerConfiguration::class,
+    ApplicationEventHandlerConfiguration::class,
     KafkaConfiguration::class,
     OrmRepositoryConfiguration::class,
     ControllerConfiguration::class,

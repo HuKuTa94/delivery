@@ -1,7 +1,7 @@
 package github.com.hukuta94.delivery.api.startup.configuration.adapter.orm
 
-import github.com.hukuta94.delivery.core.application.event.DomainEventPublisher
-import github.com.hukuta94.delivery.core.application.event.DomainEventSerializer
+import github.com.hukuta94.delivery.core.application.event.domain.DomainEventSerializer
+import github.com.hukuta94.delivery.core.application.event.domain.DomainEventPublisher
 import github.com.hukuta94.delivery.core.application.event.integration.IntegrationEventPublisher
 import github.com.hukuta94.delivery.core.application.event.integration.IntegrationEventSerializer
 import github.com.hukuta94.delivery.core.port.UnitOfWork
@@ -38,6 +38,7 @@ import org.springframework.scheduling.annotation.EnableScheduling
     OrmOrderRepositoryConfiguration::class,
     OrmCourierRepositoryConfiguration::class,
 )
+@Suppress("SpringJavaInjectionPointsAutowiringInspection")
 open class OrmRepositoryConfiguration {
 
     @Bean
