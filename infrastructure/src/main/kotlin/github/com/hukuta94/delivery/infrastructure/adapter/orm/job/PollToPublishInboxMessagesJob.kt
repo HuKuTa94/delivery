@@ -1,8 +1,7 @@
 package github.com.hukuta94.delivery.infrastructure.adapter.orm.job
 
-import github.com.hukuta94.delivery.core.application.event.integration.IntegrationEvent
+import github.com.hukuta94.delivery.core.application.event.integration.IntegrationEventDeserializer
 import github.com.hukuta94.delivery.core.application.event.integration.IntegrationEventPublisher
-import github.com.hukuta94.delivery.core.application.event.integration.IntegrationEventSerializer
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.entity.box.InboxJpaEntity
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.repository.jpa.InboxJpaRepository
 import org.slf4j.LoggerFactory
@@ -14,7 +13,7 @@ import java.time.LocalDateTime
 class PollToPublishInboxMessagesJob(
     private val inboxJpaRepository: InboxJpaRepository,
     private val integrationEventPublisher: IntegrationEventPublisher,
-    private val integrationEventSerializer: IntegrationEventSerializer,
+    private val integrationEventDeserializer: IntegrationEventDeserializer,
 ) {
 
     @Scheduled(fixedDelay = 5000)
@@ -36,7 +35,7 @@ class PollToPublishInboxMessagesJob(
      * @return successfully processed inbox message [InboxJpaEntity] or null if it was processed with error
      */
     private fun processIntegrationEventOfInboxMessage(inboxMessage: InboxJpaEntity): InboxJpaEntity? {
-        val domainEvent = convertToIntegrationEvent(inboxMessage) ?: return null
+        val domainEvent = inboxMessage.toEvent(integrationEventDeserializer)
 
         return try {
             integrationEventPublisher.publish(domainEvent)
@@ -49,23 +48,6 @@ class PollToPublishInboxMessagesJob(
             )
             return null
         }
-    }
-
-    private fun convertToIntegrationEvent(inboxJpaEntity: InboxJpaEntity): IntegrationEvent? {
-        val integrationEventType = inboxJpaEntity.type
-        val serializedIntegrationEvent = inboxJpaEntity.content
-
-        if (serializedIntegrationEvent == null || integrationEventType == null) {
-            LOG.error(
-                "Inbox message with id: ${inboxJpaEntity.id} was not processed because the content or type is null"
-            )
-            return null
-        }
-
-        return integrationEventSerializer.deserialize(
-            serializedEvent = serializedIntegrationEvent,
-            type = integrationEventType,
-        )
     }
 
     companion object {

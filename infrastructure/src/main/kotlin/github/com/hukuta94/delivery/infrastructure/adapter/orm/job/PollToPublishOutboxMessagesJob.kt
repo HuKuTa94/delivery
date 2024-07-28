@@ -1,8 +1,7 @@
 package github.com.hukuta94.delivery.infrastructure.adapter.orm.job
 
-import github.com.hukuta94.delivery.core.application.event.domain.DomainEventSerializer
+import github.com.hukuta94.delivery.core.application.event.domain.DomainEventDeserializer
 import github.com.hukuta94.delivery.core.application.event.domain.DomainEventPublisher
-import github.com.hukuta94.delivery.core.domain.DomainEvent
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.entity.box.OutboxJpaEntity
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.repository.jpa.OutboxJpaRepository
 import org.slf4j.LoggerFactory
@@ -14,7 +13,7 @@ import java.time.LocalDateTime
 class PollToPublishOutboxMessagesJob(
     private val outboxJpaRepository: OutboxJpaRepository,
     private val domainEventPublisher: DomainEventPublisher,
-    private val domainEventSerializer: DomainEventSerializer,
+    private val domainEventDeserializer: DomainEventDeserializer,
 ) {
 
     @Scheduled(fixedDelay = 5000)
@@ -36,7 +35,7 @@ class PollToPublishOutboxMessagesJob(
      * @return successfully processed outbox message [OutboxJpaEntity] or null if it was processed with error
      */
     private fun processDomainEventOfOutboxMessage(outboxMessage: OutboxJpaEntity): OutboxJpaEntity? {
-        val domainEvent = convertToDomainEvent(outboxMessage) ?: return null
+        val domainEvent = outboxMessage.toEvent(domainEventDeserializer)
 
         return try {
             domainEventPublisher.publish(domainEvent)
@@ -49,23 +48,6 @@ class PollToPublishOutboxMessagesJob(
             )
             return null
         }
-    }
-
-    private fun convertToDomainEvent(outboxJpaEntity: OutboxJpaEntity): DomainEvent? {
-        val domainEventType = outboxJpaEntity.type
-        val serializedDomainEvent = outboxJpaEntity.content
-
-        if (serializedDomainEvent == null || domainEventType == null) {
-            LOG.error(
-                "Outbox message with id: ${outboxJpaEntity.id} was not processed because the content or type is null"
-            )
-            return null
-        }
-
-        return domainEventSerializer.deserialize(
-            serializedEvent = serializedDomainEvent,
-            type = domainEventType,
-        )
     }
 
     companion object {

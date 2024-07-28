@@ -5,6 +5,7 @@ import github.com.hukuta94.delivery.api.startup.configuration.adapter.kafka.Kafk
 import github.com.hukuta94.delivery.api.startup.configuration.adapter.orm.OrmRepositoryConfiguration
 import github.com.hukuta94.delivery.api.startup.configuration.adapter.scheduler.SchedulerConfiguration
 import github.com.hukuta94.delivery.api.startup.configuration.application.*
+import github.com.hukuta94.delivery.api.startup.configuration.application.event.ApplicationEventsConfiguration
 import github.com.hukuta94.delivery.api.startup.configuration.domain.DomainServiceConfiguration
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.context.annotation.Configuration
@@ -18,7 +19,7 @@ import org.springframework.context.annotation.Import
     DomainServiceConfiguration::class,
     SchedulerConfiguration::class,
     PortConfiguration::class,
-    ApplicationEventHandlerConfiguration::class,
+    ApplicationEventsConfiguration::class,
     KafkaConfiguration::class,
     OrmRepositoryConfiguration::class,
     ControllerConfiguration::class,

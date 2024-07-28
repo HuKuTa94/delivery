@@ -1,4 +1,4 @@
-package github.com.hukuta94.delivery.infrastructure.adapter.orm.model.converter
+package github.com.hukuta94.delivery.infrastructure.adapter.orm.model.entity.box
 
 import github.com.hukuta94.delivery.core.application.event.domain.DomainEventSerializer
 import github.com.hukuta94.delivery.core.domain.order.OrderAssignedDomainEvent
@@ -6,32 +6,29 @@ import io.kotlintest.assertSoftly
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito.mock
+import org.mockito.Mockito
 import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import java.util.*
 
-internal class DomainEventConverterTest {
+class OutboxJpaEntityTest {
 
     // Mocks
-    private val domainEventSerializer: DomainEventSerializer = mock()
-
-    // System Under Testing
-    private val sut = DomainEventConverter(domainEventSerializer)
+    private val domainEventSerializer: DomainEventSerializer = Mockito.mock()
 
     @Test
-    fun `converts domain events into out box entity`() {
+    fun `creates outbox entity from domain event`() {
         // Given
         val serializedDomainEvent = "serialized domain event"
         val domainEvent = OrderAssignedDomainEvent(
-                orderId = UUID.randomUUID(),
-                courierId = UUID.randomUUID(),
-            )
+            orderId = UUID.randomUUID(),
+            courierId = UUID.randomUUID(),
+        )
         whenever(domainEventSerializer.serialize(any()))
             .thenReturn(serializedDomainEvent)
 
         // When
-        val outboxEntity = sut.toOutboxJpaEntities(listOf(domainEvent)).first()
+        val outboxEntity = OutboxJpaEntity.fromEvent(domainEvent, domainEventSerializer)
 
         // Then
         assertSoftly {

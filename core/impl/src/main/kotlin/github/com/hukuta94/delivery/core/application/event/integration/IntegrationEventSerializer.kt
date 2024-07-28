@@ -2,7 +2,4 @@ package github.com.hukuta94.delivery.core.application.event.integration
 
 import github.com.hukuta94.delivery.core.application.event.ApplicationEventSerializer
 
-class IntegrationEventSerializer : ApplicationEventSerializer<IntegrationEvent>() {
-
-    override val eventPackage = "github.com.hukuta94.delivery.core.application.event.integration."
-}
+class IntegrationEventSerializer : ApplicationEventSerializer<IntegrationEvent>()
