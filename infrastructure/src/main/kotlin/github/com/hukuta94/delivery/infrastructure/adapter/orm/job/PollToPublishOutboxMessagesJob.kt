@@ -63,7 +63,7 @@ class PollToPublishOutboxMessagesJob(
         }
 
         return domainEventSerializer.deserialize(
-            serializedDomainEvent = serializedDomainEvent,
+            serializedEvent = serializedDomainEvent,
             type = domainEventType,
         )
     }

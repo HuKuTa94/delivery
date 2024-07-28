@@ -63,7 +63,7 @@ class PollToPublishInboxMessagesJob(
         }
 
         return integrationEventSerializer.deserialize(
-            serializedIntegrationEvent = serializedIntegrationEvent,
+            serializedEvent = serializedIntegrationEvent,
             type = integrationEventType,
         )
     }

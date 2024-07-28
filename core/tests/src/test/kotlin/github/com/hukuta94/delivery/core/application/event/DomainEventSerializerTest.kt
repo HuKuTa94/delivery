@@ -1,7 +1,6 @@
 package github.com.hukuta94.delivery.core.application.event
 
 import github.com.hukuta94.delivery.core.application.event.domain.DomainEventSerializer
-import github.com.hukuta94.delivery.core.application.event.domain.DomainEventSerializer.Companion.DOMAIN_EVENT_PACKAGE
 import github.com.hukuta94.delivery.core.domain.order.OrderAssignedDomainEvent
 import github.com.hukuta94.delivery.core.domain.order.OrderCompletedDomainEvent
 import io.kotlintest.assertSoftly
@@ -55,7 +54,7 @@ internal class DomainEventSerializerTest {
 
         // When
         val actualDeserializedDomainEvent = sut.deserialize(
-            serializedDomainEvent = serializedDomainEvent,
+            serializedEvent = serializedDomainEvent,
             type = cutDomainClassType,
         )
 
@@ -100,7 +99,7 @@ internal class DomainEventSerializerTest {
 
         // When
         val actualDeserializedDomainEvent = sut.deserialize(
-            serializedDomainEvent = serializedDomainEvent,
+            serializedEvent = serializedDomainEvent,
             type = cutDomainClassType,
         )
 
@@ -111,6 +110,7 @@ internal class DomainEventSerializerTest {
     private fun String.withoutSpaces() = this.trimIndent().replace(SPACES_REGEX, "")
 
     companion object {
+        private const val DOMAIN_EVENT_PACKAGE = "github.com.hukuta94.delivery.core.domain."
         private val SPACES_REGEX = Regex("\\s+")
     }
 }
