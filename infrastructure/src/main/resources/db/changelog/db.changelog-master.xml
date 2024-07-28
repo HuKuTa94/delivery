@@ -244,10 +244,10 @@
             <column name="id" type="uuid">
                 <constraints primaryKey="true" nullable="false" primaryKeyName="pk_dlv_outbox"/>
             </column>
-            <column name="type" type="varchar(255)">
+            <column name="event_type" type="varchar(64)">
                 <constraints nullable="false"/>
             </column>
-            <column name="content" type="text">
+            <column name="payload" type="text">
                 <constraints nullable="false"/>
             </column>
             <column name="created_at" type="timestamp">
@@ -270,10 +270,10 @@
             <column name="id" type="uuid">
                 <constraints primaryKey="true" nullable="false" primaryKeyName="pk_dlv_inbox"/>
             </column>
-            <column name="type" type="varchar(255)">
+            <column name="event_type" type="varchar(64)">
                 <constraints nullable="false"/>
             </column>
-            <column name="content" type="text">
+            <column name="payload" type="text">
                 <constraints nullable="false"/>
             </column>
             <column name="created_at" type="timestamp">

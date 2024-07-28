@@ -43,7 +43,7 @@ class PollToPublishInboxMessagesJob(
             inboxMessage
         } catch (ex: Exception) {
             LOG.error(
-                "Integration event of type ${inboxMessage.type} from inbox message " +
+                "Integration event of type ${inboxMessage.eventType} from inbox message " +
                     "with id: ${inboxMessage.id} was processed with error: " + ex.message
             )
             return null

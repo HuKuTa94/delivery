@@ -17,12 +17,12 @@ class OutboxJpaEntity {
     @Id
     var id: UUID? = null
 
-    @Column(name = "type")
+    @Column(name = "event_type")
     @Convert(converter = DomainEventClassTypeConverter::class)
-    lateinit var type: DomainEventClassType
+    lateinit var eventType: DomainEventClassType
 
-    @Column(name = "content")
-    lateinit var content: String
+    @Column(name = "payload")
+    lateinit var payload: String
 
     @Column(name = "created_at")
     lateinit var createdAt: LocalDateTime
@@ -34,8 +34,8 @@ class OutboxJpaEntity {
         eventDeserializer: DomainEventDeserializer
     ): DomainEvent {
         return eventDeserializer.deserialize(
-            serializedEvent = content,
-            eventClassType = type,
+            serializedEvent = payload,
+            eventClassType = eventType,
         )
     }
 
@@ -47,8 +47,8 @@ class OutboxJpaEntity {
             eventSerializer: DomainEventSerializer
         ) = OutboxJpaEntity().apply {
             id = event.id
-            type = DomainEventClassType(event::class)
-            content = eventSerializer.serialize(event)
+            eventType = DomainEventClassType(event::class)
+            payload = eventSerializer.serialize(event)
             createdAt = LocalDateTime.now()
             processedAt = null
         }

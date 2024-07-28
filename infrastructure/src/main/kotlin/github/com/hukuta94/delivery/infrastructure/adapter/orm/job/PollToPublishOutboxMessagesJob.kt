@@ -43,7 +43,7 @@ class PollToPublishOutboxMessagesJob(
             outboxMessage
         } catch (ex: Exception) {
             LOG.error(
-                "Domain event of type ${outboxMessage.type} from outbox message " +
+                "Domain event of type ${outboxMessage.eventType} from outbox message " +
                     "with id: ${outboxMessage.id} was processed with error: " + ex.message
             )
             return null

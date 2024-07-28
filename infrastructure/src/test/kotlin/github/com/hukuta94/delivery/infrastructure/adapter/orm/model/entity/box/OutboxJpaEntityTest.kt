@@ -33,8 +33,8 @@ class OutboxJpaEntityTest {
         // Then
         assertSoftly {
             outboxEntity.id shouldBe domainEvent.id
-            outboxEntity.type shouldBe "order.OrderAssignedDomainEvent"
-            outboxEntity.content shouldBe serializedDomainEvent
+            outboxEntity.eventType shouldBe "order.OrderAssignedDomainEvent"
+            outboxEntity.payload shouldBe serializedDomainEvent
             outboxEntity.createdAt shouldNotBe null
             outboxEntity.processedAt shouldBe null
         }

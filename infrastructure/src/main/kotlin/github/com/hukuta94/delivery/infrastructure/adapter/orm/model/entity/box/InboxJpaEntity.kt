@@ -17,12 +17,12 @@ class InboxJpaEntity {
     @Id
     lateinit var id: UUID
 
-    @Column(name = "type")
+    @Column(name = "event_type")
     @Convert(converter = IntegrationEventClassTypeConverter::class)
-    lateinit var type: IntegrationEventClassType
+    lateinit var eventType: IntegrationEventClassType
 
-    @Column(name = "content")
-    lateinit var content: String
+    @Column(name = "payload")
+    lateinit var payload: String
 
     @Column(name = "created_at")
     lateinit var createdAt: LocalDateTime
@@ -34,8 +34,8 @@ class InboxJpaEntity {
         eventDeserializer: IntegrationEventDeserializer
     ): IntegrationEvent {
         return eventDeserializer.deserialize(
-            serializedEvent = content,
-            eventClassType = type,
+            serializedEvent = payload,
+            eventClassType = eventType,
         )
     }
 
@@ -47,8 +47,8 @@ class InboxJpaEntity {
             eventSerializer: IntegrationEventSerializer
         ) = InboxJpaEntity().apply {
                 id = event.id
-                type = IntegrationEventClassType(event::class)
-                content = eventSerializer.serialize(event)
+                eventType = IntegrationEventClassType(event::class)
+                payload = eventSerializer.serialize(event)
                 createdAt = LocalDateTime.now()
                 processedAt = null
             }
