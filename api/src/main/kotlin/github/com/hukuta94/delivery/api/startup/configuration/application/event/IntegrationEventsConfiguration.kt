@@ -1,6 +1,6 @@
 package github.com.hukuta94.delivery.api.startup.configuration.application.event
 
-import github.com.hukuta94.delivery.core.application.event.integration.IntegrationEvent
+import github.com.hukuta94.delivery.core.domain.IntegrationEvent
 import github.com.hukuta94.delivery.core.application.event.integration.IntegrationEventDeserializer
 import github.com.hukuta94.delivery.core.application.event.integration.IntegrationEventPublisher
 import github.com.hukuta94.delivery.core.application.event.integration.IntegrationEventSerializer

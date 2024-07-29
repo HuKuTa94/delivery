@@ -1,9 +1,10 @@
 package github.com.hukuta94.delivery.core.application.event
 
+import github.com.hukuta94.delivery.core.domain.DomainEvent
 import org.slf4j.LoggerFactory
 import kotlin.reflect.KClass
 
-abstract class ApplicationEventPublisher <EVENT : Any, HANDLER : ApplicationEventHandler<EVENT>> {
+abstract class ApplicationEventPublisher <EVENT : DomainEvent, HANDLER : ApplicationEventHandler<EVENT>> {
 
     private val handlerMap = mutableMapOf<KClass<*>, MutableList<HANDLER>>()
 

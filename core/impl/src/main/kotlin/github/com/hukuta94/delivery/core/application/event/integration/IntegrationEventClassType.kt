@@ -1,6 +1,7 @@
 package github.com.hukuta94.delivery.core.application.event.integration
 
 import github.com.hukuta94.delivery.core.application.event.EventClassType
+import github.com.hukuta94.delivery.core.domain.IntegrationEvent
 import kotlin.reflect.KClass
 
 @Suppress("UNCHECKED_CAST")
