@@ -1,4 +1,4 @@
-package github.com.hukuta94.delivery.core.domain.sharedkernel
+package github.com.hukuta94.delivery.core.domain.common
 
 import kotlin.math.abs
 

@@ -1,6 +1,6 @@
 package github.com.hukuta94.delivery.core.port
 
-import github.com.hukuta94.delivery.core.domain.sharedkernel.Currency
+import github.com.hukuta94.delivery.core.domain.common.Currency
 import java.math.BigDecimal
 
 interface Exchange {

@@ -1,6 +1,6 @@
 package github.com.hukuta94.delivery.core.port
 
-import github.com.hukuta94.delivery.core.domain.sharedkernel.Location
+import github.com.hukuta94.delivery.core.domain.common.Location
 
 /**
  * Port of application layer to get [Location] value object by different ways.

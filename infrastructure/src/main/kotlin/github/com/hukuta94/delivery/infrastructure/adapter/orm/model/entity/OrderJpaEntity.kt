@@ -2,7 +2,7 @@ package github.com.hukuta94.delivery.infrastructure.adapter.orm.model.entity
 
 import github.com.hukuta94.delivery.core.domain.order.Order
 import github.com.hukuta94.delivery.core.domain.order.OrderStatus
-import github.com.hukuta94.delivery.core.domain.sharedkernel.Location
+import github.com.hukuta94.delivery.core.domain.common.Location
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.converter.LocationConverter
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.converter.OrderStatusConverter
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.entity.OrderJpaEntity.Companion.TABLE_NAME

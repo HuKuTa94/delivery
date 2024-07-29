@@ -1,4 +1,4 @@
-package github.com.hukuta94.delivery.core.domain.sharedkernel
+package github.com.hukuta94.delivery.core.domain.common
 
 data class Location(
     val abscissa: Int,
