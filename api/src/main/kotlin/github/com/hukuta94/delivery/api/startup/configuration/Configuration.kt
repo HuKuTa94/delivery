@@ -6,6 +6,7 @@ import github.com.hukuta94.delivery.api.startup.configuration.adapter.orm.OrmRep
 import github.com.hukuta94.delivery.api.startup.configuration.adapter.scheduler.SchedulerConfiguration
 import github.com.hukuta94.delivery.api.startup.configuration.application.*
 import github.com.hukuta94.delivery.api.startup.configuration.application.event.ApplicationEventsConfiguration
+import github.com.hukuta94.delivery.api.startup.configuration.application.usecase.UseCaseConfiguration
 import github.com.hukuta94.delivery.api.startup.configuration.domain.DomainServiceConfiguration
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.context.annotation.Configuration
@@ -14,8 +15,7 @@ import org.springframework.context.annotation.Import
 @Configuration
 @EnableAutoConfiguration
 @Import(
-    OrderUseCaseConfiguration::class,
-    CourierUseCaseConfiguration::class,
+    UseCaseConfiguration::class,
     DomainServiceConfiguration::class,
     SchedulerConfiguration::class,
     PortConfiguration::class,

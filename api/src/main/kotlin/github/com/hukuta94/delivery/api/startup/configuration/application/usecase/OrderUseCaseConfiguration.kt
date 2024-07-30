@@ -1,4 +1,4 @@
-package github.com.hukuta94.delivery.api.startup.configuration.application
+package github.com.hukuta94.delivery.api.startup.configuration.application.usecase
 
 import github.com.hukuta94.delivery.core.application.usecase.order.AssignCourierToOrderUseCase
 import github.com.hukuta94.delivery.core.application.usecase.order.CreateOrderUseCase
