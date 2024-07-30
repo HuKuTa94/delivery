@@ -44,7 +44,7 @@ class PollToPublishOutboxMessagesJob(
             outboxMessage.toEvent(domainEventDeserializer)
         } catch (ex: Exception) {
             val error = "Deserialization error of " +
-                "${outboxMessage.eventType.eventClass.simpleName} domain event: " + ex.message
+                "${outboxMessage.eventType.value.simpleName} domain event: " + ex.message
 
             LOG.error(error)
 

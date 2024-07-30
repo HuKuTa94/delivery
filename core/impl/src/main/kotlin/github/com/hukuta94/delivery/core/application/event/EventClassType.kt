@@ -6,7 +6,7 @@ import kotlin.reflect.KClass
  * The value object stores information about event class type and package
  */
 abstract class EventClassType<EVENT : Any>(
-    val eventClass: KClass<out EVENT>
+    val value: KClass<out EVENT>
 ) {
     /**
      * Full path to package of event class
@@ -18,11 +18,11 @@ abstract class EventClassType<EVENT : Any>(
      */
     protected abstract val eventClassPackageRegexPattern: Regex
 
-    fun stringValue() = eventClass.qualifiedName
+    fun stringValue() = value.qualifiedName
         ?.replace(eventClassPackageRegexPattern, "")
         ?: error(qualifiedNameIsAbsentErrorMessage())
 
     private fun qualifiedNameIsAbsentErrorMessage(): String {
-        return "Qualified name is absent for class: ${eventClass.simpleName}"
+        return "Qualified name is absent for class: ${value.simpleName}"
     }
 }

@@ -28,8 +28,7 @@ class DomainEventClassType(
                 }
             } catch (ex: ClassNotFoundException) {
                 throw IllegalArgumentException(
-                    "Can't instantiate value object from type $type",
-                    ex
+                    "Can't instantiate value object from type $type", ex
                 )
             }
         }

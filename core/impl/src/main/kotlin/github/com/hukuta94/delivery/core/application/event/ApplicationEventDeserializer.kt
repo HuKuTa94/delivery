@@ -12,6 +12,6 @@ abstract class ApplicationEventDeserializer<EVENT : Any> {
         serializedEvent: String,
         eventClassType: EventClassType<EVENT>
     ): EVENT {
-        return objectMapper.readValue(serializedEvent, eventClassType.eventClass.java) as EVENT
+        return objectMapper.readValue(serializedEvent, eventClassType.value.java) as EVENT
     }
 }
