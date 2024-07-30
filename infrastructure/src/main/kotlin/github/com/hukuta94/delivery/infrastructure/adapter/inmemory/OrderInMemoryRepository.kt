@@ -27,6 +27,10 @@ class OrderInMemoryRepository : OrderRepositoryPort {
         return storage[id] ?:  error("The order with id=$id is not found")
     }
 
+    override fun existsById(id: UUID): Boolean {
+        return storage.containsKey(id)
+    }
+
     override fun getAllCreated(): Collection<Order> {
         return storage.values.filter { order ->
             order.status == OrderStatus.CREATED

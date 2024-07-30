@@ -42,6 +42,10 @@ class OrmCourierRepositoryAdapter(
             ?: error("The courier with id=$id is not found")
     }
 
+    override fun existsById(id: UUID): Boolean {
+        return courierJpaRepository.existsById(id)
+    }
+
     override fun getAllFree(): Collection<Courier> {
         return getAllByStatus(CourierStatus.FREE)
     }

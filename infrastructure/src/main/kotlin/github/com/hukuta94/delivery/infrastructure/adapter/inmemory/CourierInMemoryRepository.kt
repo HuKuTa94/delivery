@@ -37,6 +37,10 @@ class CourierInMemoryRepository : CourierRepositoryPort {
         return storage[id] ?: error("The courier with id=$id is not found")
     }
 
+    override fun existsById(id: UUID): Boolean {
+        return storage.containsKey(id)
+    }
+
     override fun getAllFree(): Collection<Courier> {
         return storage.values.filter { courier ->
             courier.status == CourierStatus.FREE

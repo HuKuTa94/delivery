@@ -13,4 +13,6 @@ sealed interface AggregateRepository<AGGREGATE : Aggregate<*>> {
 
     fun getById(id: UUID): AGGREGATE
 
+    fun existsById(id: UUID): Boolean
+
 }

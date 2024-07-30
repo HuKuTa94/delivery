@@ -42,6 +42,10 @@ class OrmOrderRepositoryAdapter(
             ?: error("The order with id=$id is not found")
     }
 
+    override fun existsById(id: UUID): Boolean {
+        return orderJpaRepository.existsById(id)
+    }
+
     override fun getAllCreated(): Collection<Order> {
         return getAllByStatus(OrderStatus.CREATED)
     }
