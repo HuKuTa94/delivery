@@ -41,7 +41,7 @@ class GetBusyCouriersQueryImpl(
 
     companion object {
         private val PARAMETERS = mapOf(
-            CourierJpaEntity.STATUS_ID to CourierStatus.FREE.id,
+            CourierJpaEntity.STATUS_ID to CourierStatus.BUSY.id,
         )
 
         private val SQL = """
