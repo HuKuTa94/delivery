@@ -1,7 +1,7 @@
 package github.com.hukuta94.delivery.api.adapter.http.order
 
 import github.com.hukuta94.delivery.core.application.query.order.GetNotCompletedOrdersQuery
-import github.com.hukuta94.delivery.core.application.query.order.response.GetNotCompletedOrdersResponse
+import github.com.hukuta94.delivery.core.application.query.order.response.Order
 import github.com.hukuta94.delivery.core.application.usecase.order.CreateOrderCommand
 import github.com.hukuta94.delivery.core.application.usecase.order.CreateOrderUseCase
 import org.springframework.http.HttpStatus
@@ -27,9 +27,9 @@ class OrderControllerV1(
     }
 
     @GetMapping("orders/active")
-    fun getActiveOrders(): ResponseEntity<GetNotCompletedOrdersResponse> {
-        val activeOrders = getNotCompletedOrdersQuery.execute()
-        return ResponseEntity.ok(activeOrders)
+    fun getActiveOrders(): ResponseEntity<List<Order>> {
+        val response = getNotCompletedOrdersQuery.execute()
+        return ResponseEntity.ok(response.orders)
     }
 }
 
