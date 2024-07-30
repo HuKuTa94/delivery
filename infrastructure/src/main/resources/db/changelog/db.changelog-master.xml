@@ -256,6 +256,12 @@
             <column name="processed_at" type="timestamp">
                 <constraints nullable="true"/>
             </column>
+            <column name="status" type="varchar(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="error_description" type="text">
+                <constraints nullable="true"/>
+            </column>
         </createTable>
     </changeSet>
 

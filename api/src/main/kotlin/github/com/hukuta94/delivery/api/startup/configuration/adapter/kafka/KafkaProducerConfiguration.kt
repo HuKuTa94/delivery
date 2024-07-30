@@ -15,12 +15,14 @@ import java.util.*
 @Configuration
 open class KafkaProducerConfiguration {
 
+    //TODO Вынести все магические числа в файл конфигурации
     @Bean
     open fun orderKafkaProducerFactory(): ProducerFactory<UUID, ByteArray> {
         val properties = mapOf(
             ProducerConfig.BOOTSTRAP_SERVERS_CONFIG to "localhost:9092",
             ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG to UUIDSerializer::class.java,
             ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG to ByteArraySerializer::class.java,
+            ProducerConfig.MAX_BLOCK_MS_CONFIG to 5000,
         )
         return DefaultKafkaProducerFactory(properties)
     }

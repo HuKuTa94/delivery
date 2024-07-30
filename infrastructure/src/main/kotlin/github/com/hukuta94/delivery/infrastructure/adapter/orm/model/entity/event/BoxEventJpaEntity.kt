@@ -7,6 +7,10 @@ import javax.persistence.Column
 import javax.persistence.Id
 import javax.persistence.MappedSuperclass
 
+/**
+ * Entity describes columns table of the In/Out Box pattern.
+ * It is used to increase reliability of processing incoming and outgoing events.
+ */
 @MappedSuperclass
 abstract class BoxEventJpaEntity<EVENT : Any, EVENT_CLASS_TYPE : EventClassType<EVENT>> {
 
