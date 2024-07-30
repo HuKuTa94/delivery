@@ -14,7 +14,7 @@ class BasketKafkaConsumer(
         groupId = "basket-consumer-group",
         topics = [ "basket.confirmed" ],
     )
-    fun basketConfirmedTopic(message: ConsumerRecord<UUID, String>) {
+    fun basketConfirmedTopic(message: ConsumerRecord<String, String>) {
         LOG.info("Begin handling message with key: ${message.key()}")
 
         val basketConfirmedEventBuilder = BasketConfirmedIntegrationEvent.newBuilder()
@@ -24,7 +24,7 @@ class BasketKafkaConsumer(
         val basketConfirmedEvent = basketConfirmedEventBuilder.build()
 
         val integrationEvent = github.com.hukuta94.delivery.core.application.event.integration.BasketConfirmedIntegrationEvent(
-            id = UUID.randomUUID(), //TODO ID должен проставлятьcz из полученного интеграционного события
+            id = UUID.fromString(message.key()),
             basketId = UUID.fromString(basketConfirmedEvent.basketId),
             street = basketConfirmedEvent.address.street,
         )
