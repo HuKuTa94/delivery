@@ -12,14 +12,25 @@ class CreateOrderUseCaseImpl(
     private val getLocationPort: GetLocationPort,
 ) : CreateOrderUseCase {
     override fun execute(command: CreateOrderCommand) {
-        LOG.info("Try to create new order with basket id: ${command.basketId}")
+        val orderId = command.basketId
+
+        LOG.info("Try to create new order with basket id: $orderId")
+
+        val orderAlreadyExists = orderRepository.existsById(command.basketId)
+        if (orderAlreadyExists) {
+            LOG.info("Order with id: $orderId already exists")
+            return
+        }
+
 
         val newOrder = Order.create(
-            id = command.basketId,
+            id = orderId,
             location = getLocationPort.getFromStreet(command.street),
         )
 
         orderRepository.add(newOrder)
+
+        LOG.info("Order with basket id: $orderId was created")
     }
 
     companion object {
