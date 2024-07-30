@@ -1,7 +1,7 @@
 package github.com.hukuta94.delivery.api.startup.configuration.adapter.kafka
 
 import github.com.hukuta94.delivery.api.adapter.kafka.BasketKafkaConsumer
-import github.com.hukuta94.delivery.core.port.repository.event.InboxEventRepositoryPort
+import github.com.hukuta94.delivery.core.application.usecase.event.SaveIntegrationEventUseCase
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.common.serialization.StringDeserializer
 import org.springframework.context.annotation.Bean
@@ -35,8 +35,8 @@ open class KafkaConsumerConfiguration {
 
     @Bean
     open fun basketKafkaConsumer(
-        inboxEventRepository: InboxEventRepositoryPort,
+        saveIntegrationEventUseCase: SaveIntegrationEventUseCase,
     ) = BasketKafkaConsumer(
-        inboxEventRepository = inboxEventRepository,
+        saveIntegrationEventUseCase = saveIntegrationEventUseCase,
     )
 }
