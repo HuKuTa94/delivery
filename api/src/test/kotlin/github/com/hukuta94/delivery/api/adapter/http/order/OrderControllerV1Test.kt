@@ -6,6 +6,7 @@ import github.com.hukuta94.delivery.core.application.query.order.GetNotCompleted
 import github.com.hukuta94.delivery.core.application.query.order.response.GetNotCompletedOrdersResponse
 import github.com.hukuta94.delivery.core.application.query.order.response.Order
 import github.com.hukuta94.delivery.core.domain.order.newOrder
+import github.com.hukuta94.delivery.startup.configuration.DeliveryApplicationConfiguration
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
 import org.springframework.beans.factory.annotation.Autowired
@@ -20,7 +21,7 @@ import org.springframework.test.web.servlet.get
 //TODO Настроить конфигурацию, чтобы не поднимался весь контекст
 @SpringBootTest(
     classes = [
-        github.com.hukuta94.delivery.api.startup.configuration.Configuration::class,
+        DeliveryApplicationConfiguration::class,
     ]
 )
 internal class OrderControllerV1Test {

@@ -5,6 +5,7 @@ import github.com.hukuta94.delivery.core.application.query.courier.response.Cour
 import github.com.hukuta94.delivery.core.application.query.courier.response.GetCouriersResponse
 import github.com.hukuta94.delivery.core.application.query.common.Location
 import github.com.hukuta94.delivery.core.domain.courier.newCourier
+import github.com.hukuta94.delivery.startup.configuration.DeliveryApplicationConfiguration
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
 import org.springframework.beans.factory.annotation.Autowired
@@ -19,7 +20,7 @@ import org.springframework.test.web.servlet.get
 //TODO Настроить конфигурацию, чтобы не поднимался весь контекст
 @SpringBootTest(
     classes = [
-        github.com.hukuta94.delivery.api.startup.configuration.Configuration::class,
+        DeliveryApplicationConfiguration::class,
     ]
 )
 internal class CourierControllerV1Test {
