@@ -1,11 +1,12 @@
 package github.com.hukuta94.delivery.core.application.event
 
+import github.com.hukuta94.delivery.core.domain.DomainEvent
 import kotlin.reflect.KClass
 
 /**
  * The value object stores information about event class type and package
  */
-abstract class EventClassType<EVENT : Any>(
+abstract class EventClassType<EVENT : DomainEvent>(
     val value: KClass<out EVENT>
 ) {
     /**

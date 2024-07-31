@@ -1,6 +1,7 @@
 package github.com.hukuta94.delivery.infrastructure.adapter.orm.model.entity.event
 
 import github.com.hukuta94.delivery.core.application.event.EventClassType
+import github.com.hukuta94.delivery.core.domain.DomainEvent
 import java.time.LocalDateTime
 import java.util.*
 import javax.persistence.Column
@@ -12,7 +13,7 @@ import javax.persistence.MappedSuperclass
  * It is used to increase reliability of processing incoming and outgoing events.
  */
 @MappedSuperclass
-abstract class BoxEventJpaEntity<EVENT : Any, EVENT_CLASS_TYPE : EventClassType<EVENT>> {
+abstract class BoxEventJpaEntity<EVENT : DomainEvent, EVENT_CLASS_TYPE : EventClassType<EVENT>> {
 
     @Id
     lateinit var id: UUID
