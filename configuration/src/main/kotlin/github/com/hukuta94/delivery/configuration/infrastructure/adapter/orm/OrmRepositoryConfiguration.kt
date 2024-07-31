@@ -6,8 +6,8 @@ import github.com.hukuta94.delivery.core.application.event.domain.DomainEventSer
 import github.com.hukuta94.delivery.core.application.event.integration.IntegrationEventDeserializer
 import github.com.hukuta94.delivery.core.application.event.integration.IntegrationEventPublisher
 import github.com.hukuta94.delivery.core.application.event.integration.IntegrationEventSerializer
-import github.com.hukuta94.delivery.core.port.repository.UnitOfWorkPort
-import github.com.hukuta94.delivery.core.port.repository.event.InboxEventRepositoryPort
+import github.com.hukuta94.delivery.core.application.port.repository.UnitOfWorkPort
+import github.com.hukuta94.delivery.core.application.port.repository.event.InboxEventRepositoryPort
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.job.PollToPublishInboxMessagesJob
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.job.PollToPublishOutboxMessagesJob
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.repository.event.OrmOutboxEventRepositoryAdapter

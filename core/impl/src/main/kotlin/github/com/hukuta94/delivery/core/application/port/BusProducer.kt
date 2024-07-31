@@ -1,4 +1,4 @@
-package github.com.hukuta94.delivery.core.port
+package github.com.hukuta94.delivery.core.application.port
 
 import github.com.hukuta94.delivery.core.domain.order.OrderAssignedDomainEvent
 import github.com.hukuta94.delivery.core.domain.order.OrderCompletedDomainEvent

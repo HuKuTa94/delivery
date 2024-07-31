@@ -1,6 +1,6 @@
 package github.com.hukuta94.delivery.core.domain.common
 
-import github.com.hukuta94.delivery.core.port.Exchange
+import github.com.hukuta94.delivery.core.application.port.Exchange
 import java.math.BigDecimal
 
 data class Money(

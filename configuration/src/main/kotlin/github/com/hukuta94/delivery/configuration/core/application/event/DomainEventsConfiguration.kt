@@ -7,7 +7,7 @@ import github.com.hukuta94.delivery.core.application.event.domain.handler.Domain
 import github.com.hukuta94.delivery.core.application.event.domain.handler.OrderAssignedDomainEventHandler
 import github.com.hukuta94.delivery.core.application.event.domain.handler.OrderCompletedDomainEventHandler
 import github.com.hukuta94.delivery.core.domain.DomainEvent
-import github.com.hukuta94.delivery.core.port.BusProducer
+import github.com.hukuta94.delivery.core.application.port.BusProducer
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 

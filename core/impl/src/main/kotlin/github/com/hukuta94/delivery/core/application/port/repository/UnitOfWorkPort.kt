@@ -1,4 +1,4 @@
-package github.com.hukuta94.delivery.core.port.repository
+package github.com.hukuta94.delivery.core.application.port.repository
 
 interface UnitOfWorkPort {
 

@@ -3,9 +3,9 @@ package github.com.hukuta94.delivery.core.application.usecase.courier.impl
 import github.com.hukuta94.delivery.core.application.usecase.courier.MoveCouriersUseCase
 import github.com.hukuta94.delivery.core.domain.order.Order
 import github.com.hukuta94.delivery.core.domain.service.CompleteOrderService
-import github.com.hukuta94.delivery.core.port.repository.domain.CourierRepositoryPort
-import github.com.hukuta94.delivery.core.port.repository.domain.OrderRepositoryPort
-import github.com.hukuta94.delivery.core.port.repository.UnitOfWorkPort
+import github.com.hukuta94.delivery.core.application.port.repository.domain.CourierRepositoryPort
+import github.com.hukuta94.delivery.core.application.port.repository.domain.OrderRepositoryPort
+import github.com.hukuta94.delivery.core.application.port.repository.UnitOfWorkPort
 import org.slf4j.LoggerFactory
 
 class MoveCouriersUseCaseImpl(

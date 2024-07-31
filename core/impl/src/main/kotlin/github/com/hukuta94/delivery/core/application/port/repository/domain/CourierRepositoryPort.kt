@@ -1,4 +1,4 @@
-package github.com.hukuta94.delivery.core.port.repository.domain
+package github.com.hukuta94.delivery.core.application.port.repository.domain
 
 import github.com.hukuta94.delivery.core.domain.courier.Courier
 

@@ -1,4 +1,4 @@
-package github.com.hukuta94.delivery.core.port.repository.event
+package github.com.hukuta94.delivery.core.application.port.repository.event
 
 import github.com.hukuta94.delivery.core.domain.IntegrationEvent
 

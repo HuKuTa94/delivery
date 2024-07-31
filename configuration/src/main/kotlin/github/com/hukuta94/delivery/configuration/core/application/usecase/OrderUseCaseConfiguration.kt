@@ -5,10 +5,10 @@ import github.com.hukuta94.delivery.core.application.usecase.order.CreateOrderUs
 import github.com.hukuta94.delivery.core.application.usecase.order.impl.AssignCourierToOrderUseCaseImpl
 import github.com.hukuta94.delivery.core.application.usecase.order.impl.CreateOrderUseCaseImpl
 import github.com.hukuta94.delivery.core.domain.service.DispatchService
-import github.com.hukuta94.delivery.core.port.repository.domain.CourierRepositoryPort
-import github.com.hukuta94.delivery.core.port.GetLocationPort
-import github.com.hukuta94.delivery.core.port.repository.domain.OrderRepositoryPort
-import github.com.hukuta94.delivery.core.port.repository.UnitOfWorkPort
+import github.com.hukuta94.delivery.core.application.port.repository.domain.CourierRepositoryPort
+import github.com.hukuta94.delivery.core.application.port.GetLocationPort
+import github.com.hukuta94.delivery.core.application.port.repository.domain.OrderRepositoryPort
+import github.com.hukuta94.delivery.core.application.port.repository.UnitOfWorkPort
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 

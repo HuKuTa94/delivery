@@ -1,6 +1,6 @@
 package github.com.hukuta94.delivery.configuration.infrastructure.adapter.kafka
 
-import github.com.hukuta94.delivery.core.port.BusProducer
+import github.com.hukuta94.delivery.core.application.port.BusProducer
 import github.com.hukuta94.delivery.infrastructure.adapter.kafka.OrderKafkaProducer
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.common.serialization.ByteArraySerializer

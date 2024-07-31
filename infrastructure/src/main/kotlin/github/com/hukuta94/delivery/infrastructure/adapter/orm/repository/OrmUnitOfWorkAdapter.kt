@@ -1,6 +1,6 @@
 package github.com.hukuta94.delivery.infrastructure.adapter.orm.repository
 
-import github.com.hukuta94.delivery.core.port.repository.UnitOfWorkPort
+import github.com.hukuta94.delivery.core.application.port.repository.UnitOfWorkPort
 import org.springframework.transaction.annotation.Transactional
 
 open class OrmUnitOfWorkAdapter : UnitOfWorkPort {

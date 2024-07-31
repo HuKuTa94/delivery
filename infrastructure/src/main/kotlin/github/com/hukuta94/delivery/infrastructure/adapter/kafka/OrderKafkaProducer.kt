@@ -2,7 +2,7 @@ package github.com.hukuta94.delivery.infrastructure.adapter.kafka
 
 import github.com.hukuta94.delivery.core.domain.order.OrderAssignedDomainEvent
 import github.com.hukuta94.delivery.core.domain.order.OrderCompletedDomainEvent
-import github.com.hukuta94.delivery.core.port.BusProducer
+import github.com.hukuta94.delivery.core.application.port.BusProducer
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.slf4j.LoggerFactory
 import org.springframework.kafka.core.KafkaTemplate

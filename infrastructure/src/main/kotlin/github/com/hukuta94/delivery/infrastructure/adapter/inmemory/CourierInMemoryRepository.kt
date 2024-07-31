@@ -5,7 +5,7 @@ import github.com.hukuta94.delivery.core.domain.courier.CourierName
 import github.com.hukuta94.delivery.core.domain.courier.CourierStatus
 import github.com.hukuta94.delivery.core.domain.courier.Transport
 import github.com.hukuta94.delivery.core.domain.common.Location
-import github.com.hukuta94.delivery.core.port.repository.domain.CourierRepositoryPort
+import github.com.hukuta94.delivery.core.application.port.repository.domain.CourierRepositoryPort
 import java.util.*
 
 class CourierInMemoryRepository : CourierRepositoryPort {
