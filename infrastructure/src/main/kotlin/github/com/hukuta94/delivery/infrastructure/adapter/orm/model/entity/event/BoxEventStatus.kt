@@ -1,6 +1,6 @@
 package github.com.hukuta94.delivery.infrastructure.adapter.orm.model.entity.event
 
-enum class OutboxEventStatus(
+enum class BoxEventStatus(
     val dbCode: String,
 ) {
     /**
@@ -26,8 +26,10 @@ enum class OutboxEventStatus(
     ;
 
     companion object {
-        fun from(dbCode: String) = OutboxEventStatus.values()
+        fun from(dbCode: String) = BoxEventStatus.values()
             .firstOrNull { it.dbCode == dbCode }
-            ?: throw IllegalArgumentException("Enum value for ${OutboxEventStatus::class.simpleName} is not found by id: $dbCode")
+            ?: throw IllegalArgumentException(
+                "Enum value for ${BoxEventStatus::class.simpleName} is not found by id: $dbCode"
+            )
     }
 }

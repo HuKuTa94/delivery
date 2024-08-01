@@ -256,6 +256,9 @@
             <column name="processed_at" type="timestamp">
                 <constraints nullable="true"/>
             </column>
+            <column name="version" type="int">
+                <constraints nullable="false"/>
+            </column>
             <column name="status" type="varchar(32)">
                 <constraints nullable="false"/>
             </column>
@@ -286,6 +289,15 @@
                 <constraints nullable="false"/>
             </column>
             <column name="processed_at" type="timestamp">
+                <constraints nullable="true"/>
+            </column>
+            <column name="version" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="varchar(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="error_description" type="text">
                 <constraints nullable="true"/>
             </column>
         </createTable>

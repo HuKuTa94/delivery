@@ -2,9 +2,11 @@ package github.com.hukuta94.delivery.infrastructure.adapter.orm.model.entity.eve
 
 import github.com.hukuta94.delivery.core.application.event.EventClassType
 import github.com.hukuta94.delivery.core.domain.DomainEvent
+import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.converter.BoxEventStatusConverter
 import java.time.LocalDateTime
 import java.util.*
 import javax.persistence.Column
+import javax.persistence.Convert
 import javax.persistence.Id
 import javax.persistence.MappedSuperclass
 
@@ -30,4 +32,37 @@ abstract class BoxEventJpaEntity<EVENT : DomainEvent, EVENT_CLASS_TYPE : EventCl
     @get:Column(name = "event_type")
     @set:Column(name = "event_type")
     abstract var eventType: EVENT_CLASS_TYPE
+
+    @Column(name = "version")
+    var version: Int = 0
+
+    @Column(name = "status")
+    @Convert(converter = BoxEventStatusConverter::class)
+    var status: BoxEventStatus = BoxEventStatus.TO_BE_PROCESSED
+
+    @Column(name = "error_description")
+    var errorDescription: String? = null
+
+    fun failedConversion(errorDescription: String) {
+        this.status = BoxEventStatus.CONVERSION_ERROR
+        this.errorDescription = errorDescription
+        increaseVersion()
+    }
+
+    fun failedDelivery(errorDescription: String) {
+        this.status = BoxEventStatus.DELIVERY_ERROR
+        this.errorDescription = errorDescription
+        increaseVersion()
+    }
+
+    fun successfully(processedAt: LocalDateTime) {
+        this.status = BoxEventStatus.SUCCESSFULLY
+        this.errorDescription = null
+        this.processedAt = processedAt
+        increaseVersion()
+    }
+
+    private fun increaseVersion() {
+        version += 1
+    }
 }

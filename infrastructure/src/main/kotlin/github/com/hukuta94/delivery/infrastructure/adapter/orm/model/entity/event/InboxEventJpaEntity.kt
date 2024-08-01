@@ -30,13 +30,13 @@ class InboxEventJpaEntity : BoxEventJpaEntity<IntegrationEvent, IntegrationEvent
 
         fun fromEvent(
             event: IntegrationEvent,
-            eventSerializer: IntegrationEventSerializer
+            eventSerializer: IntegrationEventSerializer,
+            createdAt: LocalDateTime,
         ) = InboxEventJpaEntity().apply {
                 id = event.id
                 eventType = IntegrationEventClassType(event::class)
                 payload = eventSerializer.serialize(event)
-                createdAt = LocalDateTime.now()
-                processedAt = null
+                this.createdAt = createdAt
             }
     }
 }

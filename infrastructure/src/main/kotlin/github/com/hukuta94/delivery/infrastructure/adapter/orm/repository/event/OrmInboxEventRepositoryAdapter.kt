@@ -5,6 +5,7 @@ import github.com.hukuta94.delivery.core.application.event.integration.Integrati
 import github.com.hukuta94.delivery.core.application.port.repository.event.InboxEventRepositoryPort
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.entity.event.InboxEventJpaEntity
 import org.slf4j.LoggerFactory
+import java.time.LocalDateTime
 
 class OrmInboxEventRepositoryAdapter(
     private val inboxJpaRepository: InboxEventJpaRepository,
@@ -21,7 +22,12 @@ class OrmInboxEventRepositoryAdapter(
             return
         }
 
-        val inboxMessage = InboxEventJpaEntity.fromEvent(integrationEvent, integrationEventSerializer)
+        val inboxMessage = InboxEventJpaEntity.fromEvent(
+            integrationEvent,
+            integrationEventSerializer,
+            createdAt = LocalDateTime.now()
+        )
+
         inboxJpaRepository.save(inboxMessage)
     }
 

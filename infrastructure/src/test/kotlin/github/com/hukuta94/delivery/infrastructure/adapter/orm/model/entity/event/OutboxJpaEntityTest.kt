@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
+import java.time.LocalDateTime
 import java.util.*
 
 class OutboxJpaEntityTest {
@@ -28,7 +29,7 @@ class OutboxJpaEntityTest {
             .thenReturn(serializedDomainEvent)
 
         // When
-        val outboxEntity = OutboxEventJpaEntity.fromEvent(domainEvent, domainEventSerializer)
+        val outboxEntity = OutboxEventJpaEntity.fromEvent(domainEvent, domainEventSerializer, LocalDateTime.now())
 
         // Then
         assertSoftly {
