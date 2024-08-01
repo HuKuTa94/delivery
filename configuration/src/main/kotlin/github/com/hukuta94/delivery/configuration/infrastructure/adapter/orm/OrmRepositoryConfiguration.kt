@@ -8,8 +8,8 @@ import github.com.hukuta94.delivery.core.application.event.integration.Integrati
 import github.com.hukuta94.delivery.core.application.event.integration.IntegrationEventSerializer
 import github.com.hukuta94.delivery.core.application.port.repository.UnitOfWorkPort
 import github.com.hukuta94.delivery.core.application.port.repository.event.InboxEventRepositoryPort
-import github.com.hukuta94.delivery.infrastructure.adapter.orm.job.PollToPublishInboxMessagesJob
-import github.com.hukuta94.delivery.infrastructure.adapter.orm.job.PollToPublishOutboxMessagesJob
+import github.com.hukuta94.delivery.infrastructure.adapter.orm.job.PublishInboxMessagesJob
+import github.com.hukuta94.delivery.infrastructure.adapter.orm.job.PublishOutboxMessagesJob
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.repository.event.OrmOutboxEventRepositoryAdapter
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.repository.OrmUnitOfWorkAdapter
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.repository.event.OrmInboxEventRepositoryAdapter
@@ -59,7 +59,7 @@ open class OrmRepositoryConfiguration {
         outboxEventJpaRepository: OutboxEventJpaRepository,
         domainEventPublisher: DomainEventPublisher,
         domainEventDeserializer: DomainEventDeserializer,
-    ) = PollToPublishOutboxMessagesJob(
+    ) = PublishOutboxMessagesJob(
         outboxEventJpaRepository = outboxEventJpaRepository,
         domainEventPublisher = domainEventPublisher,
         domainEventDeserializer = domainEventDeserializer,
@@ -81,7 +81,7 @@ open class OrmRepositoryConfiguration {
         inboxJpaRepository: InboxEventJpaRepository,
         integrationEventPublisher: IntegrationEventPublisher,
         integrationEventDeserializer: IntegrationEventDeserializer,
-    ) = PollToPublishInboxMessagesJob(
+    ) = PublishInboxMessagesJob(
         inboxJpaRepository = inboxJpaRepository,
         integrationEventPublisher = integrationEventPublisher,
         integrationEventDeserializer = integrationEventDeserializer,
