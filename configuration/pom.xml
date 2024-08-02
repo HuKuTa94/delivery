@@ -13,12 +13,7 @@
     <artifactId>delivery-configuration</artifactId>
 
     <dependencies>
-        <!-- Application modules -->
-        <dependency>
-            <groupId>github.com.hukuta94.delivery</groupId>
-            <artifactId>delivery-api</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
+        <!-- API (primary/input adapters) -->
         <dependency>
             <groupId>github.com.hukuta94.delivery</groupId>
             <artifactId>delivery-api-adapter-http</artifactId>
@@ -38,15 +33,37 @@
             <scope>compile</scope>
         </dependency>
 
+        <!-- Core (application layer, domain layer) -->
         <dependency>
             <groupId>github.com.hukuta94.delivery</groupId>
             <artifactId>delivery-core</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+
+        <!-- Infrastructure (secondary/output adapters) -->
         <dependency>
             <groupId>github.com.hukuta94.delivery</groupId>
-            <artifactId>delivery-infrastructure</artifactId>
+            <artifactId>delivery-infrastructure-adapter-grpc</artifactId>
             <version>${project.parent.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>github.com.hukuta94.delivery</groupId>
+            <artifactId>delivery-infrastructure-adapter-inmemory</artifactId>
+            <version>${project.parent.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>github.com.hukuta94.delivery</groupId>
+            <artifactId>delivery-infrastructure-adapter-kafka</artifactId>
+            <version>${project.parent.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>github.com.hukuta94.delivery</groupId>
+            <artifactId>delivery-infrastructure-adapter-orm</artifactId>
+            <version>${project.parent.version}</version>
+            <scope>compile</scope>
         </dependency>
 
         <!-- Spring Boot Starter -->
