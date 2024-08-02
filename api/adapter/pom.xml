@@ -21,9 +21,15 @@
     </modules>
 
     <dependencies>
+        <!-- Core -->
         <dependency>
             <groupId>github.com.hukuta94.delivery</groupId>
-            <artifactId>delivery-core-impl</artifactId>
+            <artifactId>delivery-core-application</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>github.com.hukuta94.delivery</groupId>
+            <artifactId>delivery-core-domain</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>

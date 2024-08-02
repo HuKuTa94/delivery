@@ -79,7 +79,7 @@ internal class OrderTest {
 
         // then
         assertSoftly {
-            actualDomainEvent shouldBe OrderAssignedDomainEvent::class
+            actualDomainEvent::class shouldBe OrderAssignedDomainEvent::class
             actualDomainEvent.orderId shouldBe order.id
             actualDomainEvent.courierId shouldBe order.courierId
         }
@@ -95,7 +95,7 @@ internal class OrderTest {
 
         // then
         assertSoftly {
-            actualDomainEvent shouldBe OrderCompletedDomainEvent::class
+            actualDomainEvent::class shouldBe OrderCompletedDomainEvent::class
             actualDomainEvent.orderId shouldBe order.id
         }
     }

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>delivery-core</artifactId>
+        <groupId>github.com.hukuta94.delivery</groupId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <description>Core domain layer:
+        - contains business logic (domain services/rules);
+        - contains domain objects (aggregates, value objects, domain events);
+        - domain events are used only inside of one bounded context (microservice);
+        - integration events are used as incoming events from other bounded context (microservices);
+        - any framework dependencies are not allowed here;
+    </description>
+
+    <artifactId>delivery-core-domain</artifactId>
+
+</project>

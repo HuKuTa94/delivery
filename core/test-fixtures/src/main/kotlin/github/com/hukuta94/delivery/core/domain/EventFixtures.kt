@@ -9,5 +9,6 @@ class FakeIntegrationEvent(id: UUID) : IntegrationEvent(id)
 fun fakeDomainEvent() = FakeDomainEvent()
 fun fakeIntegrationEvent(id: UUID? = null) = FakeIntegrationEvent(id ?: UUID.randomUUID())
 
+//TODO эти фикстуры должны быть в модуле application
 fun fakeDomainEventClassType() = DomainEventClassType(FakeDomainEvent::class)
 fun fakeIntegrationEventClassType() = DomainEventClassType(FakeDomainEvent::class)

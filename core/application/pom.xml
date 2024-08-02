@@ -9,10 +9,23 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>delivery-core-impl</artifactId>
-    <packaging>jar</packaging>
+    <description>Core application layer:
+        - port/query interfaces for implementing by infrastructure (secondary/output) adapters that can be driven by application layer only;
+        - use case interfaces for using in API (primary/input) adapters that send request to application;
+        - event handlers to execute business logic or rules (reacting on domain/integration events);
+    </description>
+
+    <artifactId>delivery-core-application</artifactId>
 
     <dependencies>
+        <!-- Core domain layer -->
+        <dependency>
+            <groupId>github.com.hukuta94.delivery</groupId>
+            <artifactId>delivery-core-domain</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <!-- Serialization/deserialization of application events -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
@@ -24,4 +37,5 @@
             <version>${jackson.version}</version>
         </dependency>
     </dependencies>
+
 </project>
