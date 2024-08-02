@@ -203,7 +203,7 @@
                 </executions>
             </plugin>
 
-            <!-- ProtoBuff classes generator -->
+            <!-- ProtoBuf classes generator -->
             <plugin>
                 <groupId>org.xolstice.maven.plugins</groupId>
                 <artifactId>protobuf-maven-plugin</artifactId>
@@ -212,7 +212,7 @@
                     <protocArtifact>com.google.protobuf:protoc:${protobuf.version}:exe:${os.detected.classifier}</protocArtifact>
                     <pluginId>grpc-java</pluginId>
                     <pluginArtifact>io.grpc:protoc-gen-grpc-java:${grpc.version}:exe:${os.detected.classifier}</pluginArtifact>
-                    <protoSourceRoot>src/main/resources/protobuff</protoSourceRoot>
+                    <protoSourceRoot>src/main/resources/protobuf</protoSourceRoot>
                 </configuration>
                 <executions>
                     <execution>
