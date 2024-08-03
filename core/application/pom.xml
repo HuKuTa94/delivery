@@ -16,12 +16,24 @@
     </description>
 
     <artifactId>delivery-core-application</artifactId>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>main</module>
+        <module>test</module>
+        <module>testFixtures</module>
+    </modules>
 
     <dependencies>
         <!-- Core domain layer -->
         <dependency>
             <groupId>github.com.hukuta94.delivery</groupId>
-            <artifactId>delivery-core-domain</artifactId>
+            <artifactId>delivery-core-domain-main</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>github.com.hukuta94.delivery</groupId>
+            <artifactId>delivery-core-domain-test</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
 

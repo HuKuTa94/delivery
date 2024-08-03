@@ -18,5 +18,12 @@
     </description>
 
     <artifactId>delivery-core-domain</artifactId>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>main</module>
+        <module>test</module>
+        <module>testFixtures</module>
+    </modules>
 
 </project>

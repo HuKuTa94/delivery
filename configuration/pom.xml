@@ -36,13 +36,13 @@
         <!-- Core (application layer, domain layer) -->
         <dependency>
             <groupId>github.com.hukuta94.delivery</groupId>
-            <artifactId>delivery-core-application</artifactId>
+            <artifactId>delivery-core-application-main</artifactId>
             <version>${project.parent.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>github.com.hukuta94.delivery</groupId>
-            <artifactId>delivery-core-domain</artifactId>
+            <artifactId>delivery-core-domain-main</artifactId>
             <version>${project.parent.version}</version>
             <scope>compile</scope>
         </dependency>

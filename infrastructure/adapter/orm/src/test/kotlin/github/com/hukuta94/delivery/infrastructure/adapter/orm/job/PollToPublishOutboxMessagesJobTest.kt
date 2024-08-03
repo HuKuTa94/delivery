@@ -2,7 +2,7 @@ package github.com.hukuta94.delivery.infrastructure.adapter.orm.job
 
 import github.com.hukuta94.delivery.core.application.event.domain.DomainEventDeserializer
 import github.com.hukuta94.delivery.core.application.event.domain.DomainEventPublisher
-import github.com.hukuta94.delivery.core.domain.fakeDomainEventClassType
+import github.com.hukuta94.delivery.core.application.event.fakeDomainEventClassType
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.entity.event.OutboxEventJpaEntity
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.entity.event.BoxEventStatus
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.repository.event.OutboxEventJpaRepository

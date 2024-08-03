@@ -34,19 +34,28 @@
 
     <dependencies>
         <!-- Core -->
+        <!-- Application layer -->
         <dependency>
             <groupId>github.com.hukuta94.delivery</groupId>
-            <artifactId>delivery-core-application</artifactId>
+            <artifactId>delivery-core-application-main</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>github.com.hukuta94.delivery</groupId>
-            <artifactId>delivery-core-domain</artifactId>
+            <artifactId>delivery-core-application-testFixtures</artifactId>
+            <version>${project.parent.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Domain layer -->
+        <dependency>
+            <groupId>github.com.hukuta94.delivery</groupId>
+            <artifactId>delivery-core-domain-main</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>github.com.hukuta94.delivery</groupId>
-            <artifactId>delivery-core-test-fixtures</artifactId>
+            <artifactId>delivery-core-domain-testFixtures</artifactId>
             <version>${project.parent.version}</version>
             <scope>test</scope>
         </dependency>
