@@ -4,7 +4,7 @@ import github.com.hukuta94.delivery.core.application.query.common.Location
 import github.com.hukuta94.delivery.core.application.query.order.GetNotCompletedOrdersQuery
 import github.com.hukuta94.delivery.core.application.query.order.response.GetNotCompletedOrdersResponse
 import github.com.hukuta94.delivery.core.application.query.order.response.Order
-import github.com.hukuta94.delivery.core.domain.order.OrderStatus
+import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderStatus
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.converter.LocationConverter
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.entity.OrderJpaEntity
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.query.AbstractQuery

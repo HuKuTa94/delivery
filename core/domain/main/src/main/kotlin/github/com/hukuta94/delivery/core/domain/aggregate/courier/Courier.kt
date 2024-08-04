@@ -1,6 +1,6 @@
-package github.com.hukuta94.delivery.core.domain.courier
+package github.com.hukuta94.delivery.core.domain.aggregate.courier
 
-import github.com.hukuta94.delivery.core.domain.Aggregate
+import github.com.hukuta94.delivery.core.domain.aggregate.Aggregate
 import github.com.hukuta94.delivery.core.domain.common.Location
 import java.util.UUID
 

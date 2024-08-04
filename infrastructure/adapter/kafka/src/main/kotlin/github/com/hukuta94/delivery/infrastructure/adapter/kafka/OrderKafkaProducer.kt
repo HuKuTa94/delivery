@@ -1,7 +1,7 @@
 package github.com.hukuta94.delivery.infrastructure.adapter.kafka
 
-import github.com.hukuta94.delivery.core.domain.order.OrderAssignedDomainEvent
-import github.com.hukuta94.delivery.core.domain.order.OrderCompletedDomainEvent
+import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderAssignedDomainEvent
+import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderCompletedDomainEvent
 import github.com.hukuta94.delivery.core.application.port.BusProducer
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.slf4j.LoggerFactory
@@ -17,7 +17,7 @@ class OrderKafkaProducer(
     ) {
         publishToTopicOrderStatusChanged(
             orderId = orderAssignedDomainEvent.id,
-            orderStatus = github.com.hukuta94.delivery.core.domain.order.OrderStatus.ASSIGNED.toKafkaOrderStatus()
+            orderStatus = github.com.hukuta94.delivery.core.domain.aggregate.order.OrderStatus.ASSIGNED.toKafkaOrderStatus()
         )
     }
 
@@ -26,7 +26,7 @@ class OrderKafkaProducer(
     ) {
         publishToTopicOrderStatusChanged(
             orderId = orderCompletedDomainEvent.id,
-            orderStatus = github.com.hukuta94.delivery.core.domain.order.OrderStatus.COMPLETED.toKafkaOrderStatus()
+            orderStatus = github.com.hukuta94.delivery.core.domain.aggregate.order.OrderStatus.COMPLETED.toKafkaOrderStatus()
         )
     }
 
@@ -47,11 +47,11 @@ class OrderKafkaProducer(
         LOG.info("Integration event OrderStatusChanged to \"${orderStatus.name}\" with key: $orderId was sent to topic: $TOPIC_ORDER_STATUS_CHANGED")
     }
 
-    private fun github.com.hukuta94.delivery.core.domain.order.OrderStatus.toKafkaOrderStatus(): OrderStatus {
+    private fun github.com.hukuta94.delivery.core.domain.aggregate.order.OrderStatus.toKafkaOrderStatus(): OrderStatus {
         return when (this) {
-            github.com.hukuta94.delivery.core.domain.order.OrderStatus.CREATED -> OrderStatus.Created
-            github.com.hukuta94.delivery.core.domain.order.OrderStatus.ASSIGNED -> OrderStatus.Assigned
-            github.com.hukuta94.delivery.core.domain.order.OrderStatus.COMPLETED -> OrderStatus.Completed
+            github.com.hukuta94.delivery.core.domain.aggregate.order.OrderStatus.CREATED -> OrderStatus.Created
+            github.com.hukuta94.delivery.core.domain.aggregate.order.OrderStatus.ASSIGNED -> OrderStatus.Assigned
+            github.com.hukuta94.delivery.core.domain.aggregate.order.OrderStatus.COMPLETED -> OrderStatus.Completed
         }
     }
 

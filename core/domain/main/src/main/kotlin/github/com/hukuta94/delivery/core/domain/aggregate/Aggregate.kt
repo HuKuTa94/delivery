@@ -1,4 +1,6 @@
-package github.com.hukuta94.delivery.core.domain
+package github.com.hukuta94.delivery.core.domain.aggregate
+
+import github.com.hukuta94.delivery.core.domain.DomainEvent
 
 abstract class Aggregate<ID> {
 

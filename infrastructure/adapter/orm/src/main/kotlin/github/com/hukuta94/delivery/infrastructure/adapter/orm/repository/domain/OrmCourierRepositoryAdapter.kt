@@ -1,7 +1,7 @@
 package github.com.hukuta94.delivery.infrastructure.adapter.orm.repository.domain
 
-import github.com.hukuta94.delivery.core.domain.courier.Courier
-import github.com.hukuta94.delivery.core.domain.courier.CourierStatus
+import github.com.hukuta94.delivery.core.domain.aggregate.courier.Courier
+import github.com.hukuta94.delivery.core.domain.aggregate.courier.CourierStatus
 import github.com.hukuta94.delivery.core.application.port.repository.domain.CourierRepositoryPort
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.entity.CourierJpaEntity
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.repository.event.OrmOutboxEventRepositoryAdapter

@@ -1,6 +1,6 @@
 package github.com.hukuta94.delivery.core.application.port.repository.domain
 
-import github.com.hukuta94.delivery.core.domain.courier.Courier
+import github.com.hukuta94.delivery.core.domain.aggregate.courier.Courier
 
 interface CourierRepositoryPort : AggregateRepository<Courier> {
 

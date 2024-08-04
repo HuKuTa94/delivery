@@ -1,4 +1,4 @@
-package github.com.hukuta94.delivery.core.domain.courier
+package github.com.hukuta94.delivery.core.domain.aggregate.courier
 
 data class CourierName private constructor(
     val value: String,

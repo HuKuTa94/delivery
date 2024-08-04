@@ -1,7 +1,7 @@
-package github.com.hukuta94.delivery.core.domain.order
+package github.com.hukuta94.delivery.core.domain.aggregate.order
 
-import github.com.hukuta94.delivery.core.domain.Aggregate
-import github.com.hukuta94.delivery.core.domain.courier.Courier
+import github.com.hukuta94.delivery.core.domain.aggregate.Aggregate
+import github.com.hukuta94.delivery.core.domain.aggregate.courier.Courier
 import github.com.hukuta94.delivery.core.domain.common.Location
 import java.util.UUID
 

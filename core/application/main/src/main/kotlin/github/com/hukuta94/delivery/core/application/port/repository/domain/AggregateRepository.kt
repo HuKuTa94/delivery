@@ -1,6 +1,6 @@
 package github.com.hukuta94.delivery.core.application.port.repository.domain
 
-import github.com.hukuta94.delivery.core.domain.Aggregate
+import github.com.hukuta94.delivery.core.domain.aggregate.Aggregate
 import java.util.*
 
 sealed interface AggregateRepository<AGGREGATE : Aggregate<*>> {

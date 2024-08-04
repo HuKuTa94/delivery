@@ -1,4 +1,4 @@
-package github.com.hukuta94.delivery.core.domain.courier
+package github.com.hukuta94.delivery.core.domain.aggregate.courier
 
 enum class Transport(
     val id: Int,

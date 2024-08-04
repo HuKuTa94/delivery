@@ -1,4 +1,4 @@
-package github.com.hukuta94.delivery.core.domain.order
+package github.com.hukuta94.delivery.core.domain.aggregate.order
 
 enum class OrderStatus(
     val id: Int,
