@@ -3,16 +3,16 @@ package github.com.hukuta94.delivery.core.application.usecase.courier.impl
 import github.com.hukuta94.delivery.core.application.usecase.courier.MoveCouriersUseCase
 import github.com.hukuta94.delivery.core.domain.order.Order
 import github.com.hukuta94.delivery.core.domain.service.CompleteOrderService
-import github.com.hukuta94.delivery.core.port.CourierRepository
-import github.com.hukuta94.delivery.core.port.OrderRepository
-import github.com.hukuta94.delivery.core.port.UnitOfWork
+import github.com.hukuta94.delivery.core.application.port.repository.domain.CourierRepositoryPort
+import github.com.hukuta94.delivery.core.application.port.repository.domain.OrderRepositoryPort
+import github.com.hukuta94.delivery.core.application.port.repository.UnitOfWorkPort
 import org.slf4j.LoggerFactory
 
 class MoveCouriersUseCaseImpl(
-    private val orderRepository: OrderRepository,
-    private val courierRepository: CourierRepository,
+    private val orderRepository: OrderRepositoryPort,
+    private val courierRepository: CourierRepositoryPort,
     private val completeOrderService: CompleteOrderService,
-    private val unitOfWork: UnitOfWork,
+    private val unitOfWork: UnitOfWorkPort,
 ) : MoveCouriersUseCase {
 
     override fun execute() {

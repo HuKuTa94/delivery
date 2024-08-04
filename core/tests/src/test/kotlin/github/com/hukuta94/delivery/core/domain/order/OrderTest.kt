@@ -1,7 +1,7 @@
 package github.com.hukuta94.delivery.core.domain.order
 
 import github.com.hukuta94.delivery.core.domain.courier.newCourier
-import github.com.hukuta94.delivery.core.domain.sharedkernel.Location
+import github.com.hukuta94.delivery.core.domain.common.Location
 import io.kotlintest.assertSoftly
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
@@ -75,7 +75,7 @@ internal class OrderTest {
         val order = assignedOrder()
 
         // when
-        val actualDomainEvent = order.domainEvents().last() as OrderAssignedDomainEvent
+        val actualDomainEvent = order.popDomainEvents().last() as OrderAssignedDomainEvent
 
         // then
         assertSoftly {
@@ -91,7 +91,7 @@ internal class OrderTest {
         val order = completedOrder()
 
         // when
-        val actualDomainEvent = order.domainEvents().last() as OrderCompletedDomainEvent
+        val actualDomainEvent = order.popDomainEvents().last() as OrderCompletedDomainEvent
 
         // then
         assertSoftly {

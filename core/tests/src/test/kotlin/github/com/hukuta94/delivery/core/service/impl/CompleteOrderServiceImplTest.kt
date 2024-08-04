@@ -8,7 +8,7 @@ import github.com.hukuta94.delivery.core.domain.order.OrderStatus
 import github.com.hukuta94.delivery.core.domain.order.assignedOrder
 import github.com.hukuta94.delivery.core.domain.order.newOrder
 import github.com.hukuta94.delivery.core.domain.service.impl.CompleteOrderServiceImpl
-import github.com.hukuta94.delivery.core.domain.sharedkernel.newLocation
+import github.com.hukuta94.delivery.core.domain.common.newLocation
 import io.kotlintest.assertSoftly
 import io.kotlintest.shouldBe
 import org.junit.jupiter.api.Test

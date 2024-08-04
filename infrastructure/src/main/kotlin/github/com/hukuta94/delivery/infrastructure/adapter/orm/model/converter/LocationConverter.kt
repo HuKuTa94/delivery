@@ -1,6 +1,6 @@
 package github.com.hukuta94.delivery.infrastructure.adapter.orm.model.converter
 
-import github.com.hukuta94.delivery.core.domain.sharedkernel.Location
+import github.com.hukuta94.delivery.core.domain.common.Location
 import javax.persistence.AttributeConverter
 import javax.persistence.Converter
 

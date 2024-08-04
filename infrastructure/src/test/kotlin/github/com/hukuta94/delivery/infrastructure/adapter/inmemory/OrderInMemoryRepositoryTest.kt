@@ -1,6 +1,5 @@
 package github.com.hukuta94.delivery.infrastructure.adapter.inmemory
 
-import github.com.hukuta94.delivery.core.application.event.DomainEventPublisher
 import github.com.hukuta94.delivery.core.domain.courier.newCourier
 import github.com.hukuta94.delivery.core.domain.order.assignedOrder
 import github.com.hukuta94.delivery.core.domain.order.newOrder
@@ -9,20 +8,15 @@ import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito
-
 
 internal class OrderInMemoryRepositoryTest {
 
     // System Under Testing (sut)
     private lateinit var sut: OrderInMemoryRepository
 
-    // Mocks
-    private val domainEventPublisher: DomainEventPublisher = Mockito.mock()
-
     @BeforeEach
     fun init() {
-        sut = OrderInMemoryRepository(domainEventPublisher)
+        sut = OrderInMemoryRepository()
     }
 
     @Test

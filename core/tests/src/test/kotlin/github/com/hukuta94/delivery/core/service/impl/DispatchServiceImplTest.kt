@@ -6,9 +6,9 @@ import github.com.hukuta94.delivery.core.domain.courier.freeCourier
 import github.com.hukuta94.delivery.core.domain.order.OrderStatus
 import github.com.hukuta94.delivery.core.domain.order.newOrder
 import github.com.hukuta94.delivery.core.domain.service.impl.DispatchServiceImpl
-import github.com.hukuta94.delivery.core.domain.sharedkernel.maximalLocation
-import github.com.hukuta94.delivery.core.domain.sharedkernel.minimalLocation
-import github.com.hukuta94.delivery.core.domain.sharedkernel.newLocation
+import github.com.hukuta94.delivery.core.domain.common.maximalLocation
+import github.com.hukuta94.delivery.core.domain.common.minimalLocation
+import github.com.hukuta94.delivery.core.domain.common.newLocation
 import io.kotlintest.assertSoftly
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe

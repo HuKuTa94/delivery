@@ -1,7 +1,7 @@
 package github.com.hukuta94.delivery.core.domain.courier
 
 import github.com.hukuta94.delivery.core.domain.Aggregate
-import github.com.hukuta94.delivery.core.domain.sharedkernel.Location
+import github.com.hukuta94.delivery.core.domain.common.Location
 import java.util.UUID
 
 class Courier internal constructor(

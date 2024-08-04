@@ -1,6 +1,6 @@
 package github.com.hukuta94.delivery.core.domain.courier
 
-import github.com.hukuta94.delivery.core.domain.sharedkernel.*
+import github.com.hukuta94.delivery.core.domain.common.*
 import io.kotlintest.assertSoftly
 import io.kotlintest.shouldBe
 import org.junit.jupiter.api.Test
