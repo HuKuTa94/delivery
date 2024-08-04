@@ -3,7 +3,7 @@ package github.com.hukuta94.delivery.core.application.port
 import github.com.hukuta94.delivery.core.domain.common.Currency
 import java.math.BigDecimal
 
-interface Exchange {
+interface ExchangePort {
 
     /**
      * @param origin currency to be converted from

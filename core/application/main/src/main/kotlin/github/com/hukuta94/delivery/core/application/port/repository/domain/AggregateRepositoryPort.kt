@@ -3,7 +3,7 @@ package github.com.hukuta94.delivery.core.application.port.repository.domain
 import github.com.hukuta94.delivery.core.domain.aggregate.Aggregate
 import java.util.*
 
-sealed interface AggregateRepository<AGGREGATE : Aggregate<*>> {
+sealed interface AggregateRepositoryPort<AGGREGATE : Aggregate<*>> {
 
     fun add(aggregate: AGGREGATE)
 

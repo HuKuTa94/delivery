@@ -2,7 +2,7 @@ package github.com.hukuta94.delivery.infrastructure.adapter.kafka
 
 import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderAssignedDomainEvent
 import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderCompletedDomainEvent
-import github.com.hukuta94.delivery.core.application.port.BusProducer
+import github.com.hukuta94.delivery.core.application.port.BusProducerPort
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.slf4j.LoggerFactory
 import org.springframework.kafka.core.KafkaTemplate
@@ -10,7 +10,7 @@ import java.util.*
 
 class OrderKafkaProducer(
     private val kafkaTemplate: KafkaTemplate<UUID, ByteArray>,
-): BusProducer {
+): BusProducerPort {
 
     override fun publishOrderAssignedDomainEvent(
         orderAssignedDomainEvent: OrderAssignedDomainEvent
