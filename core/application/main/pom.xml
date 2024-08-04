@@ -2,19 +2,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-
     <parent>
-        <artifactId>delivery-all</artifactId>
+        <artifactId>delivery-core-application</artifactId>
         <groupId>github.com.hukuta94.delivery</groupId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
+    <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>delivery-infrastructure</artifactId>
-    <packaging>pom</packaging>
-
-    <modules>
-        <module>adapter</module>
-    </modules>
+    <description>Core application module implements application layer and application logic</description>
+    <artifactId>delivery-core-application-main</artifactId>
+    <packaging>jar</packaging>
 
 </project>

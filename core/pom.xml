@@ -10,13 +10,12 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <description>Core domain objects and business logic</description>
+    <description>Core of delivery application</description>
     <artifactId>delivery-core</artifactId>
     <packaging>pom</packaging>
 
     <modules>
-        <module>impl</module>
-        <module>tests</module>
-        <module>test-fixtures</module>
+        <module>application</module>
+        <module>domain</module>
     </modules>
 </project>
