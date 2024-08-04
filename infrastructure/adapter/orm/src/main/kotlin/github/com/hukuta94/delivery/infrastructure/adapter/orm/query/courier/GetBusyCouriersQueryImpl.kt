@@ -1,9 +1,9 @@
 package github.com.hukuta94.delivery.infrastructure.adapter.orm.query.courier
 
 import github.com.hukuta94.delivery.core.application.query.courier.GetBusyCouriersQuery
-import github.com.hukuta94.delivery.core.application.query.courier.response.Courier
+import github.com.hukuta94.delivery.core.application.query.courier.response.CourierResponse
 import github.com.hukuta94.delivery.core.application.query.courier.response.GetCouriersResponse
-import github.com.hukuta94.delivery.core.application.query.common.Location
+import github.com.hukuta94.delivery.core.application.query.common.LocationResponse
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.CourierStatus
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.converter.LocationConverter
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.entity.CourierJpaEntity
@@ -15,7 +15,7 @@ import java.util.*
 class GetBusyCouriersQueryImpl(
     private val jdbcTemplate: NamedParameterJdbcTemplate,
     private val locationConverter: LocationConverter,
-) : AbstractQuery<Courier>(), GetBusyCouriersQuery {
+) : AbstractQuery<CourierResponse>(), GetBusyCouriersQuery {
 
     override fun execute(): GetCouriersResponse {
         val couriers = jdbcTemplate.query(SQL, PARAMETERS) { rs, _ -> mapRowToResponseDto(rs) }
@@ -24,14 +24,14 @@ class GetBusyCouriersQueryImpl(
         )
     }
 
-    override fun mapRowToResponseDto(rs: ResultSet): Courier {
+    override fun mapRowToResponseDto(rs: ResultSet): CourierResponse {
         val location = locationConverter.convertToEntityAttribute(
             rs.getString(CourierJpaEntity::location.name)
         )
-        return Courier(
+        return CourierResponse(
             id = rs.getObject(CourierJpaEntity::id.name, UUID::class.java),
             name = rs.getString(CourierJpaEntity::name.name),
-            location = Location(
+            location = LocationResponse(
                 x = location.abscissa,
                 y = location.ordinate
             ),
