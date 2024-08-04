@@ -1,8 +1,10 @@
 package github.com.hukuta94.delivery.core.domain.aggregate.courier
 
+import github.com.hukuta94.delivery.core.domain.ValueObject
+
 data class CourierName private constructor(
     val value: String,
-) {
+) : ValueObject {
     companion object {
         operator fun invoke(value: String): CourierName {
             if (value.isBlank()) {
