@@ -1,9 +1,9 @@
 package github.com.hukuta94.delivery.infrastructure.adapter.orm.model.entity
 
-import github.com.hukuta94.delivery.core.domain.courier.Courier
-import github.com.hukuta94.delivery.core.domain.courier.CourierName
-import github.com.hukuta94.delivery.core.domain.courier.CourierStatus
-import github.com.hukuta94.delivery.core.domain.courier.Transport
+import github.com.hukuta94.delivery.core.domain.aggregate.courier.Courier
+import github.com.hukuta94.delivery.core.domain.aggregate.courier.CourierName
+import github.com.hukuta94.delivery.core.domain.aggregate.courier.CourierStatus
+import github.com.hukuta94.delivery.core.domain.aggregate.courier.Transport
 import github.com.hukuta94.delivery.core.domain.common.Location
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.converter.CourierNameConverter
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.converter.CourierStatusConverter

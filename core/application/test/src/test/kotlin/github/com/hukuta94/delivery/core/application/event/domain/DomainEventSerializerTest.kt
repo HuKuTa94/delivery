@@ -1,7 +1,7 @@
 package github.com.hukuta94.delivery.core.application.event.domain
 
-import github.com.hukuta94.delivery.core.domain.order.OrderAssignedDomainEvent
-import github.com.hukuta94.delivery.core.domain.order.OrderCompletedDomainEvent
+import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderAssignedDomainEvent
+import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderCompletedDomainEvent
 import io.kotlintest.assertSoftly
 import io.kotlintest.matchers.string.shouldContain
 import org.junit.jupiter.api.Test

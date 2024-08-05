@@ -1,12 +1,12 @@
 package github.com.hukuta94.delivery.core.service.impl
 
-import github.com.hukuta94.delivery.core.domain.courier.CourierStatus
-import github.com.hukuta94.delivery.core.domain.courier.busyCourier
-import github.com.hukuta94.delivery.core.domain.courier.freeCourier
-import github.com.hukuta94.delivery.core.domain.courier.newCourier
-import github.com.hukuta94.delivery.core.domain.order.OrderStatus
-import github.com.hukuta94.delivery.core.domain.order.assignedOrder
-import github.com.hukuta94.delivery.core.domain.order.newOrder
+import github.com.hukuta94.delivery.core.domain.aggregate.courier.CourierStatus
+import github.com.hukuta94.delivery.core.domain.aggregate.courier.busyCourier
+import github.com.hukuta94.delivery.core.domain.aggregate.courier.freeCourier
+import github.com.hukuta94.delivery.core.domain.aggregate.courier.newCourier
+import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderStatus
+import github.com.hukuta94.delivery.core.domain.aggregate.order.assignedOrder
+import github.com.hukuta94.delivery.core.domain.aggregate.order.newOrder
 import github.com.hukuta94.delivery.core.domain.service.impl.CompleteOrderServiceImpl
 import github.com.hukuta94.delivery.core.domain.common.newLocation
 import io.kotlintest.assertSoftly

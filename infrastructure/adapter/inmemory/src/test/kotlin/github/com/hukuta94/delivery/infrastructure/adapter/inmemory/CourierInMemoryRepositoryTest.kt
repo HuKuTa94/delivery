@@ -1,8 +1,8 @@
 package github.com.hukuta94.delivery.infrastructure.adapter.inmemory
 
-import github.com.hukuta94.delivery.core.domain.courier.CourierStatus
-import github.com.hukuta94.delivery.core.domain.courier.busyCourier
-import github.com.hukuta94.delivery.core.domain.courier.newCourier
+import github.com.hukuta94.delivery.core.domain.aggregate.courier.CourierStatus
+import github.com.hukuta94.delivery.core.domain.aggregate.courier.busyCourier
+import github.com.hukuta94.delivery.core.domain.aggregate.courier.newCourier
 import io.kotlintest.matchers.types.shouldBeSameInstanceAs
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe

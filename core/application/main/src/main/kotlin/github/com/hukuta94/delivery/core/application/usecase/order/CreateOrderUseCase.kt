@@ -1,8 +1,9 @@
 package github.com.hukuta94.delivery.core.application.usecase.order
 
+import github.com.hukuta94.delivery.core.application.usecase.UseCase
 import java.util.*
 
-interface CreateOrderUseCase {
+interface CreateOrderUseCase : UseCase {
     fun execute(command: CreateOrderCommand)
 }
 

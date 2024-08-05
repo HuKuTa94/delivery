@@ -1,10 +1,10 @@
 package github.com.hukuta94.delivery.infrastructure.adapter.orm.query.order
 
-import github.com.hukuta94.delivery.core.application.query.common.Location
+import github.com.hukuta94.delivery.core.application.query.common.LocationResponse
 import github.com.hukuta94.delivery.core.application.query.order.GetNotCompletedOrdersQuery
 import github.com.hukuta94.delivery.core.application.query.order.response.GetNotCompletedOrdersResponse
-import github.com.hukuta94.delivery.core.application.query.order.response.Order
-import github.com.hukuta94.delivery.core.domain.order.OrderStatus
+import github.com.hukuta94.delivery.core.application.query.order.response.OrderResponse
+import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderStatus
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.converter.LocationConverter
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.entity.OrderJpaEntity
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.query.AbstractQuery
@@ -15,7 +15,7 @@ import java.util.*
 class GetNotCompletedOrdersQueryImpl(
     private val jdbcTemplate: NamedParameterJdbcTemplate,
     private val locationConverter: LocationConverter,
-) : AbstractQuery<Order>(), GetNotCompletedOrdersQuery {
+) : AbstractQuery<OrderResponse>(), GetNotCompletedOrdersQuery {
 
     override fun execute(): GetNotCompletedOrdersResponse {
         val orders = jdbcTemplate.query(SQL, PARAMETERS) { rs, _ -> mapRowToResponseDto(rs) }
@@ -24,13 +24,13 @@ class GetNotCompletedOrdersQueryImpl(
         )
     }
 
-    override fun mapRowToResponseDto(rs: ResultSet): Order {
+    override fun mapRowToResponseDto(rs: ResultSet): OrderResponse {
         val location = locationConverter.convertToEntityAttribute(
             rs.getString(OrderJpaEntity::location.name)
         )
-        return Order(
+        return OrderResponse(
             id = rs.getObject(OrderJpaEntity::id.name, UUID::class.java),
-            location = Location(
+            location = LocationResponse(
                 x = location.abscissa,
                 y = location.ordinate
             )

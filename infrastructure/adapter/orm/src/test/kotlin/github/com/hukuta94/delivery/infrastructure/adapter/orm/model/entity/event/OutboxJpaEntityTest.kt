@@ -2,7 +2,7 @@ package github.com.hukuta94.delivery.infrastructure.adapter.orm.model.entity.eve
 
 import github.com.hukuta94.delivery.core.application.event.domain.DomainEventClassType
 import github.com.hukuta94.delivery.core.application.event.domain.DomainEventSerializer
-import github.com.hukuta94.delivery.core.domain.order.OrderAssignedDomainEvent
+import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderAssignedDomainEvent
 import io.kotlintest.assertSoftly
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe

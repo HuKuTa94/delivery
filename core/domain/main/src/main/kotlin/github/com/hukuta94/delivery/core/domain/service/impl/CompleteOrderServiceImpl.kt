@@ -1,8 +1,8 @@
 package github.com.hukuta94.delivery.core.domain.service.impl
 
-import github.com.hukuta94.delivery.core.domain.courier.Courier
-import github.com.hukuta94.delivery.core.domain.order.Order
-import github.com.hukuta94.delivery.core.domain.order.OrderStatus
+import github.com.hukuta94.delivery.core.domain.aggregate.courier.Courier
+import github.com.hukuta94.delivery.core.domain.aggregate.order.Order
+import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderStatus
 import github.com.hukuta94.delivery.core.domain.service.CompleteOrderService
 
 class CompleteOrderServiceImpl : CompleteOrderService {

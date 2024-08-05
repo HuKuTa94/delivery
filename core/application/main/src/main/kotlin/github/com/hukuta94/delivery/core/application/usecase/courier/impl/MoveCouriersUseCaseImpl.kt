@@ -1,7 +1,7 @@
 package github.com.hukuta94.delivery.core.application.usecase.courier.impl
 
 import github.com.hukuta94.delivery.core.application.usecase.courier.MoveCouriersUseCase
-import github.com.hukuta94.delivery.core.domain.order.Order
+import github.com.hukuta94.delivery.core.domain.aggregate.order.Order
 import github.com.hukuta94.delivery.core.domain.service.CompleteOrderService
 import github.com.hukuta94.delivery.core.application.port.repository.domain.CourierRepositoryPort
 import github.com.hukuta94.delivery.core.application.port.repository.domain.OrderRepositoryPort

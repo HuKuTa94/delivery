@@ -1,6 +1,6 @@
 package github.com.hukuta94.delivery.infrastructure.adapter.orm.model.entity
 
-import github.com.hukuta94.delivery.core.domain.Aggregate
+import github.com.hukuta94.delivery.core.domain.aggregate.Aggregate
 import io.kotlintest.assertSoftly
 import io.kotlintest.shouldBe
 import org.junit.jupiter.api.Test

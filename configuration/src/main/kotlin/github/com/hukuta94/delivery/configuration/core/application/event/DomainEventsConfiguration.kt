@@ -7,7 +7,7 @@ import github.com.hukuta94.delivery.core.application.event.domain.handler.Domain
 import github.com.hukuta94.delivery.core.application.event.domain.handler.OrderAssignedDomainEventHandler
 import github.com.hukuta94.delivery.core.application.event.domain.handler.OrderCompletedDomainEventHandler
 import github.com.hukuta94.delivery.core.domain.DomainEvent
-import github.com.hukuta94.delivery.core.application.port.BusProducer
+import github.com.hukuta94.delivery.core.application.port.BusProducerPort
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -23,13 +23,13 @@ open class DomainEventsConfiguration {
 
     @Bean
     open fun domainEventPublisher(
-        busProducer: BusProducer,
+        busProducerPort: BusProducerPort,
     ) = DomainEventPublisher().apply {
           registerHandler(
-              OrderAssignedDomainEventHandler(busProducer) as DomainEventHandler<DomainEvent>
+              OrderAssignedDomainEventHandler(busProducerPort) as DomainEventHandler<DomainEvent>
           )
           registerHandler(
-              OrderCompletedDomainEventHandler(busProducer) as DomainEventHandler<DomainEvent>
+              OrderCompletedDomainEventHandler(busProducerPort) as DomainEventHandler<DomainEvent>
           )
       }
 }

@@ -1,6 +1,6 @@
 package github.com.hukuta94.delivery.configuration.infrastructure.adapter.kafka
 
-import github.com.hukuta94.delivery.core.application.port.BusProducer
+import github.com.hukuta94.delivery.core.application.port.BusProducerPort
 import github.com.hukuta94.delivery.infrastructure.adapter.kafka.OrderKafkaProducer
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.common.serialization.ByteArraySerializer
@@ -37,7 +37,7 @@ open class KafkaProducerConfiguration {
     @Bean
     open fun orderKafkaProducer(
         orderKafkaTemplate: KafkaTemplate<UUID, ByteArray>,
-    ): BusProducer = OrderKafkaProducer(
+    ): BusProducerPort = OrderKafkaProducer(
         kafkaTemplate = orderKafkaTemplate,
     )
 }
