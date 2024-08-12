@@ -1,8 +1,8 @@
 package github.com.hukuta94.delivery.infrastructure.adapter.inmemory
 
 import github.com.hukuta94.delivery.core.application.port.repository.domain.CourierRepositoryPort
-import github.com.hukuta94.delivery.core.domain.courier.Courier
-import github.com.hukuta94.delivery.core.domain.courier.CourierStatus
+import github.com.hukuta94.delivery.core.domain.aggregate.courier.Courier
+import github.com.hukuta94.delivery.core.domain.aggregate.courier.CourierStatus
 import java.util.*
 
 class CourierInMemoryRepository : CourierRepositoryPort {

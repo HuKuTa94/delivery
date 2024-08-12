@@ -1,5 +1,7 @@
 package github.com.hukuta94.delivery.core.application.usecase.order
 
-interface AssignCourierToOrderUseCase {
+import github.com.hukuta94.delivery.core.application.usecase.UseCase
+
+interface AssignCourierToOrderUseCase : UseCase {
     fun execute()
 }

@@ -1,8 +1,8 @@
 package github.com.hukuta94.delivery.core.application.port.repository.domain
 
-import github.com.hukuta94.delivery.core.domain.order.Order
+import github.com.hukuta94.delivery.core.domain.aggregate.order.Order
 
-interface OrderRepositoryPort : AggregateRepository<Order> {
+interface OrderRepositoryPort : AggregateRepositoryPort<Order> {
 
     fun getAllCreated(): Collection<Order>
 

@@ -1,9 +1,11 @@
 package github.com.hukuta94.delivery.core.domain.common
 
+import github.com.hukuta94.delivery.core.domain.ValueObject
+
 data class Location(
     val abscissa: Int,
     val ordinate: Int,
-) {
+) : ValueObject {
 
     init {
         validate(abscissa)

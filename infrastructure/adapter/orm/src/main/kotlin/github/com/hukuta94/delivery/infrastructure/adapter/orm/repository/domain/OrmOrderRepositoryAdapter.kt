@@ -1,7 +1,7 @@
 package github.com.hukuta94.delivery.infrastructure.adapter.orm.repository.domain
 
-import github.com.hukuta94.delivery.core.domain.order.Order
-import github.com.hukuta94.delivery.core.domain.order.OrderStatus
+import github.com.hukuta94.delivery.core.domain.aggregate.order.Order
+import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderStatus
 import github.com.hukuta94.delivery.core.application.port.repository.domain.OrderRepositoryPort
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.entity.OrderJpaEntity
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.repository.event.OrmOutboxEventRepositoryAdapter

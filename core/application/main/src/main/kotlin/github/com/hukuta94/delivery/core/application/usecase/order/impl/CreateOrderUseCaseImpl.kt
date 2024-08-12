@@ -2,7 +2,7 @@ package github.com.hukuta94.delivery.core.application.usecase.order.impl
 
 import github.com.hukuta94.delivery.core.application.usecase.order.CreateOrderCommand
 import github.com.hukuta94.delivery.core.application.usecase.order.CreateOrderUseCase
-import github.com.hukuta94.delivery.core.domain.order.Order
+import github.com.hukuta94.delivery.core.domain.aggregate.order.Order
 import github.com.hukuta94.delivery.core.application.port.GetLocationPort
 import github.com.hukuta94.delivery.core.application.port.repository.domain.OrderRepositoryPort
 import org.slf4j.LoggerFactory
