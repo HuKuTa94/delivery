@@ -38,10 +38,8 @@ data class Location(
         fun maximal() = Location(MAX_COORDINATE_VALUE, MAX_COORDINATE_VALUE)
 
         private fun validate(coordinate: Int) {
-            if (coordinate < MIN_COORDINATE_VALUE || coordinate > MAX_COORDINATE_VALUE) {
-                throw IllegalArgumentException(
-                    "Expected coordinate must be between $MIN_COORDINATE_VALUE and $MAX_COORDINATE_VALUE. Actual coordinate is $coordinate."
-                )
+            require(coordinate in MIN_COORDINATE_VALUE .. MAX_COORDINATE_VALUE) {
+                "Expected coordinate must be between $MIN_COORDINATE_VALUE and $MAX_COORDINATE_VALUE. Actual coordinate is $coordinate."
             }
         }
 

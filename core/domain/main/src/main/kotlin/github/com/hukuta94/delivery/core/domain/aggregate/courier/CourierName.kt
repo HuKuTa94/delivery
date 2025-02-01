@@ -7,23 +7,17 @@ data class CourierName private constructor(
 ) : ValueObject {
     companion object {
         operator fun invoke(value: String): CourierName {
-            if (value.isBlank()) {
-                throw IllegalArgumentException(
-                    "Courier name can not be empty or blank"
-                )
+            require(value.isNotBlank()) {
+                "Courier name can not be empty or blank"
             }
 
-            if (value.length < MIN_NAME_LENGTH) {
-                throw IllegalArgumentException(
-                    "Courier name is too short. Minimal length must be $MIN_NAME_LENGTH. Actual length of \"$value\" is ${value.length}"
-                )
+            require(value.length > MIN_NAME_LENGTH) {
+                "Courier name is too short. Minimal length must be $MIN_NAME_LENGTH. Actual length of \"$value\" is ${value.length}"
             }
 
             val trimmedName = value.trim()
-            if (trimmedName.length > MAX_NAME_LENGTH) {
-                throw IllegalArgumentException(
-                    "Courier name is too long. Maximal length must be $MAX_NAME_LENGTH. Actual length of \"$trimmedName\" is ${trimmedName.length}"
-                )
+            require(trimmedName.length < MAX_NAME_LENGTH) {
+                "Courier name is too long. Maximal length must be $MAX_NAME_LENGTH. Actual length of \"$trimmedName\" is ${trimmedName.length}"
             }
 
             return CourierName(trimmedName)
