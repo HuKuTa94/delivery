@@ -16,19 +16,19 @@
         <!-- API (primary/input adapters) -->
         <dependency>
             <groupId>github.com.hukuta94.delivery</groupId>
-            <artifactId>delivery-api-adapter-http</artifactId>
+            <artifactId>delivery-api-http</artifactId>
             <version>${project.parent.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>github.com.hukuta94.delivery</groupId>
-            <artifactId>delivery-api-adapter-kafka</artifactId>
+            <artifactId>delivery-api-kafka</artifactId>
             <version>${project.parent.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>github.com.hukuta94.delivery</groupId>
-            <artifactId>delivery-api-adapter-scheduler</artifactId>
+            <artifactId>delivery-api-scheduler</artifactId>
             <version>${project.parent.version}</version>
             <scope>compile</scope>
         </dependency>
@@ -50,25 +50,25 @@
         <!-- Infrastructure (secondary/output adapters) -->
         <dependency>
             <groupId>github.com.hukuta94.delivery</groupId>
-            <artifactId>delivery-infrastructure-adapter-grpc</artifactId>
+            <artifactId>delivery-infrastructure-grpc</artifactId>
             <version>${project.parent.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>github.com.hukuta94.delivery</groupId>
-            <artifactId>delivery-infrastructure-adapter-inmemory</artifactId>
+            <artifactId>delivery-infrastructure-inmemory</artifactId>
             <version>${project.parent.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>github.com.hukuta94.delivery</groupId>
-            <artifactId>delivery-infrastructure-adapter-kafka</artifactId>
+            <artifactId>delivery-infrastructure-kafka</artifactId>
             <version>${project.parent.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>github.com.hukuta94.delivery</groupId>
-            <artifactId>delivery-infrastructure-adapter-orm</artifactId>
+            <artifactId>delivery-infrastructure-orm</artifactId>
             <version>${project.parent.version}</version>
             <scope>compile</scope>
         </dependency>
