@@ -2,7 +2,7 @@ syntax = "proto3";
 
 option csharp_namespace = "GeoApp.Api";
 option java_multiple_files = true;
-option java_package = "github.com.hukuta94.delivery.infrastructure.adapter.grpc";
+option java_package = "github.com.hukuta94.delivery.infrastructure.grpc";
 option java_outer_classname = "GeoServiceProtos";
 
 // The Geo service definition.

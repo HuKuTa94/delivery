@@ -2,7 +2,7 @@ syntax = "proto3";
 package OrderStatusChanged;
 
 option java_multiple_files = true;
-option java_package = "github.com.hukuta94.delivery.infrastructure.adapter.kafka";
+option java_package = "github.com.hukuta94.delivery.infrastructure.kafka";
 option java_outer_classname = "OrderStatusChangedProtos";
 
 enum OrderStatus {
