@@ -10,7 +10,6 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>configuration</module>
         <module>architectureTests</module>
     </modules>
 
