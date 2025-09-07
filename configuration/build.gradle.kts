@@ -7,19 +7,19 @@ plugins {
 dependencies {
     // project
     // core
-    implementation(project(":core:domain"))
-    implementation(project(":core:application"))
+    api(project(":core:domain"))
+    api(project(":core:application"))
 
     // api adapters
-    implementation(project(":api:http"))
-    implementation(project(":api:kafka"))
-    implementation(project(":api:scheduler"))
+    api(project(":api:http"))
+    api(project(":api:kafka"))
+    api(project(":api:scheduler"))
 
     // infrastructure adapters
-    implementation(project(":infrastructure:orm"))
-    implementation(project(":infrastructure:grpc"))
-    implementation(project(":infrastructure:kafka"))
-    implementation(project(":infrastructure:in-memory"))
+    api(project(":infrastructure:orm"))
+    api(project(":infrastructure:grpc"))
+    api(project(":infrastructure:kafka"))
+    api(project(":infrastructure:in-memory"))
 
     // frameworks
     // spring
