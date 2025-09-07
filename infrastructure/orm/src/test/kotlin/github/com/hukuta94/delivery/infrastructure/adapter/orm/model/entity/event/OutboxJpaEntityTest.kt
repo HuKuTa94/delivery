@@ -3,9 +3,9 @@ package github.com.hukuta94.delivery.infrastructure.adapter.orm.model.entity.eve
 import github.com.hukuta94.delivery.core.application.event.domain.DomainEventClassType
 import github.com.hukuta94.delivery.core.application.event.domain.DomainEventSerializer
 import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderAssignedDomainEvent
-import io.kotlintest.assertSoftly
-import io.kotlintest.shouldBe
-import io.kotlintest.shouldNotBe
+import io.kotest.assertions.assertSoftly
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.mockito.kotlin.any

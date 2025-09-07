@@ -6,8 +6,8 @@ import github.com.hukuta94.delivery.core.application.event.fakeDomainEventClassT
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.entity.event.OutboxEventJpaEntity
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.entity.event.BoxEventStatus
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.repository.event.OutboxEventJpaRepository
-import io.kotlintest.assertSoftly
-import io.kotlintest.shouldBe
+import io.kotest.assertions.assertSoftly
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mock
 import org.mockito.kotlin.*

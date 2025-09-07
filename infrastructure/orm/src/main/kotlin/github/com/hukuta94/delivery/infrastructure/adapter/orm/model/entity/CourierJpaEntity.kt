@@ -11,7 +11,7 @@ import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.converter.L
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.converter.TransportConverter
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.entity.CourierJpaEntity.Companion.TABLE_NAME
 import java.util.*
-import javax.persistence.*
+import jakarta.persistence.*
 import kotlin.reflect.KClass
 
 @Entity

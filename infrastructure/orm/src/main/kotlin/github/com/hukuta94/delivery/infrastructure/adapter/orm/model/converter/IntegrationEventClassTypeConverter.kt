@@ -1,8 +1,8 @@
 package github.com.hukuta94.delivery.infrastructure.adapter.orm.model.converter
 
 import github.com.hukuta94.delivery.core.application.event.integration.IntegrationEventClassType
-import javax.persistence.AttributeConverter
-import javax.persistence.Converter
+import jakarta.persistence.AttributeConverter
+import jakarta.persistence.Converter
 
 @Converter
 class IntegrationEventClassTypeConverter : AttributeConverter<IntegrationEventClassType, String> {

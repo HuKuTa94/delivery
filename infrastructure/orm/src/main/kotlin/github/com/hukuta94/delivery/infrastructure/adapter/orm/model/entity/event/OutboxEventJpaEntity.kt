@@ -7,9 +7,9 @@ import github.com.hukuta94.delivery.core.domain.DomainEvent
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.converter.DomainEventClassTypeConverter
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.entity.event.OutboxEventJpaEntity.Companion.TABLE_NAME
 import java.time.LocalDateTime
-import javax.persistence.Convert
-import javax.persistence.Entity
-import javax.persistence.Table
+import jakarta.persistence.Convert
+import jakarta.persistence.Entity
+import jakarta.persistence.Table
 
 @Entity
 @Table(name = TABLE_NAME)

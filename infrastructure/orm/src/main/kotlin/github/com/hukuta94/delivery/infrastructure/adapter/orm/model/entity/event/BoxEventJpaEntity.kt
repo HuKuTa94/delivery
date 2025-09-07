@@ -5,10 +5,10 @@ import github.com.hukuta94.delivery.core.domain.DomainEvent
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.converter.BoxEventStatusConverter
 import java.time.LocalDateTime
 import java.util.*
-import javax.persistence.Column
-import javax.persistence.Convert
-import javax.persistence.Id
-import javax.persistence.MappedSuperclass
+import jakarta.persistence.Column
+import jakarta.persistence.Convert
+import jakarta.persistence.Id
+import jakarta.persistence.MappedSuperclass
 
 /**
  * Entity describes columns table of the In/Out Box pattern.

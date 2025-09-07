@@ -3,9 +3,9 @@ package github.com.hukuta94.delivery.infrastructure.adapter.inmemory
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.CourierStatus
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.busyCourier
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.newCourier
-import io.kotlintest.matchers.types.shouldBeSameInstanceAs
-import io.kotlintest.shouldBe
-import io.kotlintest.shouldNotBe
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
+import io.kotest.matchers.types.shouldBeSameInstanceAs
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 

@@ -2,8 +2,7 @@ package github.com.hukuta94.delivery.core.domain.aggregate.courier
 
 import github.com.hukuta94.delivery.core.domain.ValueObject
 
-@JvmInline
-value class CourierName private constructor(
+data class CourierName private constructor(
     val value: String,
 ) : ValueObject {
     companion object {

@@ -7,7 +7,7 @@ import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.converter.L
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.converter.OrderStatusConverter
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.entity.OrderJpaEntity.Companion.TABLE_NAME
 import java.util.*
-import javax.persistence.*
+import jakarta.persistence.*
 import kotlin.reflect.KClass
 
 @Entity

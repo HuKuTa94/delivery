@@ -7,7 +7,7 @@ import github.com.hukuta94.delivery.core.application.event.integration.Integrati
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.converter.IntegrationEventClassTypeConverter
 import github.com.hukuta94.delivery.infrastructure.adapter.orm.model.entity.event.InboxEventJpaEntity.Companion.TABLE_NAME
 import java.time.LocalDateTime
-import javax.persistence.*
+import jakarta.persistence.*
 
 @Entity
 @Table(name = TABLE_NAME)

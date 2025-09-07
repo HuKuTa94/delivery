@@ -8,3 +8,9 @@ include("core:application")
 include("api:http")
 include("api:kafka")
 include("api:scheduler")
+
+// Out/Secondary/Driven adapters
+include("infrastructure:orm")
+include("infrastructure:grpc")
+include("infrastructure:kafka")
+include("infrastructure:in-memory")
