@@ -4,7 +4,7 @@ import com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes
 import com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses
 import github.com.hukuta94.delivery.core.application.query.Query
 import github.com.hukuta94.delivery.core.application.usecase.UseCase
-import io.kotlintest.assertSoftly
+import io.kotest.assertions.assertSoftly
 import org.junit.jupiter.api.Test
 
 class ApplicationPackageTest {

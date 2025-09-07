@@ -17,3 +17,6 @@ include("infrastructure:in-memory")
 
 // Configuration of whole application
 include("configuration")
+
+// Architecture tests of dependencies between modules of whole application
+include("architecture-tests")
