@@ -4,7 +4,6 @@ import github.com.hukuta94.delivery.core.application.query.courier.GetBusyCourie
 import github.com.hukuta94.delivery.core.application.query.courier.response.CourierResponse
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import java.util.*
 
 @RestController
 @RequestMapping("/api/v1")
