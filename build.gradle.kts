@@ -1,10 +1,10 @@
 group = "delivery"
 version = "1.0.0-SNAPSHOT"
 
-applyCommonSetup()
+applyCommonProjectSetup()
 
 plugins {
-    applyCommonPlugins()
+    applyCommonProjectPlugins()
 }
 
 kotlin {

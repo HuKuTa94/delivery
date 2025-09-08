@@ -1,7 +1,7 @@
-applyCommonSetup()
+applyCommonProjectSetup()
 
 plugins {
-    applyCommonPlugins()
+    applyCommonProjectPlugins()
     applyCommonProtobufPlugins()
 }
 

@@ -3,7 +3,11 @@ import org.gradle.api.artifacts.dsl.DependencyHandler
 import org.gradle.kotlin.dsl.*
 import org.gradle.plugin.use.PluginDependenciesSpec
 
-fun Project.applyCommonSetup() {
+/**
+ * Apply common project repository and common dependencies setup to the module
+ * reducing boilerplate code in each build.gradle.kts file
+ */
+fun Project.applyCommonProjectSetup() {
     repositories {
         mavenCentral()
     }
@@ -24,20 +28,35 @@ fun Project.applyCommonSetup() {
     }
 }
 
-fun PluginDependenciesSpec.applyCommonPlugins() {
+/**
+ * Apply common project plugins setup to the module
+ * reducing boilerplate code in each build.gradle.kts file
+ */
+fun PluginDependenciesSpec.applyCommonProjectPlugins() {
     id("org.jetbrains.kotlin.jvm") version "2.2.10"
     `java-test-fixtures`
 }
 
+/**
+ * Apply common protobuf plugins to the module that are required to generate code from .proto files
+ * reducing boilerplate code in each build.gradle.kts file
+ */
 fun PluginDependenciesSpec.applyCommonProtobufPlugins() {
     id("com.google.protobuf") version "0.9.5"
 }
 
+/**
+ * Apply common protobuf dependencies to the module that are required to generate code from .proto files
+ * reducing boilerplate code in each build.gradle.kts file
+ */
 fun DependencyHandler.applyCommonProtobufDependencies() {
     add("implementation", Libs.Protobuf.kotlin)
     add("implementation", Libs.Protobuf.java_util)
 }
 
+/**
+ * Defines all libraries and their versions that are used in whole project
+ */
 object Libs {
     object Kotlin {
         const val jdk8 = "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
@@ -46,7 +65,7 @@ object Libs {
         const val test = "org.jetbrains.kotlin:kotlin-test"
     }
     object JUnit {
-        const private val version = "5.10.2"
+        private const val version = "5.10.2"
         const val bom = "org.junit:junit-bom:$version"
         const val api = "org.junit.jupiter:junit-jupiter-api"
         const val engine = "org.junit.jupiter:junit-jupiter-engine"
@@ -68,7 +87,7 @@ object Libs {
         const val junit5 = "com.tngtech.archunit:archunit-junit5:$version"
     }
     object ArrowKt {
-        const private val version = "1.1.5"
+        private const val version = "1.1.5"
         const val core = "io.arrow-kt:arrow-core:$version"
     }
     object Kafka {

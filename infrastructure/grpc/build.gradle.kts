@@ -1,11 +1,12 @@
-applyCommonSetup()
+applyCommonProjectSetup()
 
 plugins {
-    applyCommonPlugins()
+    applyCommonProjectPlugins()
     applyCommonProtobufPlugins()
 }
 
 dependencies {
+    // project
     implementation(project(":core:domain"))
     implementation(project(":core:application"))
 

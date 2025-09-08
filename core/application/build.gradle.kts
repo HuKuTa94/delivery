@@ -7,10 +7,10 @@ Core application layer:
 - event handlers to execute business logic or rules (reacting on domain/integration events);
 """
 
-applyCommonSetup()
+applyCommonProjectSetup()
 
 plugins {
-    applyCommonPlugins()
+    applyCommonProjectPlugins()
 }
 
 dependencies {
