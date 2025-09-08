@@ -43,6 +43,7 @@ build/
 
 target/
 docs/
+out/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
