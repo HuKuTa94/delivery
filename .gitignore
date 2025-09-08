@@ -41,11 +41,8 @@ build/
 ### Maven ###
 !.mvn/wrapper/maven-wrapper.jar
 
-target/
 docs/
 out/
-!**/src/main/**/target/
-!**/src/test/**/target/
 
 ### STS ###
 .apt_generated
