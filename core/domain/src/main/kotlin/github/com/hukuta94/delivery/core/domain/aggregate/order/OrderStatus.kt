@@ -9,7 +9,7 @@ enum class OrderStatus(
     ;
 
     companion object {
-        fun from(id: Int) = OrderStatus.values()
+        fun from(id: Int) = entries
             .firstOrNull { it.id == id }
             ?: throw IllegalArgumentException("Enum value is not found by id: $id")
     }

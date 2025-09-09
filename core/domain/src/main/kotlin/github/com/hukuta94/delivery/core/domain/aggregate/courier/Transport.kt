@@ -11,7 +11,7 @@ enum class Transport(
     ;
 
     companion object {
-        fun from(id: Int): Transport = Transport.values()
+        fun from(id: Int): Transport = entries
             .firstOrNull { it.id == id }
             ?: throw IllegalArgumentException("Enum value is not found by id: $id")
     }
