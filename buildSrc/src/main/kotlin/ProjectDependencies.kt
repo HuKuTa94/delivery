@@ -19,12 +19,6 @@ fun Project.applyCommonProjectSetup() {
         add("implementation", Kotlin.reflect)
         add("testImplementation", Kotlin.test)
 
-        // JUnit
-        add("testImplementation", platform(JUnit.bom))
-        add("testImplementation", JUnit.api)
-        add("testImplementation", JUnit.params)
-        add("testRuntimeOnly", JUnit.engine)
-
         // Kotest
         add("testImplementation", Kotest.junit5)
         add("testImplementation", Kotest.property)
@@ -63,13 +57,6 @@ private object Kotlin {
     const val stdlib = "org.jetbrains.kotlin:kotlin-stdlib"
     const val reflect = "org.jetbrains.kotlin:kotlin-reflect"
     const val test = "org.jetbrains.kotlin:kotlin-test"
-}
-private object JUnit {
-    private const val version = "5.10.2"
-    const val bom = "org.junit:junit-bom:$version"
-    const val api = "org.junit.jupiter:junit-jupiter-api"
-    const val engine = "org.junit.jupiter:junit-jupiter-engine"
-    const val params = "org.junit.jupiter:junit-jupiter-params"
 }
 private object Kotest {
     private const val version = "6.0.2"
