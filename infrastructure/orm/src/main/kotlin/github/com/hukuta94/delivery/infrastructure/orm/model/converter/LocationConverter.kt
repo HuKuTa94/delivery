@@ -8,14 +8,14 @@ import jakarta.persistence.Converter
 class LocationConverter : AttributeConverter<Location, String> {
 
     override fun convertToDatabaseColumn(attribute: Location): String {
-        return "${attribute.abscissa},${attribute.ordinate}"
+        return "${attribute.x},${attribute.y}"
     }
 
     override fun convertToEntityAttribute(dbData: String): Location {
         val coordinate = dbData.split(',')
         return Location(
-            abscissa = coordinate[0].toInt(),
-            ordinate = coordinate[1].toInt(),
+            x = coordinate[0].toInt(),
+            y = coordinate[1].toInt(),
         )
     }
 }

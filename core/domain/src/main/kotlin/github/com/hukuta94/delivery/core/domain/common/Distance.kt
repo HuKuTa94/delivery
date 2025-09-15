@@ -3,17 +3,25 @@ package github.com.hukuta94.delivery.core.domain.common
 import github.com.hukuta94.delivery.core.domain.ValueObject
 import kotlin.math.abs
 
-data class Distance(
-    val from: Location,
-    val to: Location,
+@JvmInline
+value class Distance private constructor(
+    val value: Int,
 ) : ValueObject {
-    fun abs(): Int {
-        val absAbscissaDelta = absBetweenAbscissa()
-        val absOrdinateDelta = absBetweenOrdinate()
 
-        return absAbscissaDelta + absOrdinateDelta
+    companion object {
+        /**
+         * Calculates distance in absolute value between two [Location]s
+         */
+        operator fun invoke(
+            from: Location,
+            to: Location
+        ): Distance {
+            val xDelta = from.x - to.x
+            val yDelta = from.y - to.y
+
+            val value = abs(xDelta) + abs(yDelta)
+
+            return Distance(value)
+        }
     }
-
-    fun absBetweenAbscissa() = abs(from.abscissa - to.abscissa)
-    fun absBetweenOrdinate() = abs(from.ordinate - to.ordinate)
 }

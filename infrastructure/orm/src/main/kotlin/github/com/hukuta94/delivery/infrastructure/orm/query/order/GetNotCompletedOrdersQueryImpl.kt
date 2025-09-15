@@ -31,8 +31,8 @@ class GetNotCompletedOrdersQueryImpl(
         return OrderResponse(
             id = rs.getObject(OrderJpaEntity::id.name, UUID::class.java),
             location = LocationResponse(
-                x = location.abscissa,
-                y = location.ordinate
+                x = location.x,
+                y = location.y
             )
         )
     }

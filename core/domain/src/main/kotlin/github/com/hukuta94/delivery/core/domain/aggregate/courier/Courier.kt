@@ -1,8 +1,11 @@
 package github.com.hukuta94.delivery.core.domain.aggregate.courier
 
 import github.com.hukuta94.delivery.core.domain.aggregate.Aggregate
+import github.com.hukuta94.delivery.core.domain.common.Distance
 import github.com.hukuta94.delivery.core.domain.common.Location
 import java.util.UUID
+import kotlin.math.abs
+import kotlin.math.min
 
 class Courier internal constructor(
     override val id: UUID,
@@ -21,42 +24,37 @@ class Courier internal constructor(
     }
 
     fun timeToLocation(location: Location): Double {
-        val distance = this.location
-            .distanceTo(location)
-            .abs()
+        val distance = Distance(
+            from = this.location,
+            to = location,
+        )
 
-        return distance.toDouble() / transport.speed
+        return distance.value.toDouble() / transport.speed
     }
 
     /**
      * The courier moves one step to another [Location] clockwise: up - right - down - left
      */
     fun moveTo(location: Location) {
-        val abscissaDifference = location.abscissa - this.location.abscissa
-        val ordinateDifference = location.ordinate - this.location.ordinate
+        val yDelta = this.location.y - location.y
+        val xDelta = this.location.x - location.x
 
-        val isSameLocation = abscissaDifference == 0 && ordinateDifference == 0
-        if (isSameLocation) {
-            return
-        }
+        val yStep = computeStep(yDelta, transport.speed)
+        val xStep = computeStep(xDelta, transport.speed - abs(yStep))
 
-        val distanceToLocation = this.location.distanceTo(location)
-        val courierMovementAbscissaStep = minOf(distanceToLocation.absBetweenAbscissa(), transport.speed)
-        val courierMovementOrdinateStep = minOf(distanceToLocation.absBetweenOrdinate(), transport.speed)
+        this.location = Location(
+            x = this.location.x + xStep,
+            y = this.location.y + yStep,
+        )
+    }
 
-        val newAbscissa = when {
-            abscissaDifference < 0 -> this.location.abscissa - courierMovementAbscissaStep // Moves up
-            abscissaDifference > 0 -> this.location.abscissa + courierMovementAbscissaStep // Moves down
-            else -> this.location.abscissa
-        }
-
-        val newOrdinate = when {
-            ordinateDifference < 0 -> this.location.ordinate - courierMovementOrdinateStep // Moves left
-            ordinateDifference > 0 -> this.location.ordinate + courierMovementOrdinateStep // Moves right
-            else -> this.location.ordinate
-        }
-
-        this.location = Location(newAbscissa, newOrdinate)
+    private fun computeStep(
+        coordinateDelta: Int,
+        availableCourierStepCount: Int,
+    ) = when {
+        coordinateDelta > 0 -> -min( coordinateDelta, availableCourierStepCount)
+        coordinateDelta < 0 ->  min(-coordinateDelta, availableCourierStepCount)
+        else -> 0
     }
 
     companion object {
@@ -64,9 +62,10 @@ class Courier internal constructor(
             name: CourierName,
             transport: Transport,
             location: Location,
+            id: UUID? = null,
         ): Courier {
             return Courier(
-                id = UUID.randomUUID(),
+                id = id ?: UUID.randomUUID(),
                 name = name,
                 location = location,
                 transport = transport

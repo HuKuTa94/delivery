@@ -32,8 +32,8 @@ class GetBusyCouriersQueryImpl(
             id = rs.getObject(CourierJpaEntity::id.name, UUID::class.java),
             name = rs.getString(CourierJpaEntity::name.name),
             location = LocationResponse(
-                x = location.abscissa,
-                y = location.ordinate
+                x = location.x,
+                y = location.y
             ),
             transportId = rs.getInt(CourierJpaEntity.TRANSPORT_ID)
         )

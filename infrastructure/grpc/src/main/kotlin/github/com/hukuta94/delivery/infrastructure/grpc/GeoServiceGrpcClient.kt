@@ -19,8 +19,8 @@ class GeoServiceGrpcClient(
         val response = stub.getGeolocation(request)
 
         return Location(
-            abscissa = response.location.x,
-            ordinate = response.location.y,
+            x = response.location.x,
+            y = response.location.y,
         )
     }
 }
