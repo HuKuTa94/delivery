@@ -4,13 +4,11 @@ import com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes
 import com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses
 import github.com.hukuta94.delivery.core.application.query.Query
 import github.com.hukuta94.delivery.core.application.usecase.UseCase
-import io.kotest.assertions.assertSoftly
-import org.junit.jupiter.api.Test
+import io.kotest.core.spec.style.StringSpec
 
-class ApplicationPackageTest {
+class ApplicationPackageTest : StringSpec({
 
-    @Test
-    fun `application event package dependencies are correct`() {
+    "application event package dependencies are correct" {
         APPLICATION_EVENT_PACKAGE onlyDependsOn packages(
             APPLICATION_USECASE_PACKAGE,
             APPLICATION_PORT_PACKAGE,
@@ -18,26 +16,22 @@ class ApplicationPackageTest {
         )
     }
 
-    @Test
-    fun `application port package dependencies are correct`() {
+    "application port package can depend on domain package" {
         APPLICATION_PORT_PACKAGE onlyDependsOn DOMAIN_LAYER_PACKAGE
     }
 
-    @Test
-    fun `application query package does not have dependencies on other packages`() {
+    "application query package can not depend on other packages" {
         APPLICATION_QUERY_PACKAGE onlyDependsOn self()
     }
 
-    @Test
-    fun `application usecase package can not depend on other application packages`() {
+    "application usecase package can not depend on other application packages" {
         APPLICATION_USECASE_PACKAGE onlyDependsOn packages(
             APPLICATION_PORT_PACKAGE,
             DOMAIN_LAYER_PACKAGE,
         )
     }
 
-    @Test
-    fun `application usecase package contains correct classes and interfaces`() {
+    "application usecase package contains correct classes and interfaces" {
         classes()
             .that()
             .resideInAPackage(APPLICATION_USECASE_PACKAGE)
@@ -49,42 +43,48 @@ class ApplicationPackageTest {
             .check(APPLICATION_USECASE_PACKAGE.classes())
     }
 
-    @Test
-    fun `application query package contains correct classes and interfaces`() {
-        val packageClasses = APPLICATION_QUERY_PACKAGE.classes()
-
-        assertSoftly {
-            classes()
-                .that()
-                .haveSimpleNameEndingWith("Query").should().beInterfaces()
-                .check(packageClasses)
-
-            classes()
-                .that()
-                .haveSimpleNameEndingWith("Response").should().notBeInterfaces()
-                .check(packageClasses)
-
-            noClasses()
-                .that()
-                .resideInAPackage(APPLICATION_QUERY_PACKAGE)
-                .should().haveSimpleNameEndingWith("Impl")
-                .check(packageClasses)
-
-            noClasses()
-                .that()
-                .resideInAPackage(APPLICATION_QUERY_PACKAGE)
-                .should().implement(Query::class.java)
-                .check(packageClasses)
-        }
+    "application query package must contain only interfaces with suffix Query" {
+        classes()
+            .that()
+            .haveSimpleNameEndingWith("Query")
+            .should().beInterfaces()
+            .check(APPLICATION_QUERY_CLASSES)
     }
 
-    @Test
-    fun `application port package contains only interfaces that have name ending with 'Port'`() {
+    "application query package must contain only classes (not interfaces) with suffix Response" {
+        classes()
+            .that()
+            .haveSimpleNameEndingWith("Response")
+            .should().notBeInterfaces()
+            .check(APPLICATION_QUERY_CLASSES)
+    }
+
+    "application query package must not contain classes with suffix Impl" {
+        noClasses()
+            .that()
+            .resideInAPackage(APPLICATION_QUERY_PACKAGE)
+            .should().haveSimpleNameEndingWith("Impl")
+            .check(APPLICATION_QUERY_CLASSES)
+    }
+
+    "application query package must not contain classes implementing Query interface" {
+        noClasses()
+            .that()
+            .resideInAPackage(APPLICATION_QUERY_PACKAGE)
+            .should().implement(Query::class.java)
+            .check(APPLICATION_QUERY_CLASSES)
+    }
+
+    "application port package contains only interfaces that have name ending with 'Port'" {
         classes()
             .that()
             .resideInAPackage(APPLICATION_PORT_PACKAGE)
             .should().beInterfaces()
             .andShould().haveSimpleNameEndingWith("Port")
             .check(APPLICATION_PORT_PACKAGE.classes())
+    }
+}) {
+    companion object {
+        private val APPLICATION_QUERY_CLASSES = APPLICATION_QUERY_PACKAGE.classes()
     }
 }

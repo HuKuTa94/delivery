@@ -38,8 +38,8 @@ infix fun String.onlyContains(classes: Collection<KClass<*>>) {
 
         rule = when (rule) {
             is ClassesShould -> when {
-                isLast -> (rule as ClassesShould).beAssignableTo(clazz)
-                else -> (rule as ClassesShould).beAssignableTo(clazz).orShould()
+                isLast -> rule.beAssignableTo(clazz)
+                else -> rule.beAssignableTo(clazz).orShould()
             }
             else -> error("Impossible and unreachable error of \"else\" branch")
         }
@@ -56,12 +56,12 @@ infix fun String.onlyDependsOn(shouldDependOn: Collection<String>) {
     val allowedPackages = mutableSetOf(this)
 
     shouldDependOn.forEach { currentPackage ->
-        ALL_EXISTING_PACKAGES[currentPackage]?.let { nestingPackages ->
+        ALL_PROJECT_PACKAGES[currentPackage]?.let { nestingPackages ->
             allowedPackages.addAll(nestingPackages)
         }
     }
 
-    val shouldNotDependOn = ALL_EXISTING_PACKAGES.values
+    val shouldNotDependOn = ALL_PROJECT_PACKAGES.values
         .flatten()
         .filterNot {
             val isParentPackage = it.contains(APPLICATION_LAYER_PACKAGE) || it.contains(DOMAIN_LAYER_PACKAGE)

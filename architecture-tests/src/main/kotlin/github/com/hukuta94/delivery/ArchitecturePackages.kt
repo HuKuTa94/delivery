@@ -19,7 +19,7 @@ val FRAMEWORK_PACKAGES = arrayOf(
     "com.google.protobuf..",
 )
 
-/* ------------------------------------------ API (primary/input) adapters ------------------------------------------ */
+/* --------------------------------------- API (primary/input/drive) adapters --------------------------------------- */
 const val API_LAYER_PACKAGE = "$GROUP_ID_PACKAGE.api.."
 /* ------------------------------------------------------------------------------------------------------------------ */
 
@@ -47,7 +47,7 @@ val DOMAIN_ALLOWED_OUTSIDE_PACKAGES = PROGRAMMING_LANGUAGE_PACKAGES
 /* ------------------------------------------------------------------------------------------------------------------ */
 
 
-/* ----------------------------------- Infrastructure (secondary/output) adapters ----------------------------------- */
+/* -------------------------------- Infrastructure (secondary/output/drive) adapters -------------------------------- */
 const val INFRASTRUCTURE_LAYER_PACKAGE = "$GROUP_ID_PACKAGE.infrastructure.."
 /* ------------------------------------------------------------------------------------------------------------------ */
 
@@ -55,10 +55,11 @@ const val INFRASTRUCTURE_LAYER_PACKAGE = "$GROUP_ID_PACKAGE.infrastructure.."
 /**
  * All existing packages by layer with nesting packages.
  *
- * K - Layer package (parent)
- * V - Nesting packages
+ * Where:
+ * - K - Layer package (parent)
+ * - V - Nesting packages
  */
-val ALL_EXISTING_PACKAGES = mapOf(
+val ALL_PROJECT_PACKAGES = mapOf(
     API_LAYER_PACKAGE to setOf(
         API_LAYER_PACKAGE,
     ),

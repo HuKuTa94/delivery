@@ -5,12 +5,11 @@ import github.com.hukuta94.delivery.core.domain.DomainEvent
 import github.com.hukuta94.delivery.core.domain.ValueObject
 import github.com.hukuta94.delivery.core.domain.aggregate.Aggregate
 import github.com.hukuta94.delivery.core.domain.service.DomainService
-import org.junit.jupiter.api.Test
+import io.kotest.core.spec.style.StringSpec
 
-class DomainPackageTest {
+class DomainPackageTest : StringSpec({
 
-    @Test
-    fun `domain aggregate package can contain only aggregates, events and value objects`() {
+    "domain aggregate package can contain only aggregates, events and value objects" {
         DOMAIN_AGGREGATE_PACKAGE onlyContains classes(
             Aggregate::class,
             DomainEvent::class,
@@ -18,18 +17,15 @@ class DomainPackageTest {
         )
     }
 
-    @Test
-    fun `domain common package can contain only value objects`() {
+    "domain common package can contain only value objects" {
         DOMAIN_COMMON_PACKAGE onlyContains ValueObject::class
     }
 
-    @Test
-    fun `domain service package can contain only domain services`() {
+    "domain service package can contain only domain services" {
         DOMAIN_SERVICE_PACKAGE onlyContains DomainService::class
     }
 
-    @Test
-    fun `domain classes can not depend on classes that outside of the domain layer package`() {
+    "domain classes can not depend on classes that outside of the domain layer package" {
         noClasses()
             .that()
             .resideInAnyPackage(DOMAIN_LAYER_PACKAGE)
@@ -41,4 +37,4 @@ class DomainPackageTest {
             )
             .check(DOMAIN_LAYER_PACKAGE.classes())
     }
-}
+})
