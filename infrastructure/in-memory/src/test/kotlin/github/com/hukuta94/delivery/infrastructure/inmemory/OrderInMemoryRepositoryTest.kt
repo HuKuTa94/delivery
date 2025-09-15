@@ -1,55 +1,65 @@
 package github.com.hukuta94.delivery.infrastructure.inmemory
 
-import github.com.hukuta94.delivery.core.domain.aggregate.courier.newCourier
+import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderStatus
 import github.com.hukuta94.delivery.core.domain.aggregate.order.newAssignedOrder
+import github.com.hukuta94.delivery.core.domain.aggregate.order.newCompletedOrder
 import github.com.hukuta94.delivery.core.domain.aggregate.order.newOrder
+import io.kotest.assertions.assertSoftly
+import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.types.shouldBeSameInstanceAs
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
+import io.kotest.matchers.types.shouldNotBeSameInstanceAs
+import java.util.*
 
-internal class OrderInMemoryRepositoryTest {
+class OrderInMemoryRepositoryTest : StringSpec({
 
-    // System Under Testing (sut)
-    private lateinit var sut: OrderInMemoryRepository
+    lateinit var sut: OrderInMemoryRepository
 
-    @BeforeEach
-    fun init() {
+    beforeTest {
         sut = OrderInMemoryRepository()
     }
 
-    @Test
-    fun `can add the order`() {
-        // given
+    "can add the order" {
+        // Given
         val order = newOrder()
 
-        // when
+        // When
         sut.add(order)
 
-        // then
-        sut.getById(order.id) shouldBeSameInstanceAs order
+        // Then
+        val actual = sut.getById(order.id)
+        actual shouldBeSameInstanceAs order
     }
 
-    @Test
-    fun `can update the order`() {
-        // given
-        val order = newOrder()
-        sut.add(order)
-        val orderFromRepository = sut.getById(order.id)
-        orderFromRepository.courierId shouldBe null
-        orderFromRepository.assignCourier(newCourier())
+    "can update the order" {
+        // Given
+        val orderId = UUID.randomUUID()
+        val orderInStorage = newOrder(
+            id = orderId,
+        )
+        val orderToUpdate = newCompletedOrder(
+            id = orderId,
+            location = orderInStorage.location,
+        )
+        sut.add(orderInStorage)
 
-        // when
-        sut.update(orderFromRepository)
+        // When
+        sut.update(orderToUpdate)
+        val actual = sut.getById(orderId)
 
-        // then
-        sut.getById(orderFromRepository.id).courierId shouldNotBe null
+        // Then
+        assertSoftly {
+            actual shouldNotBeSameInstanceAs orderInStorage
+            actual.id shouldBe orderId
+            actual.location shouldBe orderInStorage.location
+            actual.status shouldNotBe orderInStorage.status
+            actual.status shouldBe OrderStatus.COMPLETED
+        }
     }
 
-    @Test
-    fun `can get all created orders`() {
-        // given
+    "can get all created orders" {
+        // Given
         val countOfCreatedOrders = 3
         repeat(countOfCreatedOrders) {
             sut.add(newOrder())
@@ -57,16 +67,15 @@ internal class OrderInMemoryRepositoryTest {
         val assignedOrder = newAssignedOrder()
         sut.add(assignedOrder)
 
-        // when
-        val result = sut.getAllCreated()
+        // When
+        val actual = sut.getAllCreated()
 
-        // then
-        result.size shouldBe countOfCreatedOrders
+        // Then
+        actual.size shouldBe countOfCreatedOrders
     }
 
-    @Test
-    fun `can get all assigned orders`() {
-        // given
+    "can get all assigned orders" {
+        // Given
         val countOfAssignedOrders = 3
         repeat(countOfAssignedOrders) {
             sut.add(newAssignedOrder())
@@ -74,10 +83,10 @@ internal class OrderInMemoryRepositoryTest {
         val createdOrder = newOrder()
         sut.add(createdOrder)
 
-        // when
-        val result = sut.getAllAssigned()
+        // When
+        val actual = sut.getAllAssigned()
 
-        // then
-        result.size shouldBe countOfAssignedOrders
+        // Then
+        actual.size shouldBe countOfAssignedOrders
     }
-}
+})

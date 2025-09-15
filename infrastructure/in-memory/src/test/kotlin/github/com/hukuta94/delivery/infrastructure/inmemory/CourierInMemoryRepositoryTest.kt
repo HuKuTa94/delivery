@@ -3,63 +3,78 @@ package github.com.hukuta94.delivery.infrastructure.inmemory
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.CourierStatus
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.newBusyCourier
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.newCourier
+import github.com.hukuta94.delivery.core.domain.aggregate.courier.newFreeCourier
+import io.kotest.assertions.assertSoftly
+import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.types.shouldBeSameInstanceAs
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
+import io.kotest.matchers.types.shouldNotBeSameInstanceAs
+import java.util.UUID
 
-internal class CourierInMemoryRepositoryTest {
+internal class CourierInMemoryRepositoryTest : StringSpec({
 
     // System Under Testing (sut)
-    private lateinit var sut: CourierInMemoryRepository
+    lateinit var sut: CourierInMemoryRepository
 
-    @BeforeEach
-    fun init() {
+    beforeTest {
         sut = CourierInMemoryRepository()
     }
 
-    @Test
-    fun `can add the courier`() {
-        // given
-        val courier = newCourier()
-
-        // when
-        sut.add(courier)
-
-        // then
-        sut.getById(courier.id) shouldBeSameInstanceAs courier
-    }
-
-    @Test
-    fun `can update the courier`() {
-        // given
+    "can add the courier" {
+        // Given
         val courier = newCourier()
         sut.add(courier)
-        val courierFromRepository = sut.getById(courier.id)
-        courierFromRepository.status shouldNotBe CourierStatus.BUSY
-        courierFromRepository.busy()
 
-        // when
-        sut.update(courierFromRepository)
+        // When
+        val actual = sut.getById(courier.id)
 
-        // then
-        sut.getById(courierFromRepository.id).status shouldBe CourierStatus.BUSY
+        // Then
+        actual shouldBeSameInstanceAs courier
     }
 
-    @Test
-    fun `can get all free couriers`() {
-        // given
+    "can update the courier" {
+        // Given
+        val courierId = UUID.randomUUID()
+        val courierInStorage = newFreeCourier(
+            id = courierId,
+        )
+        val courierToUpdate = newBusyCourier(
+            id = courierId,
+            name = courierInStorage.name,
+            location = courierInStorage.location,
+            transport = courierInStorage.transport,
+        )
+        sut.add(courierInStorage)
+
+        // When
+        sut.update(courierToUpdate)
+        val actual = sut.getById(courierId)
+
+        // Then
+        assertSoftly {
+            actual shouldNotBeSameInstanceAs courierInStorage
+            actual.id shouldBe courierId
+            actual.name shouldBe courierInStorage.name
+            actual.location shouldBe courierInStorage.location
+            actual.transport shouldBe courierInStorage.transport
+            actual.status shouldNotBe courierInStorage.status
+            actual.status shouldBe CourierStatus.BUSY
+        }
+    }
+
+    "can get all free couriers" {
+        // Given
         val countOfFreeCouriers = 3
         repeat(countOfFreeCouriers) {
-            sut.add(newCourier())
+            sut.add(newFreeCourier())
         }
         sut.add(newBusyCourier())
 
-        // when
-        val result = sut.getAllFree()
+        // When
+        val actual = sut.getAllFree()
 
-        // then
-        result.size shouldBe countOfFreeCouriers
+        // Then
+        actual.size shouldBe countOfFreeCouriers
     }
-}
+})
