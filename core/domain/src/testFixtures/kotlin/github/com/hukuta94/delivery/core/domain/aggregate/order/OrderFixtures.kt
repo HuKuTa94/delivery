@@ -3,6 +3,7 @@ package github.com.hukuta94.delivery.core.domain.aggregate.order
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.Courier
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.newCourier
 import github.com.hukuta94.delivery.core.domain.common.Location
+import github.com.hukuta94.delivery.core.domain.common.newLocationWithRandomCoords
 import java.util.*
 
 fun newOrder(
@@ -10,10 +11,10 @@ fun newOrder(
     location: Location? = null,
 ) = Order.create(
     id = id ?: UUID.randomUUID(),
-    location = location ?: Location.random(),
+    location = location ?: newLocationWithRandomCoords(),
 )
 
-fun assignedOrder(
+fun newAssignedOrder(
     id: UUID? = null,
     location: Location? = null,
     courier: Courier? = null,
@@ -26,11 +27,11 @@ fun assignedOrder(
     )
 }
 
-fun completedOrder(
+fun newCompletedOrder(
     id: UUID? = null,
     location: Location? = null,
     courier: Courier? = null,
-) = assignedOrder(
+) = newAssignedOrder(
     id = id,
     location = location,
     courier = courier

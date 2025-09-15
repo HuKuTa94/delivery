@@ -1,7 +1,7 @@
 package github.com.hukuta94.delivery.infrastructure.inmemory
 
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.CourierStatus
-import github.com.hukuta94.delivery.core.domain.aggregate.courier.busyCourier
+import github.com.hukuta94.delivery.core.domain.aggregate.courier.newBusyCourier
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.newCourier
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
@@ -54,7 +54,7 @@ internal class CourierInMemoryRepositoryTest {
         repeat(countOfFreeCouriers) {
             sut.add(newCourier())
         }
-        sut.add(busyCourier())
+        sut.add(newBusyCourier())
 
         // when
         val result = sut.getAllFree()

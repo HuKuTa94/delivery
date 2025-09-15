@@ -1,7 +1,7 @@
 package github.com.hukuta94.delivery.infrastructure.inmemory
 
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.newCourier
-import github.com.hukuta94.delivery.core.domain.aggregate.order.assignedOrder
+import github.com.hukuta94.delivery.core.domain.aggregate.order.newAssignedOrder
 import github.com.hukuta94.delivery.core.domain.aggregate.order.newOrder
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
@@ -54,7 +54,7 @@ internal class OrderInMemoryRepositoryTest {
         repeat(countOfCreatedOrders) {
             sut.add(newOrder())
         }
-        val assignedOrder = assignedOrder()
+        val assignedOrder = newAssignedOrder()
         sut.add(assignedOrder)
 
         // when
@@ -69,7 +69,7 @@ internal class OrderInMemoryRepositoryTest {
         // given
         val countOfAssignedOrders = 3
         repeat(countOfAssignedOrders) {
-            sut.add(assignedOrder())
+            sut.add(newAssignedOrder())
         }
         val createdOrder = newOrder()
         sut.add(createdOrder)

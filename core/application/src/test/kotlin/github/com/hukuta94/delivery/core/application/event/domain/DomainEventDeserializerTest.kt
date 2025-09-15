@@ -2,16 +2,15 @@ package github.com.hukuta94.delivery.core.application.event.domain
 
 import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderAssignedDomainEvent
 import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderCompletedDomainEvent
+import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.Test
 import java.util.*
 
-internal class DomainEventDeserializerTest {
+class DomainEventDeserializerTest : StringSpec({
 
-    private val sut = DomainEventDeserializer()
+    val sut = DomainEventDeserializer()
 
-    @Test
-    fun `deserializes order assigned domain event from string`() {
+    "deserializes order assigned domain event from string" {
         // Given
         val domainEvent = OrderAssignedDomainEvent(
             orderId = UUID.randomUUID(),
@@ -35,8 +34,7 @@ internal class DomainEventDeserializerTest {
         actualDeserializedDomainEvent shouldBe domainEvent
     }
 
-    @Test
-    fun `deserializes order completed domain event from string`() {
+    "deserializes order completed domain event from string" {
         // Given
         val domainEvent = OrderCompletedDomainEvent(
             orderId = UUID.randomUUID(),
@@ -57,10 +55,10 @@ internal class DomainEventDeserializerTest {
         // Then
         actualDeserializedDomainEvent shouldBe domainEvent
     }
-
-    private fun String.withoutSpaces() = this.trimIndent().replace(SPACES_REGEX, "")
-
+}) {
     companion object {
         private val SPACES_REGEX = Regex("\\s+")
+
+        private fun String.withoutSpaces() = this.trimIndent().replace(SPACES_REGEX, "")
     }
 }

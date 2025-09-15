@@ -1,186 +1,288 @@
 package github.com.hukuta94.delivery.core.domain.aggregate.courier
 
-import github.com.hukuta94.delivery.core.domain.common.*
+import github.com.hukuta94.delivery.core.domain.LocationSpecification.MAX_COORDINATE_VALUE
+import github.com.hukuta94.delivery.core.domain.LocationSpecification.VALID_COORDINATE_RANGE
+import github.com.hukuta94.delivery.core.domain.common.Distance
+import github.com.hukuta94.delivery.core.domain.common.Location
+import github.com.hukuta94.delivery.core.domain.common.newLocationWithMinCoords
 import io.kotest.assertions.assertSoftly
+import io.kotest.assertions.withClue
+import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.Arguments
-import org.junit.jupiter.params.provider.MethodSource
-import java.util.stream.Stream
+import io.kotest.property.Arb
+import io.kotest.property.arbitrary.bind
+import io.kotest.property.arbitrary.element
+import io.kotest.property.arbitrary.int
+import io.kotest.property.arbitrary.of
+import io.kotest.property.checkAll
+import kotlin.math.abs
 
-internal class CourierTest {
+internal class CourierTest : StringSpec ({
 
-    @Test
-    fun `new courier is created in valid status`() {
-        val name = courierName()
-        val transport = bicycle()
-        val location = randomLocation()
+    "new courier is created in valid state and status" {
+        checkAll(TRANSPORTS) { transport ->
+            // Given
+            val name = courierName()
+            val location = newLocationWithMinCoords()
 
-        val courier = Courier.create(
-            name = name,
-            transport = transport,
-            location = location,
-        )
-
-        assertSoftly {
-            courier.name shouldBe name
-            courier.transport shouldBe transport
-            courier.location shouldBe location
-            courier.status shouldBe CourierStatus.FREE
-        }
-    }
-
-    @Test
-    fun `the courier can become free`() {
-        val courier = newCourier()
-
-        courier.free()
-
-        courier.status shouldBe CourierStatus.FREE
-    }
-
-    @Test
-    fun `the courier can become busy`() {
-        val courier = newCourier()
-
-        courier.busy()
-
-        courier.status shouldBe CourierStatus.BUSY
-    }
-
-    @ParameterizedTest
-    @MethodSource("allCourierTransportsWithTimeToAnotherLocation")
-    fun `the courier can calculate time to another location based on his transport speed`(
-        startLocation: Location,
-        endLocation: Location,
-        transport: Transport,
-        expectedTime: Double,
-    ) {
-        val courier = newCourier(
-            transport = transport,
-            location = startLocation,
-        )
-
-        val timeToLocation = courier.timeToLocation(endLocation)
-
-        timeToLocation shouldBe expectedTime
-    }
-
-    @ParameterizedTest
-    @MethodSource("courierMovesToOrderLocationsOnEachTransport")
-    fun `the courier moves to order location with the step based on his transport speed`(
-        courier: Courier,
-        orderLocation: Location,
-        courierLocationAfterMovement: Location,
-    ) {
-        assertCourierLocationAfterMoveToOrder(courier, orderLocation, courierLocationAfterMovement)
-    }
-
-    @ParameterizedTest
-    @MethodSource("courierReachesOrderLocationsOnEachTransport")
-    fun `the courier reaches exactly in the order location on his transport`(
-        courier: Courier,
-        orderLocation: Location,
-        courierLocationAfterMovement: Location,
-    ) {
-        assertCourierLocationAfterMoveToOrder(courier, orderLocation, courierLocationAfterMovement)
-    }
-
-    private fun assertCourierLocationAfterMoveToOrder(
-        courier: Courier,
-        orderLocation: Location,
-        courierLocationAfterMovement: Location
-    ) {
-        courier.moveTo(orderLocation)
-
-        courier.location shouldBe courierLocationAfterMovement
-    }
-
-    companion object {
-        @JvmStatic
-        fun allCourierTransportsWithTimeToAnotherLocation(): Stream<Arguments> {
-            val startLocation = minimalLocation()
-            val endLocation = maximalLocation()
-
-            return Transport.values().map { transport ->
-                val expectedTime = startLocation.distanceTo(endLocation).abs() / transport.speed.toDouble()
-
-                Arguments.of(
-                    startLocation,
-                    endLocation,
-                    transport,
-                    expectedTime,
-                )
-            }.stream()
-        }
-
-        @JvmStatic
-        fun courierMovesToOrderLocationsOnEachTransport(): Stream<Arguments> {
-            val maxTransportSpeed = Transport.values().maxOf { it.speed }
-            val orderLocations = allPossibleLocationsWithShiftsFromCourier(
-                shift = maxTransportSpeed, // shift by max possible value of transport speed
+            // When
+            val sut = Courier.create(
+                name = name,
+                transport = transport,
+                location = location,
             )
 
-            return Transport.values().flatMap { transport ->
-                val expectedCourierLocationsAfterMovement = allPossibleLocationsWithShiftsFromCourier(
-                    shift = transport.speed,
-                )
-                orderAndExpectedCourierLocationsForTransport(
-                    transport = transport,
-                    orderLocations = orderLocations,
-                    expectedCourierLocations = expectedCourierLocationsAfterMovement,
-                )
-            }.stream()
+            // Then
+            assertSoftly {
+                sut.name shouldBe name
+                sut.transport shouldBe transport
+                sut.location shouldBe location
+                sut.status shouldBe CourierStatus.FREE
+            }
         }
+    }
 
-        @JvmStatic
-        fun courierReachesOrderLocationsOnEachTransport(): Stream<Arguments> {
-            val orderLocations = allPossibleLocationsWithShiftsFromCourier(shift = 1)
+    "courier must become free" {
+        // Given
+        val sut = newCourier()
 
-            return Transport.values().flatMap { transport ->
-                orderAndExpectedCourierLocationsForTransport(
-                    transport = transport,
-                    orderLocations = orderLocations,
-                    expectedCourierLocations = orderLocations, // expected courier locations are same as order locations
-                )
-            }.stream()
-        }
+        // When
+        sut.free()
 
-        private fun allPossibleLocationsWithShiftsFromCourier(shift: Int): List<Location> {
-            val shifts = listOf(
-                0, // same location
-                shift,
-                -shift
+        // Then
+        sut.status shouldBe CourierStatus.FREE
+    }
+
+    "courier must become busy" {
+        // Given
+        val sut = newCourier()
+
+        // When
+        sut.busy()
+
+        // Then
+        sut.status shouldBe CourierStatus.BUSY
+    }
+
+    "courier must calculate time to other location by using his transport" {
+        val validLocations = Arb.bind(
+            Arb.int(VALID_COORDINATE_RANGE),
+            Arb.int(VALID_COORDINATE_RANGE)
+        ) { x, y -> Location(x, y) }
+
+        checkAll(
+            validLocations,
+            validLocations,
+            TRANSPORTS
+        ) { courierLocation, otherLocation, transport ->
+            // Given
+            val distance = Distance(courierLocation, otherLocation)
+            val sut = newCourier(
+                location = courierLocation,
+                transport = transport,
             )
 
-            return shifts.flatMap { xShift ->
-                shifts.map { yShift ->
-                    newLocation(
-                        abscissa = COURIER_START_LOCATION.abscissa + xShift,
-                        ordinate = COURIER_START_LOCATION.ordinate + yShift
+            // When
+            val actual = sut.timeToLocation(otherLocation)
+
+            // Then
+            val expected = distance.value / transport.speed.toDouble()
+            actual shouldBe expected
+        }
+    }
+
+    "when target location is front of courier then he must move forward" {
+        checkAll(TRANSPORTS) { transport ->
+            // Given
+            val sut = newCourier(transport = transport, location = COURIER_START_LOCATION)
+            val forward = CENTER + transport.speed
+            val target = Location(CENTER, forward)
+            val expected = Location(CENTER, forward)
+
+            // When
+            sut.moveTo(target)
+
+            // Then
+            sut.location shouldBe expected
+        }
+    }
+
+    "when target location is front and right of courier then he must move forward" {
+        checkAll(TRANSPORTS) { transport ->
+            // Given
+            val sut = newCourier(transport = transport, location = COURIER_START_LOCATION)
+            val forward = CENTER + transport.speed
+            val right = CENTER + transport.speed
+            val target = Location(right, forward)
+            val expected = Location(CENTER, forward)
+
+            // When
+            sut.moveTo(target)
+
+            // Then
+            sut.location shouldBe expected
+        }
+    }
+
+    "when target location is right of courier then he must move right" {
+        checkAll(TRANSPORTS) { transport ->
+            // Given
+            val sut = newCourier(transport = transport, location = COURIER_START_LOCATION)
+            val right = CENTER + transport.speed
+            val target = Location(right, CENTER)
+            val expected = Location(right, CENTER)
+
+            // When
+            sut.moveTo(target)
+
+            // Then
+            sut.location shouldBe expected
+        }
+    }
+
+    "when target location is right and backward of courier then he must move backward" {
+        checkAll(TRANSPORTS) { transport ->
+            // Given
+            val sut = newCourier(transport = transport, location = COURIER_START_LOCATION)
+            val right = CENTER + transport.speed
+            val backward = CENTER - transport.speed
+            val target = Location(right, backward)
+            val expected = Location(CENTER, backward)
+
+            // When
+            sut.moveTo(target)
+
+            // Then
+            sut.location shouldBe expected
+        }
+    }
+
+    "when target location is backward of courier then he must move backward" {
+        checkAll(TRANSPORTS) { transport ->
+            // Given
+            val sut = newCourier(transport = transport, location = COURIER_START_LOCATION)
+            val backward = CENTER - transport.speed
+            val target = Location(CENTER, backward)
+            val expected = Location(CENTER, backward)
+
+            // When
+            sut.moveTo(target)
+
+            // Then
+            sut.location shouldBe expected
+        }
+    }
+
+    "when target location is left and backward of courier then he must move backward" {
+        checkAll(TRANSPORTS) { transport ->
+            // Given
+            val sut = newCourier(transport = transport, location = COURIER_START_LOCATION)
+            val left = CENTER - transport.speed
+            val backward = CENTER - transport.speed
+            val target = Location(left, backward)
+            val expected = Location(CENTER, backward)
+
+            // When
+            sut.moveTo(target)
+
+            // Then
+            sut.location shouldBe expected
+        }
+    }
+
+    "when target location is left of courier then he must move left" {
+        checkAll(TRANSPORTS) { transport ->
+            // Given
+            val sut = newCourier(transport = transport, location = COURIER_START_LOCATION)
+            val left = CENTER - transport.speed
+            val target = Location(left, CENTER)
+            val expected = Location(left, CENTER)
+
+            // When
+            sut.moveTo(target)
+
+            // Then
+            sut.location shouldBe expected
+        }
+    }
+
+    "when target location is left and forward of courier then he must move forward" {
+        checkAll(TRANSPORTS) { transport ->
+            // Given
+            val sut = newCourier(transport = transport, location = COURIER_START_LOCATION)
+            val left = CENTER - transport.speed
+            val forward = CENTER + transport.speed
+            val target = Location(left, forward)
+            val expected = Location(CENTER, forward)
+
+            // When
+            sut.moveTo(target)
+
+            // Then
+            sut.location shouldBe expected
+        }
+    }
+
+    "courier can reach every reachable target location in one step according to transport speed" {
+        /**
+         * Computes all test cases of closest target locations to courier
+         * (not further than courier can reach for one movement)
+         */
+        fun computeAllTargetLocationsFor(transport: Transport): List<Location> {
+            val result = mutableListOf<Location>()
+
+            // take reachable range of coordinates for one movement based on transport speed
+            for (deltaX in -transport.speed..transport.speed) {
+                val deltaYAbs = transport.speed - abs(deltaX)
+                result.add(
+                    Location(
+                        x = COURIER_START_LOCATION.x + deltaX,
+                        y = COURIER_START_LOCATION.y + deltaYAbs
+                    )
+                )
+
+                // don't duplicate coordinate
+                if (deltaYAbs != 0) {
+                    result.add(
+                        Location(
+                            x = COURIER_START_LOCATION.x + deltaX,
+                            y = COURIER_START_LOCATION.y - deltaYAbs
+                        )
                     )
                 }
             }
+            return result
         }
 
-        private fun orderAndExpectedCourierLocationsForTransport(
-            transport: Transport,
-            orderLocations: List<Location>,
-            expectedCourierLocations: List<Location>,
-        ): List<Arguments> {
-            return orderLocations.mapIndexed { i, orderLocation ->
-                Arguments.of(
-                    newCourier(
-                        transport = transport,
-                        location = COURIER_START_LOCATION,
-                    ),
-                    orderLocation,
-                    expectedCourierLocations[i],
+        Transport.entries.forEach { transport ->
+            val targets = computeAllTargetLocationsFor(transport)
+
+            checkAll(
+                iterations = targets.size, // execute only precomputed test cases
+                Arb.of(targets),
+            ) { target ->
+                // Given
+                val sut = newCourier(
+                    transport = transport,
+                    location = COURIER_START_LOCATION,
                 )
+
+                // When
+                sut.moveTo(target)
+
+                // Then
+                withClue(
+                    "Courier with transport = $transport must reach target $target from start $COURIER_START_LOCATION, actual is ${sut.location}"
+                ) {
+                    sut.location shouldBe target
+                }
             }
         }
-
-        private val COURIER_START_LOCATION = newLocation(5, 5)
+    }
+}) {
+    companion object {
+        private val TRANSPORTS = Arb.element(Transport.entries)
+        private val COURIER_START_LOCATION = Location(CENTER, CENTER)
+        private const val CENTER = (MAX_COORDINATE_VALUE / 2)
     }
 }

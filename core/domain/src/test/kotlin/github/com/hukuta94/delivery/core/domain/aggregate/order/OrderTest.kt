@@ -1,108 +1,119 @@
 package github.com.hukuta94.delivery.core.domain.aggregate.order
 
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.newCourier
-import github.com.hukuta94.delivery.core.domain.common.Location
+import github.com.hukuta94.delivery.core.domain.common.newLocationWithRandomCoords
 import io.kotest.assertions.assertSoftly
+import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import org.junit.jupiter.api.Test
+import io.kotest.property.Arb
+import io.kotest.property.arbitrary.of
+import io.kotest.property.checkAll
 import java.util.*
 
-internal class OrderTest {
+class OrderTest : StringSpec({
 
-    @Test
-    fun `new order is created in correct status and state`() {
-        val order = Order.create(
-            id = UUID.randomUUID(),
-            location = Location.random()
+    "new order is created in correct status and state" {
+        // Given
+        val id = UUID.randomUUID()
+        val location = newLocationWithRandomCoords()
+
+        // When
+        val sut = Order.create(
+            id = id,
+            location = location,
         )
 
+        // Then
         assertSoftly {
-            order.status shouldBe OrderStatus.CREATED
-            order.courierId shouldBe null
+            sut.status shouldBe OrderStatus.CREATED
+            sut.courierId shouldBe null
         }
     }
 
-    @Test
-    fun `order status is changed when courier is assigned`() {
-        val order = newOrder()
+    "order status is changed when courier is assigned" {
+        // Given
+        val sut = newOrder()
         val courier = newCourier()
 
-        order.assignCourier(courier)
+        // When
+        sut.assignCourier(courier)
 
+        // Then
         assertSoftly {
-            order.status shouldBe OrderStatus.ASSIGNED
-            order.courierId shouldBe courier.id
+            sut.status shouldBe OrderStatus.ASSIGNED
+            sut.courierId shouldBe courier.id
         }
     }
 
-    @Test
-    fun `order can not be reassigned to other courier`() {
-        val assignedOrder = assignedOrder()
-        val completedOrder = completedOrder()
+    "order can not be reassigned to other courier" {
+        // Given
         val otherCourier = newCourier()
-        assignedOrder.assignCourier(otherCourier)
+        val notReassignableOrders = listOf(
+            newAssignedOrder(),
+            newCompletedOrder(),
+        )
 
-        completedOrder.assignCourier(otherCourier)
+        checkAll(
+            iterations = notReassignableOrders.size,
+            Arb.of(notReassignableOrders)
+        ) { sut ->
+            // When
+            sut.assignCourier(otherCourier)
 
-        assertSoftly {
-            assignedOrder.courierId shouldNotBe otherCourier.id
-            completedOrder.courierId shouldNotBe otherCourier.id
+            // Then
+            sut.courierId shouldNotBe otherCourier.id
         }
     }
 
-    @Test
-    fun `order can be completed when courier is assigned`() {
-        val order = assignedOrder()
+    "order can be completed when courier is assigned" {
+        // Given
+        val sut = newAssignedOrder()
 
-        order.complete()
+        // When
+        sut.complete()
 
-        order.status shouldBe OrderStatus.COMPLETED
+        // Then
+        sut.status shouldBe OrderStatus.COMPLETED
     }
 
-    @Test
-    fun `order can not be completed when courier is not assigned`() {
-        val order = newOrder()
+    "order can not be completed when courier is not assigned" {
+        // Given
+        val sut = newOrder()
 
-        order.complete()
+        // When
+        sut.complete()
 
-        order.status shouldNotBe OrderStatus.COMPLETED
+        // Then
+        sut.status shouldNotBe OrderStatus.COMPLETED
     }
 
-    @Test
-    fun `raise order assigned domain event when order is assigned courier`() {
-        // given
-        val order = assignedOrder()
+    "raise order assigned domain event when order is assigned courier" {
+        // Given
+        val sut = newAssignedOrder()
 
-        // when
-        val actualDomainEvent = order.popDomainEvents().last() as OrderAssignedDomainEvent
+        // When
+        val actualDomainEvent = sut.popDomainEvents().last() as OrderAssignedDomainEvent
 
-        // then
+        // Then
         assertSoftly {
             actualDomainEvent::class shouldBe OrderAssignedDomainEvent::class
-            actualDomainEvent.orderId shouldBe order.id
-            actualDomainEvent.courierId shouldBe order.courierId
+            actualDomainEvent.orderId shouldBe sut.id
+            actualDomainEvent.courierId shouldBe sut.courierId
         }
     }
 
-    @Test
-    fun `raise order completed domain event when order is completed`() {
-        // given
-        val order = completedOrder()
+    "raise order completed domain event when order is completed" {
+        // Given
+        val sut = newCompletedOrder()
 
-        // when
-        val actualDomainEvent = order.popDomainEvents().last() as OrderCompletedDomainEvent
+        // When
+        val actualDomainEvent = sut.popDomainEvents().last() as OrderCompletedDomainEvent
 
-        // then
+        // Then
         assertSoftly {
             actualDomainEvent::class shouldBe OrderCompletedDomainEvent::class
-            actualDomainEvent.orderId shouldBe order.id
+            actualDomainEvent.orderId shouldBe sut.id
         }
     }
-}
-
-
-
-
-
-
+})

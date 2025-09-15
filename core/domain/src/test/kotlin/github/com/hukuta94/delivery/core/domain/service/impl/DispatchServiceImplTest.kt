@@ -1,13 +1,13 @@
 package github.com.hukuta94.delivery.core.service.impl
 
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.CourierStatus
-import github.com.hukuta94.delivery.core.domain.aggregate.courier.busyCourier
-import github.com.hukuta94.delivery.core.domain.aggregate.courier.freeCourier
+import github.com.hukuta94.delivery.core.domain.aggregate.courier.newBusyCourier
+import github.com.hukuta94.delivery.core.domain.aggregate.courier.newFreeCourier
 import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderStatus
 import github.com.hukuta94.delivery.core.domain.aggregate.order.newOrder
 import github.com.hukuta94.delivery.core.domain.service.impl.DispatchServiceImpl
-import github.com.hukuta94.delivery.core.domain.common.maximalLocation
-import github.com.hukuta94.delivery.core.domain.common.minimalLocation
+import github.com.hukuta94.delivery.core.domain.common.newLocationWithMaxCoords
+import github.com.hukuta94.delivery.core.domain.common.newLocationWithMinCoords
 import github.com.hukuta94.delivery.core.domain.common.newLocation
 import io.kotest.assertions.assertSoftly
 import io.kotest.matchers.shouldBe
@@ -22,7 +22,7 @@ internal class DispatchServiceImplTest {
     @Test
     fun `assignOrderToMostSuitableCourier does nothing when no free couriers`() {
         val order = newOrder()
-        val couriers = listOf(busyCourier())
+        val couriers = listOf(newBusyCourier())
 
         assertDoesNotThrow {
             sut.assignOrderToMostSuitableCourier(order, couriers)
@@ -32,8 +32,8 @@ internal class DispatchServiceImplTest {
     @Test
     fun `assignOrderToMostSuitableCourier assigns order to only free courier and changes his status`() {
         val order = newOrder()
-        val freeCourier = freeCourier()
-        val busyCourier = busyCourier()
+        val freeCourier = newFreeCourier()
+        val busyCourier = newBusyCourier()
         val couriers = listOf(freeCourier, busyCourier)
 
         freeCourier.status shouldBe CourierStatus.FREE
@@ -45,12 +45,12 @@ internal class DispatchServiceImplTest {
     @Test
     fun `assignOrderToMostSuitableCourier assigns order to most suitable and nearest courier`() {
         val order = newOrder(
-            location = maximalLocation()
+            location = newLocationWithMaxCoords()
         )
-        val fartherCourier = freeCourier(
-            location = minimalLocation()
+        val fartherCourier = newFreeCourier(
+            location = newLocationWithMinCoords()
         )
-        val nearestCourier = freeCourier(
+        val nearestCourier = newFreeCourier(
             location = newLocation(4, 4)
         )
         val couriers = listOf(fartherCourier, nearestCourier)
@@ -66,7 +66,7 @@ internal class DispatchServiceImplTest {
     @Test
     fun `assignOrderToMostSuitableCourier changes order status to assigned`() {
         val order = newOrder()
-        val freeCourier = freeCourier()
+        val freeCourier = newFreeCourier()
         val couriers = listOf(freeCourier)
 
         sut.assignOrderToMostSuitableCourier(order, couriers)
@@ -77,7 +77,7 @@ internal class DispatchServiceImplTest {
     @Test
     fun `assignOrderToMostSuitableCourier changes courier id in order`() {
         val order = newOrder()
-        val freeCourier = freeCourier()
+        val freeCourier = newFreeCourier()
         val couriers = listOf(freeCourier)
 
         order.courierId shouldNotBe freeCourier.id

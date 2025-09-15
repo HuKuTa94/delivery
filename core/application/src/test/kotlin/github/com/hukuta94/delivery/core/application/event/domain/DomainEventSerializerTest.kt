@@ -3,17 +3,15 @@ package github.com.hukuta94.delivery.core.application.event.domain
 import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderAssignedDomainEvent
 import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderCompletedDomainEvent
 import io.kotest.assertions.assertSoftly
+import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.string.shouldContain
-import org.junit.jupiter.api.Test
-
 import java.util.*
 
-internal class DomainEventSerializerTest {
+class DomainEventSerializerTest : StringSpec({
 
-    private val sut = DomainEventSerializer()
+    val sut = DomainEventSerializer()
 
-    @Test
-    fun `serializes order assigned domain event into string`() {
+    "serializes order assigned domain event into string" {
         // Given
         val domainEvent = OrderAssignedDomainEvent(
             orderId = UUID.randomUUID(),
@@ -21,30 +19,29 @@ internal class DomainEventSerializerTest {
         )
 
         // When
-        val actualSerializedDomainEvent = sut.serialize(domainEvent)
+        val actual = sut.serialize(domainEvent)
 
         // Then
         assertSoftly {
-            actualSerializedDomainEvent shouldContain "\"id\":\"${domainEvent.id}\""
-            actualSerializedDomainEvent shouldContain "\"orderId\":\"${domainEvent.orderId}\""
-            actualSerializedDomainEvent shouldContain "\"courierId\":\"${domainEvent.courierId}\""
+            actual shouldContain "\"id\":\"${domainEvent.id}\""
+            actual shouldContain "\"orderId\":\"${domainEvent.orderId}\""
+            actual shouldContain "\"courierId\":\"${domainEvent.courierId}\""
         }
     }
 
-    @Test
-    fun `serializes order completed domain event into string`() {
+    "serializes order completed domain event into string" {
         // Given
         val domainEvent = OrderCompletedDomainEvent(
             orderId = UUID.randomUUID()
         )
 
         // When
-        val actualSerializedDomainEvent = sut.serialize(domainEvent)
+        val actual = sut.serialize(domainEvent)
 
         // Then
         assertSoftly {
-            actualSerializedDomainEvent shouldContain "\"id\":\"${domainEvent.id}\""
-            actualSerializedDomainEvent shouldContain "\"orderId\":\"${domainEvent.orderId}\""
+            actual shouldContain "\"id\":\"${domainEvent.id}\""
+            actual shouldContain "\"orderId\":\"${domainEvent.orderId}\""
         }
     }
-}
+})
