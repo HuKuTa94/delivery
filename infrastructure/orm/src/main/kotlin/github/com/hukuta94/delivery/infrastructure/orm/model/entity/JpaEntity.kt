@@ -37,18 +37,22 @@ abstract class JpaEntity<DOMAIN_AGGREGATE : Aggregate<*>> {
     private fun createDomainAggregate(
         jpaEntityFields: Map<String, Field>
     ): DOMAIN_AGGREGATE {
-        val aggregatePrimaryConstructor = domainAggregateClass.primaryConstructor
+        val constructor = domainAggregateClass.primaryConstructor
             ?: throw IllegalArgumentException(
                 "Primary constructor is missing for domain ${domainAggregateClass.simpleName}"
             )
-        val constructorParameters = aggregatePrimaryConstructor.parameters.map { parameter ->
-            parameter.name?.let {
-                getFieldValue(
-                    jpaEntityFields.ofName(it)
-                )
+
+        val parameters = constructor.parameters
+
+        val arguments = Array(parameters.size) { i ->
+            val name = parameters[i].name
+            when {
+                name != null -> getFieldValue(jpaEntityFields.ofName(name))
+                else -> null
             }
         }
-        return aggregatePrimaryConstructor.call(*constructorParameters.toTypedArray())
+
+        return constructor.call(*arguments)
     }
 
     private fun <DOMAIN_AGGREGATE : Aggregate<*>> mapJpaEntityFieldsToDomainAggregate(
