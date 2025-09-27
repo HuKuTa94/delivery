@@ -14,14 +14,15 @@ fun Project.applyCommonProjectSetup() {
 
     dependencies {
         // kotlin
-        add("implementation", Kotlin.jdk8)
-        add("implementation", Kotlin.stdlib)
-        add("implementation", Kotlin.reflect)
-        add("testImplementation", Kotlin.test)
+        add("implementation", PrivateLibs.Kotlin.jdk8)
+        add("implementation", PrivateLibs.Kotlin.stdlib)
+        add("implementation", PrivateLibs.Kotlin.reflect)
+        add("testImplementation", PrivateLibs.Kotlin.test)
 
         // Kotest
-        add("testImplementation", Kotest.junit5)
-        add("testImplementation", Kotest.property)
+        add("testImplementation", PrivateLibs.Kotest.junit5)
+        add("testImplementation", PrivateLibs.Kotest.property)
+        add("testImplementation", PrivateLibs.Kotest.engine)
     }
 }
 
@@ -30,7 +31,8 @@ fun Project.applyCommonProjectSetup() {
  * reducing boilerplate code in each build.gradle.kts file
  */
 fun PluginDependenciesSpec.applyCommonProjectPlugins() {
-    id("org.jetbrains.kotlin.jvm") version "2.2.10"
+    id("io.kotest")                version PrivateLibs.Kotest.version
+    id("org.jetbrains.kotlin.jvm") version PrivateLibs.Kotlin.version
     `java-test-fixtures`
 }
 
@@ -51,30 +53,43 @@ fun DependencyHandler.applyCommonProtobufDependencies() {
     add("implementation", Libs.Protobuf.java_util)
 }
 
-// Private libs are used in whole project (each module) and apply only in applyCommonProjectSetup function
-private object Kotlin {
-    const val jdk8 = "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-    const val stdlib = "org.jetbrains.kotlin:kotlin-stdlib"
-    const val reflect = "org.jetbrains.kotlin:kotlin-reflect"
-    const val test = "org.jetbrains.kotlin:kotlin-test"
-}
-private object Kotest {
-    private const val version = "6.0.2"
-    const val junit5 = "io.kotest:kotest-runner-junit5:$version"
-    const val property = "io.kotest:kotest-property:$version"
+/**
+ * Private libs are used in whole project (each module) and must be applied only in applyCommonProjectSetup function
+ */
+object PrivateLibs {
+    object Kotlin {
+        const val version = "2.2.10"
+        const val jdk8 = "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+        const val stdlib = "org.jetbrains.kotlin:kotlin-stdlib"
+        const val reflect = "org.jetbrains.kotlin:kotlin-reflect"
+        const val test = "org.jetbrains.kotlin:kotlin-test"
+    }
+    object Kotest {
+        const val version = "6.0.3"
+        const val junit5 = "io.kotest:kotest-runner-junit5:$version"
+        const val property = "io.kotest:kotest-property:$version"
+        const val engine = "io.kotest:kotest-framework-engine:$version"
 
-    private const val arrow_version = "1.1.1"
-    const val arrow = "io.kotest.extensions:kotest-assertions-arrow-jvm:$arrow_version"
-}
-private object ArrowKt {
-    private const val version = "1.1.5"
-    const val core = "io.arrow-kt:arrow-core:$version"
+        private const val arrow_version = "1.1.1"
+        const val arrow = "io.kotest.extensions:kotest-assertions-arrow-jvm:$arrow_version"
+    }
+    object ArrowKt {
+        private const val version = "1.1.5"
+        const val core = "io.arrow-kt:arrow-core:$version"
+    }
 }
 
 /**
  * Defines all additional libraries and their versions that are used in whole project in adapters
  */
 object Libs {
+    object TestContainers {
+        private const val version = "1.18.0"
+        const val postgresql = "org.testcontainers:postgresql:$version"
+    }
+    object Kotest {
+        const val kotest_extensions_spring = "io.kotest:kotest-extensions-spring-jvm:${PrivateLibs.Kotest.version}"
+    }
     object Mockito {
         private const val version = "5.4.0"
         const val mockito_kotlin = "org.mockito.kotlin:mockito-kotlin:$version"
