@@ -1,7 +1,6 @@
 package github.com.hukuta94.delivery.core.domain.aggregate.courier
 
 import github.com.hukuta94.delivery.core.domain.aggregate.Aggregate
-import github.com.hukuta94.delivery.core.domain.common.Distance
 import github.com.hukuta94.delivery.core.domain.common.Location
 import java.util.UUID
 import kotlin.math.abs
@@ -24,12 +23,7 @@ class Courier internal constructor(
     }
 
     fun timeToLocation(location: Location): Double {
-        val distance = Distance(
-            from = this.location,
-            to = location,
-        )
-
-        return distance.value.toDouble() / transport.speed
+        return this.location.distanceTo(location).toDouble() / transport.speed
     }
 
     /**

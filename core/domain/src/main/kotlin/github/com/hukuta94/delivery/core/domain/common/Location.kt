@@ -1,11 +1,19 @@
 package github.com.hukuta94.delivery.core.domain.common
 
 import github.com.hukuta94.delivery.core.domain.ValueObject
+import kotlin.math.abs
 
 data class Location private constructor(
     val x: Int,
     val y: Int,
 ) : ValueObject {
+
+    fun distanceTo(other: Location): Int {
+        val xDelta = this.x - other.x
+        val yDelta = this.y - other.y
+
+        return abs(xDelta) + abs(yDelta)
+    }
 
     companion object {
 

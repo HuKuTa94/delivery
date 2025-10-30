@@ -2,7 +2,6 @@ package github.com.hukuta94.delivery.core.domain.aggregate.courier
 
 import github.com.hukuta94.delivery.core.domain.LocationSpecification.MAX_COORDINATE_VALUE
 import github.com.hukuta94.delivery.core.domain.LocationSpecification.VALID_COORDINATE_RANGE
-import github.com.hukuta94.delivery.core.domain.common.Distance
 import github.com.hukuta94.delivery.core.domain.common.Location
 import github.com.hukuta94.delivery.core.domain.common.newLocationWithMinCoords
 import io.kotest.assertions.assertSoftly
@@ -76,7 +75,6 @@ internal class CourierTest : StringSpec ({
             TRANSPORTS
         ) { courierLocation, otherLocation, transport ->
             // Given
-            val distance = Distance(courierLocation, otherLocation)
             val sut = newCourier(
                 location = courierLocation,
                 transport = transport,
@@ -86,7 +84,8 @@ internal class CourierTest : StringSpec ({
             val actual = sut.timeToLocation(otherLocation)
 
             // Then
-            val expected = distance.value / transport.speed.toDouble()
+            val distance = courierLocation.distanceTo(otherLocation)
+            val expected = distance / transport.speed.toDouble()
             actual shouldBe expected
         }
     }
