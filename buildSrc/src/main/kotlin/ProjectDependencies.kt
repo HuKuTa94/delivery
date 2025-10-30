@@ -23,6 +23,9 @@ fun Project.applyCommonProjectSetup() {
         add("testImplementation", PrivateLibs.Kotest.junit5)
         add("testImplementation", PrivateLibs.Kotest.property)
         add("testImplementation", PrivateLibs.Kotest.engine)
+
+        // arrow
+        add("testImplementation", PrivateLibs.ArrowKt.core)
     }
 }
 
@@ -70,11 +73,11 @@ object PrivateLibs {
         const val property = "io.kotest:kotest-property:$version"
         const val engine = "io.kotest:kotest-framework-engine:$version"
 
-        private const val arrow_version = "1.1.1"
-        const val arrow = "io.kotest.extensions:kotest-assertions-arrow-jvm:$arrow_version"
+        private const val kotest_arrow_version = "1.1.1"
+        const val arrow = "io.kotest.extensions:kotest-assertions-arrow-jvm:$kotest_arrow_version"
     }
     object ArrowKt {
-        private const val version = "1.1.5"
+        private const val version = "2.1.2"
         const val core = "io.arrow-kt:arrow-core:$version"
     }
 }
