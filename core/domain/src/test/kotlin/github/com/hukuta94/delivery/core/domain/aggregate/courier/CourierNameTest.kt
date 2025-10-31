@@ -1,5 +1,6 @@
 package github.com.hukuta94.delivery.core.domain.aggregate.courier
 
+import github.com.hukuta94.delivery.core.domain.CourierNameSpecification.ALLOWED_LETTERS
 import github.com.hukuta94.delivery.core.domain.CourierNameSpecification.MAX_COURIER_NAME_LENGTH
 import github.com.hukuta94.delivery.core.domain.CourierNameSpecification.MIN_COURIER_NAME_LENGTH
 import io.kotest.assertions.arrow.core.shouldBeLeft
@@ -15,15 +16,14 @@ import io.kotest.property.checkAll
 
 class CourierNameTest : StringSpec({
 
+    val allowedLetter = allowedLetter()
+
     "courier name must be created when within allowed length range and letters" {
         // Given
-        val allowedLetters =
-            ('A'..'Z') + ('a'..'z') + ('А'..'Я') + ('а'..'я')
-
         val strings = Arb.string(
             minSize = MIN_COURIER_NAME_LENGTH,
             maxSize = MAX_COURIER_NAME_LENGTH,
-            codepoints = Arb.of(allowedLetters).map { Codepoint(it.code) },
+            codepoints = Arb.of(ALLOWED_LETTERS).map { Codepoint(it.code) },
         )
 
         checkAll(strings) { expected ->
@@ -51,7 +51,7 @@ class CourierNameTest : StringSpec({
 
     "courier name must not be shorter than minimum length" {
         // Given
-        val string = "a".repeat(MIN_COURIER_NAME_LENGTH - 1)
+        val string = allowedLetter.repeat(MIN_COURIER_NAME_LENGTH - 1)
 
         // Then
         val result = CourierName.of(string)
@@ -63,7 +63,7 @@ class CourierNameTest : StringSpec({
 
     "courier name must not be longer than maximum length" {
         // Given
-        val string = "a".repeat(MAX_COURIER_NAME_LENGTH + 1)
+        val string = allowedLetter.repeat(MAX_COURIER_NAME_LENGTH + 1)
 
         // Then
         val result = CourierName.of(string)
@@ -86,7 +86,7 @@ class CourierNameTest : StringSpec({
 
     "courier name must allow exactly minimum length" {
         // Given
-        val string = "a".repeat(MIN_COURIER_NAME_LENGTH)
+        val string = allowedLetter.repeat(MIN_COURIER_NAME_LENGTH)
 
         // When
         val result = CourierName.of(string).shouldBeRight()
@@ -97,7 +97,7 @@ class CourierNameTest : StringSpec({
 
     "courier name must allow exactly maximum length" {
         // Given
-        val string = "a".repeat(MAX_COURIER_NAME_LENGTH)
+        val string = allowedLetter.repeat(MAX_COURIER_NAME_LENGTH)
 
         // When
         val result = CourierName.of(string).shouldBeRight()

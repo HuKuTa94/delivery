@@ -1,6 +1,6 @@
 package github.com.hukuta94.delivery.core.domain.common
 
-import github.com.hukuta94.delivery.core.domain.DistanceSpecification.MIN_DISTANCE_VALUE
+import github.com.hukuta94.delivery.core.domain.LocationSpecification.DISTANCE_BETWEEN_TWO_SAME_LOCATIONS
 import github.com.hukuta94.delivery.core.domain.LocationSpecification.MAX_COORDINATE_VALUE
 import github.com.hukuta94.delivery.core.domain.LocationSpecification.MIN_COORDINATE_VALUE
 import github.com.hukuta94.delivery.core.domain.LocationSpecification.VALID_COORDINATE_RANGE
@@ -110,7 +110,7 @@ class LocationTest : StringSpec({
         val result = location.distanceTo(location)
 
         // Then
-        result shouldBe MIN_DISTANCE_VALUE
+        result shouldBe DISTANCE_BETWEEN_TWO_SAME_LOCATIONS
     }
 
     "distance is symmetric" {
