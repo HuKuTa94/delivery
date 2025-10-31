@@ -1,4 +1,4 @@
-package github.com.hukuta94.delivery.infrastructure.inmemory
+package github.com.hukuta94.delivery.infrastructure.persistence.inmemory
 
 import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderStatus
 import github.com.hukuta94.delivery.core.domain.aggregate.order.newAssignedOrder
@@ -12,12 +12,12 @@ import io.kotest.matchers.types.shouldBeSameInstanceAs
 import io.kotest.matchers.types.shouldNotBeSameInstanceAs
 import java.util.*
 
-class OrderInMemoryRepositoryTest : StringSpec({
+class InMemoryOrderRepositoryTest : StringSpec({
 
-    lateinit var sut: OrderInMemoryRepository
+    lateinit var sut: InMemoryOrderRepository
 
     beforeTest {
-        sut = OrderInMemoryRepository()
+        sut = InMemoryOrderRepository()
     }
 
     "can add the order" {

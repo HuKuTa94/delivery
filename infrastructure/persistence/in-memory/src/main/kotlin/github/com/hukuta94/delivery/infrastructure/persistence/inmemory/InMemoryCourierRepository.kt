@@ -1,11 +1,11 @@
-package github.com.hukuta94.delivery.infrastructure.inmemory
+package github.com.hukuta94.delivery.infrastructure.persistence.inmemory
 
 import github.com.hukuta94.delivery.core.application.port.repository.domain.CourierRepositoryPort
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.Courier
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.CourierStatus
 import java.util.*
 
-class CourierInMemoryRepository : CourierRepositoryPort {
+class InMemoryCourierRepository : CourierRepositoryPort {
 
     private val storage = mutableMapOf<UUID, Courier>()
 

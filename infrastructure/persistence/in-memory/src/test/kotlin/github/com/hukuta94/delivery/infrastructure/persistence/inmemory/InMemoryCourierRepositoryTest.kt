@@ -1,4 +1,4 @@
-package github.com.hukuta94.delivery.infrastructure.inmemory
+package github.com.hukuta94.delivery.infrastructure.persistence.inmemory
 
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.CourierStatus
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.newBusyCourier
@@ -12,13 +12,13 @@ import io.kotest.matchers.types.shouldBeSameInstanceAs
 import io.kotest.matchers.types.shouldNotBeSameInstanceAs
 import java.util.UUID
 
-internal class CourierInMemoryRepositoryTest : StringSpec({
+internal class InMemoryCourierRepositoryTest : StringSpec({
 
     // System Under Testing (sut)
-    lateinit var sut: CourierInMemoryRepository
+    lateinit var sut: InMemoryCourierRepository
 
     beforeTest {
-        sut = CourierInMemoryRepository()
+        sut = InMemoryCourierRepository()
     }
 
     "can add the courier" {

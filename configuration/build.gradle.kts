@@ -19,7 +19,7 @@ dependencies {
     api(project(":infrastructure:orm"))
     api(project(":infrastructure:grpc"))
     api(project(":infrastructure:kafka"))
-    api(project(":infrastructure:in-memory"))
+    api(project(":infrastructure:persistence:in-memory"))
 
     // frameworks
     // spring
