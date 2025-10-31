@@ -1,5 +1,6 @@
 package github.com.hukuta94.delivery.core.domain.aggregate.courier
 
+import arrow.core.getOrElse
 import github.com.hukuta94.delivery.core.domain.aggregate.Aggregate
 import github.com.hukuta94.delivery.core.domain.common.Location
 import java.util.UUID
@@ -36,10 +37,10 @@ class Courier internal constructor(
         val yStep = computeStep(yDelta, transport.speed)
         val xStep = computeStep(xDelta, transport.speed - abs(yStep))
 
-        this.location = Location(
+        this.location = Location.of(
             x = this.location.x + xStep,
             y = this.location.y + yStep,
-        )
+        ).getOrElse { error -> throw IllegalStateException("Invalid location after move: $error") }
     }
 
     private fun computeStep(
@@ -56,10 +57,10 @@ class Courier internal constructor(
             name: CourierName,
             transport: Transport,
             location: Location,
-            id: UUID? = null,
+            id: UUID = UUID.randomUUID(),
         ): Courier {
             return Courier(
-                id = id ?: UUID.randomUUID(),
+                id = id,
                 name = name,
                 location = location,
                 transport = transport

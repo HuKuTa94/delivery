@@ -40,7 +40,7 @@ class MoveCouriersUseCaseImpl(
                 courier.moveTo(order.location)
 
                 // Try to complete the order
-                val isOrderCompleted = completeOrderService.execute(order, courier)
+                val isOrderCompleted = completeOrderService.execute(order, courier).isRight()
                 if (isOrderCompleted) {
                     LOG.info("Order with id: ${order.id} was completed by courier with id: ${courier.id}")
                     ordersToUpdate.add(order)

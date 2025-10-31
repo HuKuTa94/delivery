@@ -1,5 +1,6 @@
 package github.com.hukuta94.delivery.infrastructure.grpc
 
+import arrow.core.Either
 import github.com.hukuta94.delivery.core.domain.common.Location
 import github.com.hukuta94.delivery.core.application.port.GetLocationPort
 import github.com.hukuta94.delivery.infrastructure.grpc.GeoGrpc.newBlockingStub
@@ -9,7 +10,7 @@ class GeoServiceGrpcClient(
     private val managedChannel: ManagedChannel,
 ): GeoGrpc.GeoImplBase(), GetLocationPort {
 
-    override fun getFromStreet(street: String): Location {
+    override fun fromStreet(street: String): Either<Location.Error, Location> {
         val stub = newBlockingStub(managedChannel)
 
         val request = GetGeolocationRequest.newBuilder()
@@ -18,7 +19,7 @@ class GeoServiceGrpcClient(
 
         val response = stub.getGeolocation(request)
 
-        return Location(
+        return Location.of(
             x = response.location.x,
             y = response.location.y,
         )

@@ -1,4 +1,4 @@
-package github.com.hukuta94.delivery.core.service.impl
+package github.com.hukuta94.delivery.core.domain.service.impl
 
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.CourierStatus
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.newBusyCourier
@@ -7,8 +7,10 @@ import github.com.hukuta94.delivery.core.domain.aggregate.courier.newCourier
 import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderStatus
 import github.com.hukuta94.delivery.core.domain.aggregate.order.newAssignedOrder
 import github.com.hukuta94.delivery.core.domain.aggregate.order.newOrder
-import github.com.hukuta94.delivery.core.domain.service.impl.CompleteOrderServiceImpl
 import github.com.hukuta94.delivery.core.domain.common.newLocation
+import github.com.hukuta94.delivery.core.domain.service.CompleteOrderService
+import io.kotest.assertions.arrow.core.shouldBeLeft
+import io.kotest.assertions.arrow.core.shouldBeRight
 import io.kotest.assertions.assertSoftly
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
@@ -19,27 +21,27 @@ internal class CompleteOrderServiceImplTest {
     private val sut = CompleteOrderServiceImpl()
 
     @Test
-    fun `must return false if order is assigned to a different courier`() {
+    fun `must return business error if order is assigned to a different courier`() {
         val courier = newFreeCourier()
         val order = newAssignedOrder(courier = newCourier())
 
         val result = sut.execute(order, courier)
 
-        result shouldBe false
+        result shouldBeLeft CompleteOrderService.Error.OrderAssignedToAnotherCourier
     }
 
     @Test
-    fun `must return false if order status is not ASSIGNED`() {
+    fun `must return business error if order status is not ASSIGNED`() {
         val courier = newFreeCourier()
         val order = newOrder()
 
         val result = sut.execute(order, courier)
 
-        result shouldBe false
+        result shouldBeLeft CompleteOrderService.Error.OrderIsNotAssigned
     }
 
     @Test
-    fun `must return false if courier has not reached the order location`() {
+    fun `must return business error if courier has not reached the order location`() {
         val courier = newBusyCourier(
             location = newLocation(1, 1)
         )
@@ -50,11 +52,11 @@ internal class CompleteOrderServiceImplTest {
 
         val result = sut.execute(order, courier)
 
-        result shouldBe false
+        result shouldBeLeft CompleteOrderService.Error.CourierNotReachedOrderLocation
     }
 
     @Test
-    fun `must return true and complete order if all conditions are met`() {
+    fun `must complete order if all conditions are met`() {
         val sameLocation = newLocation(1, 1)
         val courier = newBusyCourier(
             location = sameLocation
@@ -64,10 +66,9 @@ internal class CompleteOrderServiceImplTest {
             location = sameLocation
         )
 
-        val result = sut.execute(order, courier)
+        sut.execute(order, courier).shouldBeRight()
 
         assertSoftly {
-            result shouldBe true
             courier.status shouldBe CourierStatus.FREE
             order.status shouldBe OrderStatus.COMPLETED
         }

@@ -1,19 +1,21 @@
 package github.com.hukuta94.delivery.core.domain.common
 
 import github.com.hukuta94.delivery.core.domain.DistanceSpecification.MIN_DISTANCE_VALUE
-import github.com.hukuta94.delivery.core.domain.LocationSpecification.VALID_COORDINATE_RANGE
 import github.com.hukuta94.delivery.core.domain.LocationSpecification.MAX_COORDINATE_VALUE
 import github.com.hukuta94.delivery.core.domain.LocationSpecification.MIN_COORDINATE_VALUE
+import github.com.hukuta94.delivery.core.domain.LocationSpecification.VALID_COORDINATE_RANGE
+import io.kotest.assertions.arrow.core.shouldBeLeft
+import io.kotest.assertions.arrow.core.shouldBeRight
 import io.kotest.assertions.assertSoftly
-import io.kotest.assertions.throwables.shouldThrow
-import io.kotest.matchers.shouldBe
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.ints.shouldBeGreaterThanOrEqual
 import io.kotest.matchers.ints.shouldBeInRange
+import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.kotest.property.Arb
-import io.kotest.property.checkAll
+import io.kotest.property.arbitrary.element
 import io.kotest.property.arbitrary.int
+import io.kotest.property.checkAll
 import kotlin.math.abs
 
 class LocationTest : StringSpec({
@@ -27,34 +29,40 @@ class LocationTest : StringSpec({
             validCoordinates,
         ) { x, y ->
             // When
-            val sut = Location(x, y)
+            val result = Location.of(x, y).shouldBeRight()
 
             // Then
             assertSoftly {
-                sut.x shouldBe x
-                sut.y shouldBe y
+                result.x shouldBe x
+                result.y shouldBe y
             }
         }
     }
 
-    "must throw exception when abscissa is out of range" {
-        assertSoftly {
-            shouldThrow<IllegalArgumentException> {
-                Location(MIN_COORDINATE_VALUE - 1, MIN_COORDINATE_VALUE)
-            }
-            shouldThrow<IllegalArgumentException> {
-                Location(MAX_COORDINATE_VALUE + 1, MIN_COORDINATE_VALUE)
-            }
-        }
-    }
+    "must be error when coordinate is out of range" {
+        // Given
+        val negativeOutOfRange = MIN_COORDINATE_VALUE - 1
+        val positiveOutOfRange = MAX_COORDINATE_VALUE + 1
+        val wrongCoordinateRanges = listOf(
+            Pair(negativeOutOfRange, MIN_COORDINATE_VALUE),
+            Pair(positiveOutOfRange, MIN_COORDINATE_VALUE),
+            Pair(MIN_COORDINATE_VALUE, negativeOutOfRange),
+            Pair(MIN_COORDINATE_VALUE, positiveOutOfRange),
+            Pair(negativeOutOfRange, negativeOutOfRange),
+            Pair(positiveOutOfRange, positiveOutOfRange),
+        )
 
-    "must throw exception when ordinate is out of range" {
-        assertSoftly {
-            shouldThrow<IllegalArgumentException> {
-                Location(MIN_COORDINATE_VALUE, MIN_COORDINATE_VALUE - 1)
-            }
-            shouldThrow<IllegalArgumentException> {
-                Location(MIN_COORDINATE_VALUE, MAX_COORDINATE_VALUE + 1)
+        checkAll(
+            iterations = wrongCoordinateRanges.size,
+            Arb.element(wrongCoordinateRanges),
+        ) { (x, y) ->
+            // When
+            val result = Location.of(x, y)
+
+            // Then
+            result.shouldBeLeft().also {
+                it::class shouldBe Location.Error.CoordinatesOutOfRange::class
+                it.message shouldBe "Location coordinates must be in range $VALID_COORDINATE_RANGE. Actual coordinates are x=$x; y=$y"
             }
         }
     }
@@ -62,53 +70,36 @@ class LocationTest : StringSpec({
     "random is always within allowed range" {
         repeat(100) {
             // When
-            val sut = Location.random()
+            val result = Location.random()
 
             // Then
             assertSoftly {
-                sut.x shouldBeInRange VALID_COORDINATE_RANGE
-                sut.y shouldBeInRange VALID_COORDINATE_RANGE
+                result.x shouldBeInRange VALID_COORDINATE_RANGE
+                result.y shouldBeInRange VALID_COORDINATE_RANGE
             }
         }
     }
 
     "locations are equal when coordinates are the same" {
         // Given
-        val abscissa = MIN_COORDINATE_VALUE
-        val ordinate = MAX_COORDINATE_VALUE
+        val x = MIN_COORDINATE_VALUE
+        val y = MAX_COORDINATE_VALUE
 
         // When
-        val sutA = Location(abscissa, ordinate)
-        val sutB = Location(abscissa, ordinate)
+        val locationA = Location.of(x, y)
+        val locationB = Location.of(x, y)
 
         // Then
-        sutA shouldBe sutB
+        locationA shouldBe locationB
     }
 
     "locations are not equal when coordinates differ" {
         // When
-        val sutA = Location(MIN_COORDINATE_VALUE, MAX_COORDINATE_VALUE)
-        val sutB = Location(MAX_COORDINATE_VALUE, MIN_COORDINATE_VALUE)
+        val locationA = Location.of(MIN_COORDINATE_VALUE, MAX_COORDINATE_VALUE)
+        val locationB = Location.of(MAX_COORDINATE_VALUE, MIN_COORDINATE_VALUE)
 
         // Then
-        sutA shouldNotBe sutB
-    }
-
-    "location must be constructible for all valid coordinates" {
-        // Given
-        val validCoordinates = Arb.int(VALID_COORDINATE_RANGE)
-
-        checkAll(
-            validCoordinates,
-            validCoordinates,
-        ) { x, y ->
-            // When
-            val sut = Location(x, y)
-
-            // Then
-            sut.x shouldBe x
-            sut.y shouldBe y
-        }
+        locationA shouldNotBe locationB
     }
 
     "distance between same locations is zero" {
@@ -116,10 +107,10 @@ class LocationTest : StringSpec({
         val location = newLocation(5, 5)
 
         // When
-        val sut = location.distanceTo(location)
+        val result = location.distanceTo(location)
 
         // Then
-        sut shouldBe MIN_DISTANCE_VALUE
+        result shouldBe MIN_DISTANCE_VALUE
     }
 
     "distance is symmetric" {
@@ -128,35 +119,35 @@ class LocationTest : StringSpec({
         val locationB = newLocation(7, 9)
 
         // When
-        val sutAB = locationA.distanceTo(locationB)
-        val sutBA = locationB.distanceTo(locationA)
+        val resultAB = locationA.distanceTo(locationB)
+        val resultBA = locationB.distanceTo(locationA)
 
         // Then
-        sutAB shouldBe sutBA
+        resultAB shouldBe resultBA
     }
 
-    "distance is valid when only abscissa changes" {
+    "distance is valid when only X changes" {
         // Given
         val from = newLocation(1, 1)
         val to = newLocation(5, 1)
 
         // When
-        val sut = from.distanceTo(to)
+        val result = from.distanceTo(to)
 
         // Then
-        sut shouldBe 4
+        result shouldBe 4
     }
 
-    "distance is valid when only ordinate changes" {
+    "distance is valid when only Y changes" {
         // Given
         val from = newLocation(1, 1)
         val to = newLocation(1, 5)
 
         // When
-        val sut = from.distanceTo(to)
+        val result = from.distanceTo(to)
 
         // Then
-        sut shouldBe 4
+        result shouldBe 4
     }
 
     "distance must equal manhattan formula" {
@@ -173,12 +164,12 @@ class LocationTest : StringSpec({
             val to = newLocation(x2, y2)
 
             // When
-            val sut = from.distanceTo(to)
+            val result = from.distanceTo(to)
 
             // Then
             val expected = abs(x1 - x2) + abs(y1 - y2)
 
-            sut shouldBe expected
+            result shouldBe expected
         }
     }
 
@@ -196,10 +187,10 @@ class LocationTest : StringSpec({
             val to = newLocation(x2, y2)
 
             // When
-            val sut = from.distanceTo(to)
+            val result = from.distanceTo(to)
 
             // Then
-            sut shouldBeGreaterThanOrEqual 0
+            result shouldBeGreaterThanOrEqual 0
         }
     }
 
@@ -209,11 +200,11 @@ class LocationTest : StringSpec({
         val to = newLocationWithMaxCoords()
 
         // When
-        val sut = from.distanceTo(to)
+        val result = from.distanceTo(to)
 
         // Then
         val expected = abs(from.x - to.x) + abs(from.y - to.y)
 
-        sut shouldBe expected
+        result shouldBe expected
     }
 })

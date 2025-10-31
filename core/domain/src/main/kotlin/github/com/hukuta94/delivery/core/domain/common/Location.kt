@@ -1,5 +1,7 @@
 package github.com.hukuta94.delivery.core.domain.common
 
+import arrow.core.raise.either
+import github.com.hukuta94.delivery.core.domain.BusinessError
 import github.com.hukuta94.delivery.core.domain.ValueObject
 import kotlin.math.abs
 
@@ -17,25 +19,27 @@ data class Location private constructor(
 
     companion object {
 
+        fun of(x: Int, y: Int) = either {
+            if (x !in VALID_COORDINATE_RANGE || y !in VALID_COORDINATE_RANGE) {
+                raise(Error.CoordinatesOutOfRange(x, y))
+            }
+            Location(x, y)
+        }
+
         fun random() = Location(
             x = (VALID_COORDINATE_RANGE).random(),
             y = (VALID_COORDINATE_RANGE).random(),
         )
 
-        operator fun invoke(x: Int, y: Int): Location {
-            validate(x)
-            validate(y)
-            return Location(x, y)
-        }
+        private val VALID_COORDINATE_RANGE = 1..10
+    }
 
-        private fun validate(coordinate: Int) {
-            require(coordinate in VALID_COORDINATE_RANGE) {
-                "Expected coordinate must be between $MIN_COORDINATE_VALUE and $MAX_COORDINATE_VALUE. Actual coordinate is $coordinate."
-            }
-        }
-
-        private const val MIN_COORDINATE_VALUE = 1
-        private const val MAX_COORDINATE_VALUE = 10
-        private val VALID_COORDINATE_RANGE = MIN_COORDINATE_VALUE..MAX_COORDINATE_VALUE
+    sealed class Error(
+        override val message: String,
+    ) : BusinessError {
+        data class CoordinatesOutOfRange internal constructor(
+            val x: Int,
+            val y: Int,
+        ) : Error("Location coordinates must be in range $VALID_COORDINATE_RANGE. Actual coordinates are x=$x; y=$y")
     }
 }

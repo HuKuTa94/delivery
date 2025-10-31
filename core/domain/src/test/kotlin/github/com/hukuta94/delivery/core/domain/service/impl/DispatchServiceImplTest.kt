@@ -1,11 +1,10 @@
-package github.com.hukuta94.delivery.core.service.impl
+package github.com.hukuta94.delivery.core.domain.service.impl
 
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.CourierStatus
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.newBusyCourier
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.newFreeCourier
 import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderStatus
 import github.com.hukuta94.delivery.core.domain.aggregate.order.newOrder
-import github.com.hukuta94.delivery.core.domain.service.impl.DispatchServiceImpl
 import github.com.hukuta94.delivery.core.domain.common.newLocationWithMaxCoords
 import github.com.hukuta94.delivery.core.domain.common.newLocationWithMinCoords
 import github.com.hukuta94.delivery.core.domain.common.newLocation

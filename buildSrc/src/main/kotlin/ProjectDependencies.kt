@@ -23,9 +23,13 @@ fun Project.applyCommonProjectSetup() {
         add("testImplementation", PrivateLibs.Kotest.junit5)
         add("testImplementation", PrivateLibs.Kotest.property)
         add("testImplementation", PrivateLibs.Kotest.engine)
+        add("testImplementation", PrivateLibs.Kotest.core_jvm)
+        add("testImplementation", PrivateLibs.Kotest.assertions_arrow)
+        add("testImplementation", PrivateLibs.Kotest.assertions_arrow_jvm)
 
         // arrow
-        add("testImplementation", PrivateLibs.ArrowKt.core)
+        add("implementation", PrivateLibs.ArrowKt.core)
+        add("testFixturesImplementation", PrivateLibs.ArrowKt.core)
     }
 }
 
@@ -72,9 +76,11 @@ object PrivateLibs {
         const val junit5 = "io.kotest:kotest-runner-junit5:$version"
         const val property = "io.kotest:kotest-property:$version"
         const val engine = "io.kotest:kotest-framework-engine:$version"
+        const val core_jvm = "io.kotest:kotest-assertions-core-jvm:$version"
 
-        private const val kotest_arrow_version = "1.1.1"
-        const val arrow = "io.kotest.extensions:kotest-assertions-arrow-jvm:$kotest_arrow_version"
+        private const val kotest_arrow_version = "2.0.0"
+        const val assertions_arrow = "io.kotest.extensions:kotest-assertions-arrow:$kotest_arrow_version"
+        const val assertions_arrow_jvm = "io.kotest.extensions:kotest-assertions-arrow-jvm:$kotest_arrow_version"
     }
     object ArrowKt {
         private const val version = "2.1.2"

@@ -3,6 +3,7 @@ package github.com.hukuta94.delivery.core.domain.aggregate.courier
 import github.com.hukuta94.delivery.core.domain.LocationSpecification.MAX_COORDINATE_VALUE
 import github.com.hukuta94.delivery.core.domain.LocationSpecification.VALID_COORDINATE_RANGE
 import github.com.hukuta94.delivery.core.domain.common.Location
+import github.com.hukuta94.delivery.core.domain.common.newLocation
 import github.com.hukuta94.delivery.core.domain.common.newLocationWithMinCoords
 import io.kotest.assertions.assertSoftly
 import io.kotest.assertions.withClue
@@ -21,7 +22,7 @@ internal class CourierTest : StringSpec ({
     "new courier is created in valid state and status" {
         checkAll(TRANSPORTS) { transport ->
             // Given
-            val name = courierName()
+            val name = newCourierName()
             val location = newLocationWithMinCoords()
 
             // When
@@ -67,7 +68,7 @@ internal class CourierTest : StringSpec ({
         val validLocations = Arb.bind(
             Arb.int(VALID_COORDINATE_RANGE),
             Arb.int(VALID_COORDINATE_RANGE)
-        ) { x, y -> Location(x, y) }
+        ) { x, y -> newLocation(x, y) }
 
         checkAll(
             validLocations,
@@ -95,8 +96,8 @@ internal class CourierTest : StringSpec ({
             // Given
             val sut = newCourier(transport = transport, location = COURIER_START_LOCATION)
             val forward = CENTER + transport.speed
-            val target = Location(CENTER, forward)
-            val expected = Location(CENTER, forward)
+            val target = newLocation(CENTER, forward)
+            val expected = newLocation(CENTER, forward)
 
             // When
             sut.moveTo(target)
@@ -112,8 +113,8 @@ internal class CourierTest : StringSpec ({
             val sut = newCourier(transport = transport, location = COURIER_START_LOCATION)
             val forward = CENTER + transport.speed
             val right = CENTER + transport.speed
-            val target = Location(right, forward)
-            val expected = Location(CENTER, forward)
+            val target = newLocation(right, forward)
+            val expected = newLocation(CENTER, forward)
 
             // When
             sut.moveTo(target)
@@ -128,8 +129,8 @@ internal class CourierTest : StringSpec ({
             // Given
             val sut = newCourier(transport = transport, location = COURIER_START_LOCATION)
             val right = CENTER + transport.speed
-            val target = Location(right, CENTER)
-            val expected = Location(right, CENTER)
+            val target = newLocation(right, CENTER)
+            val expected = newLocation(right, CENTER)
 
             // When
             sut.moveTo(target)
@@ -145,8 +146,8 @@ internal class CourierTest : StringSpec ({
             val sut = newCourier(transport = transport, location = COURIER_START_LOCATION)
             val right = CENTER + transport.speed
             val backward = CENTER - transport.speed
-            val target = Location(right, backward)
-            val expected = Location(CENTER, backward)
+            val target = newLocation(right, backward)
+            val expected = newLocation(CENTER, backward)
 
             // When
             sut.moveTo(target)
@@ -161,8 +162,8 @@ internal class CourierTest : StringSpec ({
             // Given
             val sut = newCourier(transport = transport, location = COURIER_START_LOCATION)
             val backward = CENTER - transport.speed
-            val target = Location(CENTER, backward)
-            val expected = Location(CENTER, backward)
+            val target = newLocation(CENTER, backward)
+            val expected = newLocation(CENTER, backward)
 
             // When
             sut.moveTo(target)
@@ -178,8 +179,8 @@ internal class CourierTest : StringSpec ({
             val sut = newCourier(transport = transport, location = COURIER_START_LOCATION)
             val left = CENTER - transport.speed
             val backward = CENTER - transport.speed
-            val target = Location(left, backward)
-            val expected = Location(CENTER, backward)
+            val target = newLocation(left, backward)
+            val expected = newLocation(CENTER, backward)
 
             // When
             sut.moveTo(target)
@@ -194,8 +195,8 @@ internal class CourierTest : StringSpec ({
             // Given
             val sut = newCourier(transport = transport, location = COURIER_START_LOCATION)
             val left = CENTER - transport.speed
-            val target = Location(left, CENTER)
-            val expected = Location(left, CENTER)
+            val target = newLocation(left, CENTER)
+            val expected = newLocation(left, CENTER)
 
             // When
             sut.moveTo(target)
@@ -211,8 +212,8 @@ internal class CourierTest : StringSpec ({
             val sut = newCourier(transport = transport, location = COURIER_START_LOCATION)
             val left = CENTER - transport.speed
             val forward = CENTER + transport.speed
-            val target = Location(left, forward)
-            val expected = Location(CENTER, forward)
+            val target = newLocation(left, forward)
+            val expected = newLocation(CENTER, forward)
 
             // When
             sut.moveTo(target)
@@ -234,7 +235,7 @@ internal class CourierTest : StringSpec ({
             for (deltaX in -transport.speed..transport.speed) {
                 val deltaYAbs = transport.speed - abs(deltaX)
                 result.add(
-                    Location(
+                    newLocation(
                         x = COURIER_START_LOCATION.x + deltaX,
                         y = COURIER_START_LOCATION.y + deltaYAbs
                     )
@@ -243,7 +244,7 @@ internal class CourierTest : StringSpec ({
                 // don't duplicate coordinate
                 if (deltaYAbs != 0) {
                     result.add(
-                        Location(
+                        newLocation(
                             x = COURIER_START_LOCATION.x + deltaX,
                             y = COURIER_START_LOCATION.y - deltaYAbs
                         )
@@ -281,7 +282,7 @@ internal class CourierTest : StringSpec ({
 }) {
     companion object {
         private val TRANSPORTS = Arb.element(Transport.entries)
-        private val COURIER_START_LOCATION = Location(CENTER, CENTER)
+        private val COURIER_START_LOCATION = newLocation(CENTER, CENTER)
         private const val CENTER = (MAX_COORDINATE_VALUE / 2)
     }
 }

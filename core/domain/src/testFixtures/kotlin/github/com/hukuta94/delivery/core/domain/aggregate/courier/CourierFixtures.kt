@@ -10,7 +10,7 @@ fun newCourier(
     location: Location? = null,
     id: UUID? = null,
 ) = Courier.create(
-    name = name ?: courierName(),
+    name = name ?: newCourierName(),
     transport = transport ?: pedestrian(),
     location = location ?: newLocationWithRandomCoords(),
     id = id ?: UUID.randomUUID(),

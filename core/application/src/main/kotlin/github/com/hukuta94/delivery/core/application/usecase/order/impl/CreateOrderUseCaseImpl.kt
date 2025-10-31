@@ -1,5 +1,6 @@
 package github.com.hukuta94.delivery.core.application.usecase.order.impl
 
+import arrow.core.getOrElse
 import github.com.hukuta94.delivery.core.application.usecase.order.CreateOrderCommand
 import github.com.hukuta94.delivery.core.application.usecase.order.CreateOrderUseCase
 import github.com.hukuta94.delivery.core.domain.aggregate.order.Order
@@ -22,10 +23,10 @@ class CreateOrderUseCaseImpl(
             return
         }
 
-
+        val orderLocation = getLocationPort.getFromStreet(command.street).getOrElse { error(it.message) }
         val newOrder = Order.create(
             id = orderId,
-            location = getLocationPort.getFromStreet(command.street),
+            location = orderLocation,
         )
 
         orderRepository.add(newOrder)

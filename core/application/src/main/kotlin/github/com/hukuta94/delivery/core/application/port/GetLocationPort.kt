@@ -1,5 +1,6 @@
 package github.com.hukuta94.delivery.core.application.port
 
+import arrow.core.Either
 import github.com.hukuta94.delivery.core.domain.common.Location
 
 /**
@@ -8,5 +9,5 @@ import github.com.hukuta94.delivery.core.domain.common.Location
  */
 interface GetLocationPort {
 
-    fun getFromStreet(street: String): Location
+    fun fromStreet(street: String): Either<Location.Error, Location>
 }
