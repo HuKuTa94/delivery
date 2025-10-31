@@ -2,7 +2,7 @@ package github.com.hukuta94.delivery.core.application.usecase.courier.impl
 
 import github.com.hukuta94.delivery.core.application.usecase.courier.MoveCouriersUseCase
 import github.com.hukuta94.delivery.core.domain.aggregate.order.Order
-import github.com.hukuta94.delivery.core.domain.service.CompleteOrderService
+import github.com.hukuta94.delivery.core.domain.rule.CompleteOrderBusinessRule
 import github.com.hukuta94.delivery.core.application.port.repository.domain.CourierRepositoryPort
 import github.com.hukuta94.delivery.core.application.port.repository.domain.OrderRepositoryPort
 import github.com.hukuta94.delivery.core.application.port.repository.UnitOfWorkPort
@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory
 class MoveCouriersUseCaseImpl(
     private val orderRepository: OrderRepositoryPort,
     private val courierRepository: CourierRepositoryPort,
-    private val completeOrderService: CompleteOrderService,
+    private val completeOrderBusinessRule: CompleteOrderBusinessRule,
     private val unitOfWork: UnitOfWorkPort,
 ) : MoveCouriersUseCase {
 
@@ -40,7 +40,7 @@ class MoveCouriersUseCaseImpl(
                 courier.moveTo(order.location)
 
                 // Try to complete the order
-                val isOrderCompleted = completeOrderService.execute(order, courier).isRight()
+                val isOrderCompleted = completeOrderBusinessRule.execute(order, courier).isRight()
                 if (isOrderCompleted) {
                     LOG.info("Order with id: ${order.id} was completed by courier with id: ${courier.id}")
                     ordersToUpdate.add(order)

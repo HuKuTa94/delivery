@@ -23,7 +23,7 @@ class CreateOrderUseCaseImpl(
             return
         }
 
-        val orderLocation = getLocationPort.getFromStreet(command.street).getOrElse { error(it.message) }
+        val orderLocation = getLocationPort.fromStreet(command.street).getOrElse { error(it.message) }
         val newOrder = Order.create(
             id = orderId,
             location = orderLocation,

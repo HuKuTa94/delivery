@@ -1,22 +1,22 @@
-package github.com.hukuta94.delivery.core.domain.service.impl
+package github.com.hukuta94.delivery.core.domain.rule.impl
 
 import arrow.core.raise.either
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.Courier
 import github.com.hukuta94.delivery.core.domain.aggregate.order.Order
 import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderStatus
-import github.com.hukuta94.delivery.core.domain.service.CompleteOrderService
+import github.com.hukuta94.delivery.core.domain.rule.CompleteOrderBusinessRule
 
-class CompleteOrderServiceImpl : CompleteOrderService {
+class CompleteOrderBusinessRuleImpl : CompleteOrderBusinessRule {
 
     override fun execute(order: Order, courier: Courier) = either {
         if (order.status != OrderStatus.ASSIGNED) {
-            raise(CompleteOrderService.Error.OrderIsNotAssigned)
+            raise(CompleteOrderBusinessRule.Error.OrderIsNotAssigned)
         }
         if (order.courierId != courier.id) {
-            raise(CompleteOrderService.Error.OrderAssignedToAnotherCourier)
+            raise(CompleteOrderBusinessRule.Error.OrderAssignedToAnotherCourier)
         }
         if (courier.location != order.location) {
-            raise(CompleteOrderService.Error.CourierNotReachedOrderLocation)
+            raise(CompleteOrderBusinessRule.Error.CourierNotReachedOrderLocation)
         }
 
         courier.free()

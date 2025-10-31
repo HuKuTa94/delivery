@@ -1,7 +1,7 @@
 package github.com.hukuta94.delivery.configuration.core.domain
 
-import github.com.hukuta94.delivery.core.domain.service.impl.CompleteOrderServiceImpl
-import github.com.hukuta94.delivery.core.domain.service.impl.DispatchServiceImpl
+import github.com.hukuta94.delivery.core.domain.rule.impl.CompleteOrderBusinessRuleImpl
+import github.com.hukuta94.delivery.core.domain.rule.impl.DispatchOrderToCourierBusinessRuleImpl
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -9,8 +9,8 @@ import org.springframework.context.annotation.Configuration
 open class DomainServiceConfiguration {
 
     @Bean
-    open fun dispatchService() = DispatchServiceImpl()
+    open fun dispatchService() = DispatchOrderToCourierBusinessRuleImpl()
 
     @Bean
-    open fun completeOrderService() = CompleteOrderServiceImpl()
+    open fun completeOrderService() = CompleteOrderBusinessRuleImpl()
 }

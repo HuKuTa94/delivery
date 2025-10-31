@@ -1,4 +1,4 @@
-package github.com.hukuta94.delivery.core.domain.service.impl
+package github.com.hukuta94.delivery.core.domain.rule.impl
 
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.CourierStatus
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.newBusyCourier
@@ -16,7 +16,7 @@ import org.junit.jupiter.api.assertDoesNotThrow
 
 internal class DispatchServiceImplTest {
 
-    private val sut = DispatchServiceImpl()
+    private val sut = DispatchOrderToCourierBusinessRuleImpl()
 
     @Test
     fun `assignOrderToMostSuitableCourier does nothing when no free couriers`() {
@@ -24,7 +24,7 @@ internal class DispatchServiceImplTest {
         val couriers = listOf(newBusyCourier())
 
         assertDoesNotThrow {
-            sut.assignOrderToMostSuitableCourier(order, couriers)
+            sut.execute(order, couriers)
         }
     }
 
@@ -36,7 +36,7 @@ internal class DispatchServiceImplTest {
         val couriers = listOf(freeCourier, busyCourier)
 
         freeCourier.status shouldBe CourierStatus.FREE
-        sut.assignOrderToMostSuitableCourier(order, couriers)
+        sut.execute(order, couriers)
 
         freeCourier.status shouldBe CourierStatus.BUSY
     }
@@ -54,7 +54,7 @@ internal class DispatchServiceImplTest {
         )
         val couriers = listOf(fartherCourier, nearestCourier)
 
-        sut.assignOrderToMostSuitableCourier(order, couriers)
+        sut.execute(order, couriers)
 
         assertSoftly {
             nearestCourier.status shouldBe CourierStatus.BUSY
@@ -68,7 +68,7 @@ internal class DispatchServiceImplTest {
         val freeCourier = newFreeCourier()
         val couriers = listOf(freeCourier)
 
-        sut.assignOrderToMostSuitableCourier(order, couriers)
+        sut.execute(order, couriers)
 
         order.status shouldBe OrderStatus.ASSIGNED
     }
@@ -80,7 +80,7 @@ internal class DispatchServiceImplTest {
         val couriers = listOf(freeCourier)
 
         order.courierId shouldNotBe freeCourier.id
-        sut.assignOrderToMostSuitableCourier(order, couriers)
+        sut.execute(order, couriers)
 
         order.courierId shouldBe freeCourier.id
     }

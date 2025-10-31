@@ -9,6 +9,7 @@ val PROGRAMMING_LANGUAGE_PACKAGES = arrayOf(
     "java..",
     "kotlin..",
     "org.jetbrains..",
+    "arrow..",
 )
 
 /**
@@ -40,8 +41,8 @@ const val CORE_DOMAIN = "core.domain"
 
 const val DOMAIN_LAYER_PACKAGE = "$GROUP_ID_PACKAGE.$CORE_DOMAIN.."
 const val DOMAIN_COMMON_PACKAGE = "$GROUP_ID_PACKAGE.$CORE_DOMAIN.common.."
-const val DOMAIN_SERVICE_PACKAGE = "$GROUP_ID_PACKAGE.$CORE_DOMAIN.service.."
 const val DOMAIN_AGGREGATE_PACKAGE = "$GROUP_ID_PACKAGE.$CORE_DOMAIN.aggregate.."
+const val DOMAIN_BUSINESS_RULE_PACKAGE = "$GROUP_ID_PACKAGE.$CORE_DOMAIN.rule.."
 
 val DOMAIN_ALLOWED_OUTSIDE_PACKAGES = PROGRAMMING_LANGUAGE_PACKAGES
 /* ------------------------------------------------------------------------------------------------------------------ */
@@ -75,8 +76,8 @@ val ALL_PROJECT_PACKAGES = mapOf(
     DOMAIN_LAYER_PACKAGE to setOf(
         DOMAIN_LAYER_PACKAGE,
         DOMAIN_COMMON_PACKAGE,
-        DOMAIN_SERVICE_PACKAGE,
         DOMAIN_AGGREGATE_PACKAGE,
+        DOMAIN_BUSINESS_RULE_PACKAGE,
     ),
 
     INFRASTRUCTURE_LAYER_PACKAGE to setOf(

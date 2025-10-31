@@ -9,7 +9,7 @@ import github.com.hukuta94.delivery.core.domain.aggregate.courier.newFreeCourier
 import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderStatus
 import github.com.hukuta94.delivery.core.domain.aggregate.order.newAssignedOrder
 import github.com.hukuta94.delivery.core.domain.common.newLocation
-import github.com.hukuta94.delivery.core.domain.service.impl.CompleteOrderServiceImpl
+import github.com.hukuta94.delivery.core.domain.rule.impl.CompleteOrderBusinessRuleImpl
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 
@@ -17,13 +17,13 @@ class MoveCouriersUseCaseImplTest : StringSpec({
 
     val orderRepository = OrderRepositoryFake()
     val courierRepository = CourierRepositoryFake()
-    val completeOrderService = CompleteOrderServiceImpl()
+    val completeOrderService = CompleteOrderBusinessRuleImpl()
     val unitOfWork = UnitOfWorkFake()
 
     val sut = MoveCouriersUseCaseImpl(
         orderRepository = orderRepository,
         courierRepository = courierRepository,
-        completeOrderService = completeOrderService,
+        completeOrderBusinessRule = completeOrderService,
         unitOfWork = unitOfWork,
     )
 

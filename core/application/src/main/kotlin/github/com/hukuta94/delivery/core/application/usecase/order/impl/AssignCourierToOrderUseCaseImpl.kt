@@ -1,7 +1,7 @@
 package github.com.hukuta94.delivery.core.application.usecase.order.impl
 
 import github.com.hukuta94.delivery.core.application.usecase.order.AssignCourierToOrderUseCase
-import github.com.hukuta94.delivery.core.domain.service.DispatchService
+import github.com.hukuta94.delivery.core.domain.rule.DispatchOrderToCourierBusinessRule
 import github.com.hukuta94.delivery.core.application.port.repository.domain.CourierRepositoryPort
 import github.com.hukuta94.delivery.core.application.port.repository.domain.OrderRepositoryPort
 import github.com.hukuta94.delivery.core.application.port.repository.UnitOfWorkPort
@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory
 class AssignCourierToOrderUseCaseImpl(
     private val orderRepository: OrderRepositoryPort,
     private val courierRepository: CourierRepositoryPort,
-    private val dispatchService: DispatchService,
+    private val dispatchOrderToCourierBusinessRule: DispatchOrderToCourierBusinessRule,
     private val unitOfWork: UnitOfWorkPort,
 ) : AssignCourierToOrderUseCase {
     override fun execute() {
@@ -24,7 +24,7 @@ class AssignCourierToOrderUseCaseImpl(
 
 
             orders.forEach { order ->
-                dispatchService.assignOrderToMostSuitableCourier(order, couriers)
+                dispatchOrderToCourierBusinessRule.execute(order, couriers)
             }
 
             orderRepository.update(orders)

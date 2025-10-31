@@ -4,7 +4,7 @@ import com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses
 import github.com.hukuta94.delivery.core.domain.DomainEvent
 import github.com.hukuta94.delivery.core.domain.ValueObject
 import github.com.hukuta94.delivery.core.domain.aggregate.Aggregate
-import github.com.hukuta94.delivery.core.domain.service.DomainService
+import github.com.hukuta94.delivery.core.domain.rule.BusinessRule
 import io.kotest.core.spec.style.StringSpec
 
 class DomainPackageTest : StringSpec({
@@ -21,8 +21,8 @@ class DomainPackageTest : StringSpec({
         DOMAIN_COMMON_PACKAGE onlyContains ValueObject::class
     }
 
-    "domain service package can contain only domain services" {
-        DOMAIN_SERVICE_PACKAGE onlyContains DomainService::class
+    "domain business rule package can contain only domain business rules" {
+        DOMAIN_BUSINESS_RULE_PACKAGE onlyContains BusinessRule::class
     }
 
     "domain classes can not depend on classes that outside of the domain layer package" {

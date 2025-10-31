@@ -1,4 +1,4 @@
-package github.com.hukuta94.delivery.core.domain.service.impl
+package github.com.hukuta94.delivery.core.domain.rule.impl
 
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.CourierStatus
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.newBusyCourier
@@ -8,7 +8,7 @@ import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderStatus
 import github.com.hukuta94.delivery.core.domain.aggregate.order.newAssignedOrder
 import github.com.hukuta94.delivery.core.domain.aggregate.order.newOrder
 import github.com.hukuta94.delivery.core.domain.common.newLocation
-import github.com.hukuta94.delivery.core.domain.service.CompleteOrderService
+import github.com.hukuta94.delivery.core.domain.rule.CompleteOrderBusinessRule
 import io.kotest.assertions.arrow.core.shouldBeLeft
 import io.kotest.assertions.arrow.core.shouldBeRight
 import io.kotest.assertions.assertSoftly
@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test
 internal class CompleteOrderServiceImplTest {
 
     // System Under Testing
-    private val sut = CompleteOrderServiceImpl()
+    private val sut = CompleteOrderBusinessRuleImpl()
 
     @Test
     fun `must return business error if order is assigned to a different courier`() {
@@ -27,7 +27,7 @@ internal class CompleteOrderServiceImplTest {
 
         val result = sut.execute(order, courier)
 
-        result shouldBeLeft CompleteOrderService.Error.OrderAssignedToAnotherCourier
+        result shouldBeLeft CompleteOrderBusinessRule.Error.OrderAssignedToAnotherCourier
     }
 
     @Test
@@ -37,7 +37,7 @@ internal class CompleteOrderServiceImplTest {
 
         val result = sut.execute(order, courier)
 
-        result shouldBeLeft CompleteOrderService.Error.OrderIsNotAssigned
+        result shouldBeLeft CompleteOrderBusinessRule.Error.OrderIsNotAssigned
     }
 
     @Test
@@ -52,7 +52,7 @@ internal class CompleteOrderServiceImplTest {
 
         val result = sut.execute(order, courier)
 
-        result shouldBeLeft CompleteOrderService.Error.CourierNotReachedOrderLocation
+        result shouldBeLeft CompleteOrderBusinessRule.Error.CourierNotReachedOrderLocation
     }
 
     @Test

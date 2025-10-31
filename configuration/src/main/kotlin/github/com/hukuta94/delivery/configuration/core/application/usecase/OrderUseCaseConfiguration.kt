@@ -4,7 +4,7 @@ import github.com.hukuta94.delivery.core.application.usecase.order.AssignCourier
 import github.com.hukuta94.delivery.core.application.usecase.order.CreateOrderUseCase
 import github.com.hukuta94.delivery.core.application.usecase.order.impl.AssignCourierToOrderUseCaseImpl
 import github.com.hukuta94.delivery.core.application.usecase.order.impl.CreateOrderUseCaseImpl
-import github.com.hukuta94.delivery.core.domain.service.DispatchService
+import github.com.hukuta94.delivery.core.domain.rule.DispatchOrderToCourierBusinessRule
 import github.com.hukuta94.delivery.core.application.port.repository.domain.CourierRepositoryPort
 import github.com.hukuta94.delivery.core.application.port.GetLocationPort
 import github.com.hukuta94.delivery.core.application.port.repository.domain.OrderRepositoryPort
@@ -28,12 +28,12 @@ open class OrderUseCaseConfiguration {
     open fun AssignCourierToOrderUseCase(
         orderRepository: OrderRepositoryPort,
         courierRepository: CourierRepositoryPort,
-        dispatchService: DispatchService,
+        dispatchOrderToCourierBusinessRule: DispatchOrderToCourierBusinessRule,
         unitOfWork: UnitOfWorkPort,
     ): AssignCourierToOrderUseCase = AssignCourierToOrderUseCaseImpl(
         orderRepository = orderRepository,
         courierRepository = courierRepository,
-        dispatchService = dispatchService,
+        dispatchOrderToCourierBusinessRule = dispatchOrderToCourierBusinessRule,
         unitOfWork = unitOfWork,
     )
 }

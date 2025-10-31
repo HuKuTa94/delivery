@@ -1,11 +1,11 @@
-package github.com.hukuta94.delivery.core.domain.service
+package github.com.hukuta94.delivery.core.domain.rule
 
 import arrow.core.Either
 import github.com.hukuta94.delivery.core.domain.BusinessError
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.Courier
 import github.com.hukuta94.delivery.core.domain.aggregate.order.Order
 
-interface CompleteOrderService : DomainService {
+interface CompleteOrderBusinessRule : BusinessRule {
 
     fun execute(
         order: Order,

@@ -1,13 +1,13 @@
-package github.com.hukuta94.delivery.core.domain.service.impl
+package github.com.hukuta94.delivery.core.domain.rule.impl
 
-import github.com.hukuta94.delivery.core.domain.service.DispatchService
+import github.com.hukuta94.delivery.core.domain.rule.DispatchOrderToCourierBusinessRule
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.Courier
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.CourierStatus
 import github.com.hukuta94.delivery.core.domain.aggregate.order.Order
 
-class DispatchServiceImpl : DispatchService {
+class DispatchOrderToCourierBusinessRuleImpl : DispatchOrderToCourierBusinessRule {
 
-    override fun assignOrderToMostSuitableCourier(order: Order, couriers: Collection<Courier>) {
+    override fun execute(order: Order, couriers: Collection<Courier>) {
         couriers
             .filter { it.status == CourierStatus.FREE }
             .minByOrNull { it.timeToLocation(order.location) }
