@@ -41,7 +41,7 @@ class CourierJpaEntity : JpaEntity<Courier>() {
     var status: CourierStatus? = null
 
     companion object {
-        const val TABLE_NAME = "dlv_courier"
+        const val TABLE_NAME = "courier"
         const val TRANSPORT_ID = "transport_id"
         const val STATUS_ID = "status_id"
 

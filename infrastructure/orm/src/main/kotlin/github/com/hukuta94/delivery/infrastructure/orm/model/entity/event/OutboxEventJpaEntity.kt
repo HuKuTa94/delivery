@@ -12,7 +12,7 @@ import java.time.LocalDateTime
 class OutboxEventJpaEntity: BoxEventJpaEntity() {
 
     companion object {
-        const val TABLE_NAME = "dlv_out_box"
+        const val TABLE_NAME = "out_box"
 
         fun fromEvent(
             event: DomainEvent,

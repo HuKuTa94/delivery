@@ -7,11 +7,11 @@
     <changeSet id="create_courier_status_table" author="Nikita Koshelev">
         <preConditions onFail="MARK_RAN">
             <not>
-                <tableExists tableName="dlv_courier_status"/>
+                <tableExists tableName="courier_status"/>
             </not>
         </preConditions>
 
-        <createTable tableName="dlv_courier_status">
+        <createTable tableName="courier_status">
             <column name="id" type="int">
                 <constraints primaryKey="true" nullable="false" primaryKeyName="pk_courier_status"/>
             </column>
@@ -24,15 +24,15 @@
     <changeSet id="insert_statuses_into_courier_status_table" author="Nikita Koshelev">
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="0">
-                SELECT count(*) FROM dlv_courier_status WHERE id in (1, 2)
+                SELECT count(*) FROM courier_status WHERE id in (1, 2)
             </sqlCheck>
         </preConditions>
 
-        <insert tableName="dlv_courier_status">
+        <insert tableName="courier_status">
             <column name="id" value="1"/>
             <column name="code" value="FREE"/>
         </insert>
-        <insert tableName="dlv_courier_status">
+        <insert tableName="courier_status">
             <column name="id" value="2"/>
             <column name="code" value="BUSY"/>
         </insert>
@@ -41,11 +41,11 @@
     <changeSet id="create_courier_transport_table" author="Nikita Koshelev">
         <preConditions onFail="MARK_RAN">
             <not>
-                <tableExists tableName="dlv_courier_transport"/>
+                <tableExists tableName="courier_transport"/>
             </not>
         </preConditions>
 
-        <createTable tableName="dlv_courier_transport">
+        <createTable tableName="courier_transport">
             <column name="id" type="int">
                 <constraints primaryKey="true" nullable="false" primaryKeyName="pk_courier_transport"/>
             </column>
@@ -58,23 +58,23 @@
     <changeSet id="insert_transports_into_courier_transport_table" author="Nikita Koshelev">
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="0">
-                SELECT count(*) FROM dlv_courier_transport WHERE id in (1, 2, 3, 4)
+                SELECT count(*) FROM courier_transport WHERE id in (1, 2, 3, 4)
             </sqlCheck>
         </preConditions>
 
-        <insert tableName="dlv_courier_transport">
+        <insert tableName="courier_transport">
             <column name="id" value="1"/>
             <column name="code" value="PEDESTRIAN"/>
         </insert>
-        <insert tableName="dlv_courier_transport">
+        <insert tableName="courier_transport">
             <column name="id" value="2"/>
             <column name="code" value="BICYCLE"/>
         </insert>
-        <insert tableName="dlv_courier_transport">
+        <insert tableName="courier_transport">
             <column name="id" value="3"/>
             <column name="code" value="CAR"/>
         </insert>
-        <insert tableName="dlv_courier_transport">
+        <insert tableName="courier_transport">
             <column name="id" value="4"/>
             <column name="code" value="DRONE"/>
         </insert>
@@ -83,11 +83,11 @@
     <changeSet id="create_courier_table" author="Nikita Koshelev">
         <preConditions onFail="MARK_RAN">
             <not>
-                <tableExists tableName="dlv_courier"/>
+                <tableExists tableName="courier"/>
             </not>
         </preConditions>
 
-        <createTable tableName="dlv_courier">
+        <createTable tableName="courier">
             <column name="id" type="uuid">
                 <constraints primaryKey="true" nullable="false" primaryKeyName="pk_courier"/>
             </column>
@@ -101,22 +101,22 @@
             </column>
         </createTable>
 
-        <createIndex indexName="idx_dlv_courier_id" tableName="dlv_courier">
+        <createIndex indexName="idx_courier_id" tableName="courier">
             <column name="id"/>
         </createIndex>
 
         <addForeignKeyConstraint
-                baseTableName="dlv_courier"
+                baseTableName="courier"
                 baseColumnNames="status_id"
-                constraintName="fk_dlv_courier_status_id"
-                referencedTableName="dlv_courier_status"
+                constraintName="fk_courier_status_id"
+                referencedTableName="courier_status"
                 referencedColumnNames="id"/>
 
         <addForeignKeyConstraint
-                baseTableName="dlv_courier"
+                baseTableName="courier"
                 baseColumnNames="transport_id"
-                constraintName="fk_dlv_transport_id"
-                referencedTableName="dlv_courier_transport"
+                constraintName="fk_transport_id"
+                referencedTableName="courier_transport"
                 referencedColumnNames="id"/>
     </changeSet>
 
@@ -124,7 +124,7 @@
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="0">
                 SELECT count(*)
-                FROM dlv_courier
+                FROM courier
                 WHERE id in (
                      '00000000-0000-0000-0000-000000000001',
                      '00000000-0000-0000-0000-000000000002',
@@ -133,7 +133,7 @@
             </sqlCheck>
         </preConditions>
 
-        <insert tableName="dlv_courier">
+        <insert tableName="courier">
             <column name="id" value="00000000-0000-0000-0000-000000000001"/>
             <column name="name" value="Вася Пешков"/>
             <column name="location" value="5,5"/>
@@ -141,7 +141,7 @@
             <column name="transport_id" value="1"/>
         </insert>
 
-        <insert tableName="dlv_courier">
+        <insert tableName="courier">
             <column name="id" value="00000000-0000-0000-0000-000000000002"/>
             <column name="location" value="1,5"/>
             <column name="name" value="Петя Велосипедкин"/>
@@ -149,7 +149,7 @@
             <column name="transport_id" value="2"/>
         </insert>
 
-        <insert tableName="dlv_courier">
+        <insert tableName="courier">
             <column name="id" value="00000000-0000-0000-0000-000000000003"/>
             <column name="name" value="Артур Машинин"/>
             <column name="location" value="9,9"/>
@@ -161,11 +161,11 @@
     <changeSet id="create_order_status_table" author="Nikita Koshelev">
         <preConditions onFail="MARK_RAN">
             <not>
-                <tableExists tableName="dlv_order_status"/>
+                <tableExists tableName="order_status"/>
             </not>
         </preConditions>
 
-        <createTable tableName="dlv_order_status">
+        <createTable tableName="order_status">
             <column name="id" type="int">
                 <constraints primaryKey="true" nullable="false" primaryKeyName="pk_order_status"/>
             </column>
@@ -178,19 +178,19 @@
     <changeSet id="insert_statuses_into_order_status_table" author="Nikita Koshelev">
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="0">
-                SELECT count(*) FROM dlv_order_status WHERE id in (1, 2, 3)
+                SELECT count(*) FROM order_status WHERE id in (1, 2, 3)
             </sqlCheck>
         </preConditions>
 
-        <insert tableName="dlv_order_status">
+        <insert tableName="order_status">
             <column name="id" value="1"/>
             <column name="code" value="CREATED"/>
         </insert>
-        <insert tableName="dlv_order_status">
+        <insert tableName="order_status">
             <column name="id" value="2"/>
             <column name="code" value="ASSIGNED"/>
         </insert>
-        <insert tableName="dlv_order_status">
+        <insert tableName="order_status">
             <column name="id" value="3"/>
             <column name="code" value="COMPLETED"/>
         </insert>
@@ -199,11 +199,11 @@
     <changeSet id="create_order_table" author="Nikita Koshelev">
         <preConditions onFail="MARK_RAN">
             <not>
-                <tableExists tableName="dlv_order"/>
+                <tableExists tableName="order"/>
             </not>
         </preConditions>
 
-        <createTable tableName="dlv_order">
+        <createTable tableName="order">
             <column name="id" type="uuid">
                 <constraints primaryKey="true" nullable="false" primaryKeyName="pk_order"/>
             </column>
@@ -214,33 +214,33 @@
             <column name="location" type="varchar(64)"/>
         </createTable>
 
-        <createIndex indexName="idx_dlv_order_id" tableName="dlv_order">
+        <createIndex indexName="idx_order_id" tableName="order">
             <column name="id"/>
         </createIndex>
 
         <addForeignKeyConstraint
-                baseTableName="dlv_order"
+                baseTableName="order"
                 baseColumnNames="status_id"
-                constraintName="fk_dlv_order_status_id"
-                referencedTableName="dlv_order_status"
+                constraintName="fk_order_status_id"
+                referencedTableName="order_status"
                 referencedColumnNames="id"/>
 
         <addForeignKeyConstraint
-                baseTableName="dlv_order"
+                baseTableName="order"
                 baseColumnNames="courier_id"
-                constraintName="fk_dlv_order_courier_id"
-                referencedTableName="dlv_courier"
+                constraintName="fk_order_courier_id"
+                referencedTableName="courier"
                 referencedColumnNames="id"/>
     </changeSet>
 
     <changeSet id="create_in_out_box_status_table" author="Nikita Koshelev">
         <preConditions onFail="MARK_RAN">
             <not>
-                <tableExists tableName="dlv_in_out_box_status"/>
+                <tableExists tableName="in_out_box_status"/>
             </not>
         </preConditions>
 
-        <createTable tableName="dlv_in_out_box_status">
+        <createTable tableName="in_out_box_status">
             <column name="id" type="int">
                 <constraints primaryKey="true" nullable="false" primaryKeyName="pk_in_out_box_status"/>
             </column>
@@ -253,23 +253,23 @@
     <changeSet id="insert_statuses_into_in_out_box_status_table" author="Nikita Koshelev">
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="0">
-                SELECT count(*) FROM dlv_in_out_box_status
+                SELECT count(*) FROM in_out_box_status
             </sqlCheck>
         </preConditions>
 
-        <insert tableName="dlv_in_out_box_status">
+        <insert tableName="in_out_box_status">
             <column name="id" value="1"/>
             <column name="code" value="TO_BE_PROCESSED"/>
         </insert>
-        <insert tableName="dlv_in_out_box_status">
+        <insert tableName="in_out_box_status">
             <column name="id" value="2"/>
             <column name="code" value="SUCCESSFULLY"/>
         </insert>
-        <insert tableName="dlv_in_out_box_status">
+        <insert tableName="in_out_box_status">
             <column name="id" value="3"/>
             <column name="code" value="CONVERSION_ERROR"/>
         </insert>
-        <insert tableName="dlv_in_out_box_status">
+        <insert tableName="in_out_box_status">
             <column name="id" value="4"/>
             <column name="code" value="DELIVERY_ERROR"/>
         </insert>
@@ -278,13 +278,13 @@
     <changeSet id="create_out_box_table" author="Nikita Koshelev">
         <preConditions onFail="MARK_RAN">
             <not>
-                <tableExists tableName="dlv_out_box"/>
+                <tableExists tableName="out_box"/>
             </not>
         </preConditions>
 
-        <createTable tableName="dlv_out_box">
+        <createTable tableName="out_box">
             <column name="id" type="uuid">
-                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_dlv_out_box"/>
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_out_box"/>
             </column>
             <column name="event_type" type="varchar(128)">
                 <constraints nullable="false"/>
@@ -310,23 +310,23 @@
         </createTable>
 
         <addForeignKeyConstraint
-                baseTableName="dlv_out_box"
+                baseTableName="out_box"
                 baseColumnNames="status_id"
-                constraintName="fk_dlv_out_box_status_id"
-                referencedTableName="dlv_in_out_box_status"
+                constraintName="fk_out_box_status_id"
+                referencedTableName="in_out_box_status"
                 referencedColumnNames="id"/>
     </changeSet>
 
     <changeSet id="create_in_box_table" author="Nikita Koshelev">
         <preConditions onFail="MARK_RAN">
             <not>
-                <tableExists tableName="dlv_in_box"/>
+                <tableExists tableName="in_box"/>
             </not>
         </preConditions>
 
-        <createTable tableName="dlv_in_box">
+        <createTable tableName="in_box">
             <column name="id" type="uuid">
-                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_dlv_in_box"/>
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_in_box"/>
             </column>
             <column name="event_type" type="varchar(128)">
                 <constraints nullable="false"/>
@@ -352,10 +352,10 @@
         </createTable>
 
         <addForeignKeyConstraint
-                baseTableName="dlv_in_box"
+                baseTableName="in_box"
                 baseColumnNames="status_id"
-                constraintName="fk_dlv_in_box_status_id"
-                referencedTableName="dlv_in_out_box_status"
+                constraintName="fk_in_box_status_id"
+                referencedTableName="in_out_box_status"
                 referencedColumnNames="id"/>
     </changeSet>
 

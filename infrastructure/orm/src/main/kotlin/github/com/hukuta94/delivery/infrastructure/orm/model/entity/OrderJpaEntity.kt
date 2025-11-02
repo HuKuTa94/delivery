@@ -32,7 +32,7 @@ class OrderJpaEntity : JpaEntity<Order>() {
     var courierId: UUID? = null
 
     companion object {
-        const val TABLE_NAME = "dlv_order"
+        const val TABLE_NAME = "order"
         const val STATUS_ID = "status_id"
         const val COURIER_ID = "courier_id"
 
