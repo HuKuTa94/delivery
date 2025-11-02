@@ -1,4 +1,4 @@
-package github.com.hukuta94.delivery.core.application.event.domain
+package github.com.hukuta94.delivery.core.application.event
 
 import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderAssignedDomainEvent
 import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderCompletedDomainEvent
@@ -8,7 +8,7 @@ import java.util.*
 
 class DomainEventDeserializerTest : StringSpec({
 
-    val sut = DomainEventDeserializer()
+    val sut = ApplicationEventDeserializer()
 
     "deserializes order assigned domain event from string" {
         // Given
@@ -18,7 +18,7 @@ class DomainEventDeserializerTest : StringSpec({
         )
         val serializedDomainEvent = """
             {
-                "id":"${domainEvent.id}",
+                "eventId":"${domainEvent.eventId}",
                 "orderId":"${domainEvent.orderId}",
                 "courierId":"${domainEvent.courierId}"
             }
@@ -27,7 +27,7 @@ class DomainEventDeserializerTest : StringSpec({
         // When
         val actualDeserializedDomainEvent = sut.deserialize(
             serializedEvent = serializedDomainEvent,
-            eventClassType = DomainEventClassType(domainEvent::class),
+            eventClassType = domainEvent::class.java,
         )
 
         // Then
@@ -42,14 +42,14 @@ class DomainEventDeserializerTest : StringSpec({
         val serializedDomainEvent = """
             {
                 "orderId":"${domainEvent.orderId}",
-                "id":"${domainEvent.id}"
+                "eventId":"${domainEvent.eventId}"
             }
         """.withoutSpaces()
 
         // When
         val actualDeserializedDomainEvent = sut.deserialize(
             serializedEvent = serializedDomainEvent,
-            eventClassType = DomainEventClassType(domainEvent::class),
+            eventClassType = domainEvent::class.java,
         )
 
         // Then

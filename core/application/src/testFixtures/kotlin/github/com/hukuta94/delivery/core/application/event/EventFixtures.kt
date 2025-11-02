@@ -1,10 +1,14 @@
 package github.com.hukuta94.delivery.core.application.event
 
-import github.com.hukuta94.delivery.core.application.event.domain.DomainEventClassType
-import github.com.hukuta94.delivery.core.application.event.integration.IntegrationEventClassType
 import github.com.hukuta94.delivery.core.domain.FakeDomainEvent
-import github.com.hukuta94.delivery.core.domain.FakeIntegrationEvent
 
-fun fakeDomainEventClassType() = DomainEventClassType(FakeDomainEvent::class)
+class FakeEventHandler: ApplicationEventHandler<FakeDomainEvent> {
+    var executedCount: Int = 0
+        private set
 
-fun fakeIntegrationEventClassType() = IntegrationEventClassType(FakeIntegrationEvent::class)
+    override val eventType = FakeDomainEvent::class
+
+    override fun handle(event: FakeDomainEvent) {
+        executedCount++
+    }
+}

@@ -1,6 +1,7 @@
 package github.com.hukuta94.delivery.api.kafka
 
 import com.google.protobuf.util.JsonFormat
+import github.com.hukuta94.delivery.core.application.event.BasketConfirmedIntegrationDomainEvent
 import github.com.hukuta94.delivery.core.application.usecase.event.SaveIntegrationEventUseCase
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.slf4j.LoggerFactory
@@ -23,8 +24,7 @@ class BasketKafkaConsumer(
 
         val basketConfirmedEvent = basketConfirmedEventBuilder.build()
 
-        val integrationEvent = github.com.hukuta94.delivery.core.application.event.integration.BasketConfirmedIntegrationEvent(
-            id = UUID.fromString(message.key()),
+        val integrationEvent = BasketConfirmedIntegrationDomainEvent(
             basketId = UUID.fromString(basketConfirmedEvent.basketId),
             street = basketConfirmedEvent.address.street,
         )

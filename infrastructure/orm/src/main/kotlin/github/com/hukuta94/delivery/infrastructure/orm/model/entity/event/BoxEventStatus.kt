@@ -1,7 +1,7 @@
 package github.com.hukuta94.delivery.infrastructure.orm.model.entity.event
 
 enum class BoxEventStatus(
-    val dbCode: String,
+    val dbCode: String, //TODO нормализовать БД и добавить отдельную таблицу со статусами и их id
 ) {
     /**
      * Event is ready to be processed.

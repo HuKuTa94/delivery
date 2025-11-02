@@ -1,11 +1,12 @@
-package github.com.hukuta94.delivery.core.application.event.domain.handler
+package github.com.hukuta94.delivery.core.application.event.handler
 
+import github.com.hukuta94.delivery.core.application.event.ApplicationEventHandler
 import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderAssignedDomainEvent
 import github.com.hukuta94.delivery.core.application.port.BusProducerPort
 
 class OrderAssignedDomainEventHandler(
     private val busProducerPort: BusProducerPort,
-) : DomainEventHandler<OrderAssignedDomainEvent> {
+) : ApplicationEventHandler<OrderAssignedDomainEvent> {
 
     override val eventType = OrderAssignedDomainEvent::class
 

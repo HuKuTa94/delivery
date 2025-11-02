@@ -1,30 +1,30 @@
 package github.com.hukuta94.delivery.infrastructure.orm.repository.event
 
-import github.com.hukuta94.delivery.core.domain.IntegrationEvent
-import github.com.hukuta94.delivery.core.application.event.integration.IntegrationEventSerializer
+import github.com.hukuta94.delivery.core.application.event.ApplicationEventSerializer
 import github.com.hukuta94.delivery.core.application.port.repository.event.InboxEventRepositoryPort
+import github.com.hukuta94.delivery.core.domain.DomainEvent
 import github.com.hukuta94.delivery.infrastructure.orm.model.entity.event.InboxEventJpaEntity
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 
 class OrmInboxEventRepositoryAdapter(
     private val inboxJpaRepository: InboxEventJpaRepository,
-    private val integrationEventSerializer: IntegrationEventSerializer
+    private val eventSerializer: ApplicationEventSerializer
 ) : InboxEventRepositoryPort {
 
-    override fun saveIntegrationEvent(integrationEvent: IntegrationEvent) {
+    override fun saveIntegrationEvent(integrationEvent: DomainEvent) {
         // Don't save duplicates
-        val integrationEventExists = inboxJpaRepository.existsById(integrationEvent.id)
+        val integrationEventExists = inboxJpaRepository.existsById(integrationEvent.eventId)
         if (integrationEventExists) {
             LOG.info(
-                "Integration event with id: ${integrationEvent.id} skipped because it already exists"
+                "Integration event with id: ${integrationEvent.eventId} skipped because it already exists"
             )
             return
         }
 
         val inboxMessage = InboxEventJpaEntity.fromEvent(
             integrationEvent,
-            integrationEventSerializer,
+            eventSerializer,
             createdAt = LocalDateTime.now()
         )
 

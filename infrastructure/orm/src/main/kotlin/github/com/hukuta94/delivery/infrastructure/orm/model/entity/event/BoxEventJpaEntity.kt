@@ -1,6 +1,5 @@
 package github.com.hukuta94.delivery.infrastructure.orm.model.entity.event
 
-import github.com.hukuta94.delivery.core.application.event.EventClassType
 import github.com.hukuta94.delivery.core.domain.DomainEvent
 import github.com.hukuta94.delivery.infrastructure.orm.model.converter.BoxEventStatusConverter
 import java.time.LocalDateTime
@@ -15,7 +14,7 @@ import jakarta.persistence.MappedSuperclass
  * It is used to increase reliability of processing incoming and outgoing events.
  */
 @MappedSuperclass
-abstract class BoxEventJpaEntity<EVENT : DomainEvent, EVENT_CLASS_TYPE : EventClassType<EVENT>> {
+abstract class BoxEventJpaEntity {
 
     @Id
     lateinit var id: UUID
@@ -30,8 +29,7 @@ abstract class BoxEventJpaEntity<EVENT : DomainEvent, EVENT_CLASS_TYPE : EventCl
     var processedAt: LocalDateTime? = null
 
     @get:Column(name = "event_type")
-    @set:Column(name = "event_type")
-    abstract var eventType: EVENT_CLASS_TYPE
+    lateinit var eventType: Class<out DomainEvent>
 
     @Column(name = "version")
     var version: Int = 0

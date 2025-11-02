@@ -4,30 +4,28 @@ import github.com.hukuta94.delivery.core.domain.DomainEvent
 import org.slf4j.LoggerFactory
 import kotlin.reflect.KClass
 
-abstract class ApplicationEventPublisher <EVENT : DomainEvent, HANDLER : ApplicationEventHandler<EVENT>> {
+class ApplicationEventPublisher(
+    handlers: List<ApplicationEventHandler<out DomainEvent>>,
+) {
+    private val handlers = mutableMapOf<KClass<out DomainEvent>, MutableList<ApplicationEventHandler<out DomainEvent>>>()
 
-    private val handlerMap = mutableMapOf<KClass<*>, MutableList<HANDLER>>()
-
-    fun registerHandler(handler: HANDLER) {
-        handlerMap.computeIfAbsent(handler.eventType) {
-            mutableListOf()
-        }.add(handler)
-    }
-
-    fun publish(event: EVENT) {
-        LOG.info("Processing event: $event")
-
-        handlerMap[event::class]?.let { handlers ->
-            handleEvents(
-                handlers as List<HANDLER>,
-                event
-            )
+    init {
+        handlers.forEach { handler ->
+            this.handlers.computeIfAbsent(handler.eventType) {
+                mutableListOf()
+            }.add(handler)
         }
     }
 
-    private fun handleEvents(handlers: List<HANDLER>, event: EVENT) {
-        handlers.forEach {
-            it.handle(event)
+    fun publish(event: DomainEvent) {
+        LOG.info("Processing event: $event")
+
+        handlers[event::class]?.let { handlers ->
+            handlers.forEach {
+                if (it.eventType.isInstance(event)) {
+                    (it as ApplicationEventHandler<DomainEvent>).handle(event)
+                }
+            }
         }
     }
 

@@ -1,40 +1,26 @@
 package github.com.hukuta94.delivery.infrastructure.orm.model.entity.event
 
-import github.com.hukuta94.delivery.core.domain.IntegrationEvent
-import github.com.hukuta94.delivery.core.application.event.integration.IntegrationEventClassType
-import github.com.hukuta94.delivery.core.application.event.integration.IntegrationEventDeserializer
-import github.com.hukuta94.delivery.core.application.event.integration.IntegrationEventSerializer
-import github.com.hukuta94.delivery.infrastructure.orm.model.converter.IntegrationEventClassTypeConverter
+import github.com.hukuta94.delivery.core.application.event.ApplicationEventSerializer
+import github.com.hukuta94.delivery.core.domain.DomainEvent
 import github.com.hukuta94.delivery.infrastructure.orm.model.entity.event.InboxEventJpaEntity.Companion.TABLE_NAME
+import jakarta.persistence.Entity
+import jakarta.persistence.Table
 import java.time.LocalDateTime
-import jakarta.persistence.*
 
 @Entity
 @Table(name = TABLE_NAME)
-class InboxEventJpaEntity : BoxEventJpaEntity<IntegrationEvent, IntegrationEventClassType>() {
-
-    @Convert(converter = IntegrationEventClassTypeConverter::class)
-    override lateinit var eventType: IntegrationEventClassType
-
-    fun toEvent(
-        eventDeserializer: IntegrationEventDeserializer
-    ): IntegrationEvent {
-        return eventDeserializer.deserialize(
-            serializedEvent = payload,
-            eventClassType = eventType,
-        )
-    }
+class InboxEventJpaEntity : BoxEventJpaEntity() {
 
     companion object {
         const val TABLE_NAME = "dlv_inbox"
 
         fun fromEvent(
-            event: IntegrationEvent,
-            eventSerializer: IntegrationEventSerializer,
+            event: DomainEvent,
+            eventSerializer: ApplicationEventSerializer,
             createdAt: LocalDateTime,
         ) = InboxEventJpaEntity().apply {
-                id = event.id
-                eventType = IntegrationEventClassType(event::class)
+                id = event.eventId
+                eventType = event::class.java
                 payload = eventSerializer.serialize(event)
                 this.createdAt = createdAt
             }

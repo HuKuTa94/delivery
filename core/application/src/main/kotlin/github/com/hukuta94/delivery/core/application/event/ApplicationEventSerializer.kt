@@ -4,11 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import github.com.hukuta94.delivery.core.domain.DomainEvent
 
-abstract class ApplicationEventSerializer<EVENT : DomainEvent> {
+class ApplicationEventSerializer {
 
     private val objectMapper = ObjectMapper().registerModule(KotlinModule.Builder().build())
 
-    fun serialize(event: EVENT): String {
+    fun serialize(event: DomainEvent): String {
         return objectMapper.writeValueAsString(event)
     }
 }

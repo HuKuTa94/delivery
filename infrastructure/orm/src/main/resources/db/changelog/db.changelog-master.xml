@@ -244,7 +244,7 @@
             <column name="id" type="uuid">
                 <constraints primaryKey="true" nullable="false" primaryKeyName="pk_dlv_outbox"/>
             </column>
-            <column name="event_type" type="varchar(64)">
+            <column name="event_type" type="varchar(128)">
                 <constraints nullable="false"/>
             </column>
             <column name="payload" type="text">
@@ -279,7 +279,7 @@
             <column name="id" type="uuid">
                 <constraints primaryKey="true" nullable="false" primaryKeyName="pk_dlv_inbox"/>
             </column>
-            <column name="event_type" type="varchar(64)">
+            <column name="event_type" type="varchar(128)">
                 <constraints nullable="false"/>
             </column>
             <column name="payload" type="text">

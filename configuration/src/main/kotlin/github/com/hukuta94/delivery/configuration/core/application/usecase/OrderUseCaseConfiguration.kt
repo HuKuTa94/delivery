@@ -9,6 +9,8 @@ import github.com.hukuta94.delivery.core.application.port.repository.domain.Cour
 import github.com.hukuta94.delivery.core.application.port.GetLocationPort
 import github.com.hukuta94.delivery.core.application.port.repository.domain.OrderRepositoryPort
 import github.com.hukuta94.delivery.core.application.port.repository.UnitOfWorkPort
+import github.com.hukuta94.delivery.core.application.port.repository.event.InboxEventRepositoryPort
+import github.com.hukuta94.delivery.core.application.port.repository.event.OutboxEventRepositoryPort
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -30,10 +32,12 @@ open class OrderUseCaseConfiguration {
         courierRepository: CourierRepositoryPort,
         dispatchOrderToCourierBusinessRule: DispatchOrderToCourierBusinessRule,
         unitOfWork: UnitOfWorkPort,
+        outboxEventRepositoryPort: OutboxEventRepositoryPort,
     ): AssignCourierToOrderUseCase = AssignCourierToOrderUseCaseImpl(
         orderRepository = orderRepository,
         courierRepository = courierRepository,
         dispatchOrderToCourierBusinessRule = dispatchOrderToCourierBusinessRule,
         unitOfWork = unitOfWork,
+        outboxEventRepositoryPort = outboxEventRepositoryPort,
     )
 }

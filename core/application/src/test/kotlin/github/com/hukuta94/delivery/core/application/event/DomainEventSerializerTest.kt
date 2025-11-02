@@ -1,4 +1,4 @@
-package github.com.hukuta94.delivery.core.application.event.domain
+package github.com.hukuta94.delivery.core.application.event
 
 import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderAssignedDomainEvent
 import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderCompletedDomainEvent
@@ -9,7 +9,7 @@ import java.util.*
 
 class DomainEventSerializerTest : StringSpec({
 
-    val sut = DomainEventSerializer()
+    val sut = ApplicationEventSerializer()
 
     "serializes order assigned domain event into string" {
         // Given
@@ -23,7 +23,7 @@ class DomainEventSerializerTest : StringSpec({
 
         // Then
         assertSoftly {
-            actual shouldContain "\"id\":\"${domainEvent.id}\""
+            actual shouldContain "\"eventId\":\"${domainEvent.eventId}\""
             actual shouldContain "\"orderId\":\"${domainEvent.orderId}\""
             actual shouldContain "\"courierId\":\"${domainEvent.courierId}\""
         }
@@ -40,7 +40,7 @@ class DomainEventSerializerTest : StringSpec({
 
         // Then
         assertSoftly {
-            actual shouldContain "\"id\":\"${domainEvent.id}\""
+            actual shouldContain "\"eventId\":\"${domainEvent.eventId}\""
             actual shouldContain "\"orderId\":\"${domainEvent.orderId}\""
         }
     }

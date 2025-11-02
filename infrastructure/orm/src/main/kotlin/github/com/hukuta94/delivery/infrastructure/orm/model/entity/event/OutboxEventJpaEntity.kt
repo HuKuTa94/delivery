@@ -1,42 +1,26 @@
 package github.com.hukuta94.delivery.infrastructure.orm.model.entity.event
 
-import github.com.hukuta94.delivery.core.application.event.domain.DomainEventClassType
-import github.com.hukuta94.delivery.core.application.event.domain.DomainEventDeserializer
-import github.com.hukuta94.delivery.core.application.event.domain.DomainEventSerializer
+import github.com.hukuta94.delivery.core.application.event.ApplicationEventSerializer
 import github.com.hukuta94.delivery.core.domain.DomainEvent
-import github.com.hukuta94.delivery.infrastructure.orm.model.converter.DomainEventClassTypeConverter
 import github.com.hukuta94.delivery.infrastructure.orm.model.entity.event.OutboxEventJpaEntity.Companion.TABLE_NAME
-import java.time.LocalDateTime
-import jakarta.persistence.Convert
 import jakarta.persistence.Entity
 import jakarta.persistence.Table
+import java.time.LocalDateTime
 
 @Entity
 @Table(name = TABLE_NAME)
-class OutboxEventJpaEntity: BoxEventJpaEntity<DomainEvent, DomainEventClassType>() {
-
-    @Convert(converter = DomainEventClassTypeConverter::class)
-    override lateinit var eventType: DomainEventClassType
-
-    fun toEvent(
-        eventDeserializer: DomainEventDeserializer
-    ): DomainEvent {
-        return eventDeserializer.deserialize(
-            serializedEvent = payload,
-            eventClassType = eventType,
-        )
-    }
+class OutboxEventJpaEntity: BoxEventJpaEntity() {
 
     companion object {
         const val TABLE_NAME = "dlv_outbox"
 
         fun fromEvent(
             event: DomainEvent,
-            eventSerializer: DomainEventSerializer,
+            eventSerializer: ApplicationEventSerializer,
             createdAt: LocalDateTime,
         ) = OutboxEventJpaEntity().apply {
-                id = event.id
-                eventType = DomainEventClassType(event::class)
+                id = event.eventId
+                eventType = event::class.java
                 payload = eventSerializer.serialize(event)
                 this.createdAt = createdAt
             }

@@ -1,6 +1,6 @@
 package github.com.hukuta94.delivery.infrastructure.orm.repository.event
 
-import github.com.hukuta94.delivery.core.application.event.domain.DomainEventSerializer
+import github.com.hukuta94.delivery.core.application.event.ApplicationEventSerializer
 import github.com.hukuta94.delivery.core.domain.DomainEvent
 import github.com.hukuta94.delivery.core.application.port.repository.event.OutboxEventRepositoryPort
 import github.com.hukuta94.delivery.infrastructure.orm.model.entity.event.OutboxEventJpaEntity
@@ -8,7 +8,7 @@ import java.time.LocalDateTime
 
 class OrmOutboxEventRepositoryAdapter(
     private val outboxEventJpaRepository: OutboxEventJpaRepository,
-    private val domainEventSerializer: DomainEventSerializer,
+    private val eventSerializer: ApplicationEventSerializer,
 ) : OutboxEventRepositoryPort {
 
     override fun saveDomainEvents(domainEvents: Collection<DomainEvent>) {
@@ -19,7 +19,7 @@ class OrmOutboxEventRepositoryAdapter(
         val outboxMessages = domainEvents.map { event ->
             OutboxEventJpaEntity.fromEvent(
                 event,
-                domainEventSerializer,
+                eventSerializer,
                 createdAt = LocalDateTime.now(),
             )
         }

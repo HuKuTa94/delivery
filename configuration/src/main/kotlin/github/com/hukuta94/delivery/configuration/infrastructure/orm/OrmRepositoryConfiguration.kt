@@ -1,19 +1,16 @@
 package github.com.hukuta94.delivery.configuration.infrastructure.orm
 
-import github.com.hukuta94.delivery.core.application.event.domain.DomainEventDeserializer
-import github.com.hukuta94.delivery.core.application.event.domain.DomainEventPublisher
-import github.com.hukuta94.delivery.core.application.event.domain.DomainEventSerializer
-import github.com.hukuta94.delivery.core.application.event.integration.IntegrationEventDeserializer
-import github.com.hukuta94.delivery.core.application.event.integration.IntegrationEventPublisher
-import github.com.hukuta94.delivery.core.application.event.integration.IntegrationEventSerializer
+import github.com.hukuta94.delivery.core.application.event.ApplicationEventDeserializer
+import github.com.hukuta94.delivery.core.application.event.ApplicationEventPublisher
+import github.com.hukuta94.delivery.core.application.event.ApplicationEventSerializer
 import github.com.hukuta94.delivery.core.application.port.repository.UnitOfWorkPort
 import github.com.hukuta94.delivery.core.application.port.repository.event.InboxEventRepositoryPort
 import github.com.hukuta94.delivery.infrastructure.orm.job.PublishInboxMessagesJob
 import github.com.hukuta94.delivery.infrastructure.orm.job.PublishOutboxMessagesJob
-import github.com.hukuta94.delivery.infrastructure.orm.repository.event.OrmOutboxEventRepositoryAdapter
 import github.com.hukuta94.delivery.infrastructure.orm.repository.OrmUnitOfWorkAdapter
-import github.com.hukuta94.delivery.infrastructure.orm.repository.event.OrmInboxEventRepositoryAdapter
 import github.com.hukuta94.delivery.infrastructure.orm.repository.event.InboxEventJpaRepository
+import github.com.hukuta94.delivery.infrastructure.orm.repository.event.OrmInboxEventRepositoryAdapter
+import github.com.hukuta94.delivery.infrastructure.orm.repository.event.OrmOutboxEventRepositoryAdapter
 import github.com.hukuta94.delivery.infrastructure.orm.repository.event.OutboxEventJpaRepository
 import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.context.annotation.Bean
@@ -48,42 +45,42 @@ open class OrmRepositoryConfiguration {
     @Bean
     open fun ormOutboxRepository(
         outboxEventJpaRepository: OutboxEventJpaRepository,
-        domainEventSerializer: DomainEventSerializer,
+        domainEventSerializer: ApplicationEventSerializer,
     ) = OrmOutboxEventRepositoryAdapter(
         outboxEventJpaRepository = outboxEventJpaRepository,
-        domainEventSerializer = domainEventSerializer,
+        eventSerializer = domainEventSerializer,
     )
 
     @Bean
     open fun pollToPublishOutboxMessagesJob(
-        outboxEventJpaRepository: OutboxEventJpaRepository,
-        domainEventPublisher: DomainEventPublisher,
-        domainEventDeserializer: DomainEventDeserializer,
+        eventJpaRepository: OutboxEventJpaRepository,
+        eventDeserializer: ApplicationEventDeserializer,
+        eventPublisher: ApplicationEventPublisher,
     ) = PublishOutboxMessagesJob(
-        outboxEventJpaRepository = outboxEventJpaRepository,
-        domainEventPublisher = domainEventPublisher,
-        domainEventDeserializer = domainEventDeserializer,
+        eventJpaRepository = eventJpaRepository,
+        eventDeserializer = eventDeserializer,
+        eventPublisher = eventPublisher,
     )
 
     @Bean
     open fun ormInboxRepository(
         inboxJpaRepository: InboxEventJpaRepository,
-        integrationEventSerializer: IntegrationEventSerializer,
+        integrationEventSerializer: ApplicationEventSerializer,
     ): InboxEventRepositoryPort {
         return OrmInboxEventRepositoryAdapter(
             inboxJpaRepository = inboxJpaRepository,
-            integrationEventSerializer = integrationEventSerializer,
+            eventSerializer = integrationEventSerializer,
         )
     }
 
     @Bean
     open fun pollToPublishInboxMessagesJob(
-        inboxJpaRepository: InboxEventJpaRepository,
-        integrationEventPublisher: IntegrationEventPublisher,
-        integrationEventDeserializer: IntegrationEventDeserializer,
+        eventJpaRepository: InboxEventJpaRepository,
+        eventDeserializer: ApplicationEventDeserializer,
+        eventPublisher: ApplicationEventPublisher,
     ) = PublishInboxMessagesJob(
-        inboxJpaRepository = inboxJpaRepository,
-        integrationEventPublisher = integrationEventPublisher,
-        integrationEventDeserializer = integrationEventDeserializer,
+        eventJpaRepository = eventJpaRepository,
+        eventDeserializer = eventDeserializer,
+        eventPublisher = eventPublisher,
     )
 }
