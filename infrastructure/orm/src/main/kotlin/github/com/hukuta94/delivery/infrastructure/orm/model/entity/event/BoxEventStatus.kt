@@ -1,35 +1,35 @@
 package github.com.hukuta94.delivery.infrastructure.orm.model.entity.event
 
 enum class BoxEventStatus(
-    val dbCode: String, //TODO нормализовать БД и добавить отдельную таблицу со статусами и их id
+    val id: Int,
 ) {
     /**
      * Event is ready to be processed.
      */
-    TO_BE_PROCESSED(dbCode = "TBP"),
+    TO_BE_PROCESSED(id = 1),
 
     /**
      * Event was processed successfully.
      */
-    SUCCESSFULLY(dbCode = "S"),
+    SUCCESSFULLY(id = 2),
 
     /**
      * Event was processed with a conversion error.
      * This error can be reason of failure of serialization or deserialization data.
      */
-    CONVERSION_ERROR(dbCode = "CE"),
+    CONVERSION_ERROR(id = 3),
 
     /**
      * Event was not delivered to receiver.
      */
-    DELIVERY_ERROR(dbCode = "DE"),
+    DELIVERY_ERROR(id = 4),
     ;
 
     companion object {
-        fun from(dbCode: String) = BoxEventStatus.values()
-            .firstOrNull { it.dbCode == dbCode }
+        fun from(id: Int) = entries
+            .firstOrNull { it.id == id }
             ?: throw IllegalArgumentException(
-                "Enum value for ${BoxEventStatus::class.simpleName} is not found by id: $dbCode"
+                "Enum value for ${BoxEventStatus::class.simpleName} is not found by id: $id"
             )
     }
 }

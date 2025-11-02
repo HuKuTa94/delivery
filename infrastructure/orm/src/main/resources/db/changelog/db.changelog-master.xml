@@ -233,51 +233,58 @@
                 referencedColumnNames="id"/>
     </changeSet>
 
-    <changeSet id="create_outbox_table" author="Nikita Koshelev">
+    <changeSet id="create_in_out_box_status_table" author="Nikita Koshelev">
         <preConditions onFail="MARK_RAN">
             <not>
-                <tableExists tableName="dlv_outbox"/>
+                <tableExists tableName="dlv_in_out_box_status"/>
             </not>
         </preConditions>
 
-        <createTable tableName="dlv_outbox">
-            <column name="id" type="uuid">
-                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_dlv_outbox"/>
+        <createTable tableName="dlv_in_out_box_status">
+            <column name="id" type="int">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_in_out_box_status"/>
             </column>
-            <column name="event_type" type="varchar(128)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="payload" type="text">
-                <constraints nullable="false"/>
-            </column>
-            <column name="created_at" type="timestamp">
-                <constraints nullable="false"/>
-            </column>
-            <column name="processed_at" type="timestamp">
-                <constraints nullable="true"/>
-            </column>
-            <column name="version" type="int">
-                <constraints nullable="false"/>
-            </column>
-            <column name="status" type="varchar(32)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="error_description" type="text">
-                <constraints nullable="true"/>
+            <column name="code" type="varchar(32)">
+                <constraints unique="true"/>
             </column>
         </createTable>
     </changeSet>
 
-    <changeSet id="create_inbox_table" author="Nikita Koshelev">
+    <changeSet id="insert_statuses_into_in_out_box_status_table" author="Nikita Koshelev">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT count(*) FROM dlv_in_out_box_status
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="dlv_in_out_box_status">
+            <column name="id" value="1"/>
+            <column name="code" value="TO_BE_PROCESSED"/>
+        </insert>
+        <insert tableName="dlv_in_out_box_status">
+            <column name="id" value="2"/>
+            <column name="code" value="SUCCESSFULLY"/>
+        </insert>
+        <insert tableName="dlv_in_out_box_status">
+            <column name="id" value="3"/>
+            <column name="code" value="CONVERSION_ERROR"/>
+        </insert>
+        <insert tableName="dlv_in_out_box_status">
+            <column name="id" value="4"/>
+            <column name="code" value="DELIVERY_ERROR"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="create_out_box_table" author="Nikita Koshelev">
         <preConditions onFail="MARK_RAN">
             <not>
-                <tableExists tableName="dlv_inbox"/>
+                <tableExists tableName="dlv_out_box"/>
             </not>
         </preConditions>
 
-        <createTable tableName="dlv_inbox">
+        <createTable tableName="dlv_out_box">
             <column name="id" type="uuid">
-                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_dlv_inbox"/>
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_dlv_out_box"/>
             </column>
             <column name="event_type" type="varchar(128)">
                 <constraints nullable="false"/>
@@ -294,13 +301,62 @@
             <column name="version" type="int">
                 <constraints nullable="false"/>
             </column>
-            <column name="status" type="varchar(32)">
+            <column name="status_id" type="int">
                 <constraints nullable="false"/>
             </column>
             <column name="error_description" type="text">
                 <constraints nullable="true"/>
             </column>
         </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="dlv_out_box"
+                baseColumnNames="status_id"
+                constraintName="fk_dlv_out_box_status_id"
+                referencedTableName="dlv_in_out_box_status"
+                referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="create_in_box_table" author="Nikita Koshelev">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="dlv_in_box"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="dlv_in_box">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_dlv_in_box"/>
+            </column>
+            <column name="event_type" type="varchar(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="payload" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="processed_at" type="timestamp">
+                <constraints nullable="true"/>
+            </column>
+            <column name="version" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="error_description" type="text">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="dlv_in_box"
+                baseColumnNames="status_id"
+                constraintName="fk_dlv_in_box_status_id"
+                referencedTableName="dlv_in_out_box_status"
+                referencedColumnNames="id"/>
     </changeSet>
 
 </databaseChangeLog>

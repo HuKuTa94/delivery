@@ -5,13 +5,13 @@ import jakarta.persistence.AttributeConverter
 import jakarta.persistence.Converter
 
 @Converter
-class BoxEventStatusConverter : AttributeConverter<BoxEventStatus, String> {
+class BoxEventStatusConverter : AttributeConverter<BoxEventStatus, Int> {
 
-    override fun convertToDatabaseColumn(attribute: BoxEventStatus): String {
-        return attribute.dbCode
+    override fun convertToDatabaseColumn(attribute: BoxEventStatus): Int {
+        return attribute.id
     }
 
-    override fun convertToEntityAttribute(dbData: String): BoxEventStatus {
+    override fun convertToEntityAttribute(dbData: Int): BoxEventStatus {
         return BoxEventStatus.from(dbData)
     }
 }

@@ -34,7 +34,7 @@ abstract class BoxEventJpaEntity {
     @Column(name = "version")
     var version: Int = 0
 
-    @Column(name = "status")
+    @Column(name = "status_id")
     @Convert(converter = BoxEventStatusConverter::class)
     var status: BoxEventStatus = BoxEventStatus.TO_BE_PROCESSED
 
