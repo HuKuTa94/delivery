@@ -16,9 +16,9 @@ dependencies {
     api(project(":api:scheduler"))
 
     // infrastructure adapters
-    api(project(":infrastructure:orm"))
     api(project(":infrastructure:grpc"))
     api(project(":infrastructure:kafka"))
+    api(project(":infrastructure:orm:spring-jpa"))
     api(project(":infrastructure:persistence:in-memory"))
 
     // frameworks

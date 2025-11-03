@@ -10,10 +10,9 @@ include("api:kafka")
 include("api:scheduler")
 
 // Out/Secondary/Driven adapters
-include("infrastructure:orm")
 include("infrastructure:grpc")
 include("infrastructure:kafka")
-include("infrastructure:orm:in-outbox")
+include("infrastructure:orm:spring-jpa")
 include("infrastructure:persistence:in-memory")
 
 // Configuration of whole application
