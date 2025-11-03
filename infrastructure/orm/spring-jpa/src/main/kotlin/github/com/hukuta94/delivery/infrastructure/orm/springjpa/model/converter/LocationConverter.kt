@@ -9,10 +9,12 @@ import jakarta.persistence.Converter
 class LocationConverter : AttributeConverter<Location, String> {
 
     override fun convertToDatabaseColumn(attribute: Location): String {
+        //TODO вынести общую логику в модуль orm:commons
         return "${attribute.x},${attribute.y}"
     }
 
     override fun convertToEntityAttribute(dbData: String): Location {
+        //TODO вынести общую логику в модуль orm:commons
         val coordinate = dbData.split(',')
         return Location.of(
             x = coordinate[0].toInt(),

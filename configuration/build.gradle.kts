@@ -18,6 +18,7 @@ dependencies {
     // infrastructure adapters
     api(project(":infrastructure:grpc"))
     api(project(":infrastructure:kafka"))
+    api(project(":infrastructure:orm:ktorm"))
     api(project(":infrastructure:orm:spring-jpa"))
     api(project(":infrastructure:persistence:in-memory"))
 
@@ -32,4 +33,8 @@ dependencies {
     // grpc
     implementation(platform(Libs.Grpc.bom))
     implementation(Libs.Grpc.kotlin_stub)
+
+    // ktorm
+    implementation(Libs.Ktorm.core)
+    implementation(Libs.Ktorm.support_postgresql)
 }

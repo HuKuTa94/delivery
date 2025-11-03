@@ -58,6 +58,7 @@ class Courier internal constructor(
             transport: Transport,
             location: Location,
             id: UUID = UUID.randomUUID(),
+            status: CourierStatus = CourierStatus.FREE,
         ): Courier {
             return Courier(
                 id = id,
@@ -65,7 +66,7 @@ class Courier internal constructor(
                 location = location,
                 transport = transport
             ).apply {
-                status = CourierStatus.FREE
+                this.status = status
             }
         }
     }

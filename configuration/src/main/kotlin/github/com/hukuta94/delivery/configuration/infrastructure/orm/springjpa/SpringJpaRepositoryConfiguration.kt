@@ -50,6 +50,7 @@ open class SpringJpaRepositoryConfiguration {
         eventSerializer = domainEventSerializer,
     )
 
+    //TODO вынести общую логику в модуль orm:commons
     @Bean
     open fun springOutboxEventMessageRelayJob(
         eventRepository: SpringJpaOutboxEventRepositoryAdapter,
@@ -70,6 +71,7 @@ open class SpringJpaRepositoryConfiguration {
         eventSerializer = integrationEventSerializer,
     )
 
+    //TODO вынести общую логику в модуль orm:commons
     @Bean
     open fun springInboxEventMessageRelayJob(
         eventRepository: SpringJpaInboxEventRepositoryAdapter,

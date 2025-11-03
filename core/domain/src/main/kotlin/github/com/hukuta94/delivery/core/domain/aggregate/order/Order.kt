@@ -36,12 +36,18 @@ class Order internal constructor(
     }
 
     companion object {
-        fun create(id: UUID, location: Location): Order {
+        fun create(
+            id: UUID,
+            location: Location,
+            status: OrderStatus = OrderStatus.CREATED,
+            courierId: UUID? = null,
+        ): Order {
             return Order(
                 id = id,
                 location = location,
             ).apply {
-                status = OrderStatus.CREATED
+                this.status = status
+                this.courierId = courierId
             }
         }
     }

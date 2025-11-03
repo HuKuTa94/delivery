@@ -8,7 +8,7 @@ import java.util.*
  * Class describes data of the Inbox/Outbox pattern event message.
  * It is used to increase reliability of processing incoming and outgoing events.
  */
-abstract class BoxEventMessage {
+open class BoxEventMessage {
 
     open lateinit var id: UUID
 

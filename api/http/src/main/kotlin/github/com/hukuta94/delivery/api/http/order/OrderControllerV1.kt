@@ -16,7 +16,7 @@ class OrderControllerV1(
     private val saveIntegrationEventUseCase: SaveIntegrationEventUseCase,
 ) {
 
-    @PostMapping("orders")
+    @PostMapping("orders/")
     fun createOrder(): ResponseEntity<Void> {
         val event = BasketConfirmedIntegrationDomainEvent(
             basketId = UUID.randomUUID(),
@@ -26,7 +26,7 @@ class OrderControllerV1(
         return ResponseEntity.status(HttpStatus.CREATED).build()
     }
 
-    @GetMapping("orders/active")
+    @GetMapping("orders/active/")
     fun getActiveOrders(): ResponseEntity<List<OrderResponse>> {
         val response = getNotCompletedOrdersQuery.execute()
         return ResponseEntity.ok(response.orders)

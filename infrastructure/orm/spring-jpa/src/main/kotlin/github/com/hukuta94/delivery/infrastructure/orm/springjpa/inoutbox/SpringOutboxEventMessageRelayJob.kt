@@ -6,6 +6,7 @@ import github.com.hukuta94.delivery.core.application.event.inoutbox.BoxEventMess
 import github.com.hukuta94.delivery.core.application.port.repository.event.BoxEventMessageRelayRepositoryPort
 import org.springframework.scheduling.annotation.Scheduled
 
+//TODO вынести общую логику в модуль orm:commons
 class SpringOutboxEventMessageRelayJob(
     eventRepository: BoxEventMessageRelayRepositoryPort,
     eventDeserializer: ApplicationEventDeserializer,

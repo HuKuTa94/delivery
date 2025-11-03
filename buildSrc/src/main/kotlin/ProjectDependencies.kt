@@ -114,6 +114,7 @@ object Libs {
     object Spring {
         private const val version = "3.3.9"
         const val kafka = "org.springframework.kafka:spring-kafka:$version"
+        const val tx = "org.springframework:spring-tx:6.2.12"
     }
     object SpringBoot {
         private const val version = "3.5.5"
@@ -152,5 +153,10 @@ object Libs {
     object Jackson {
         private const val version = "2.13.4"
         const val module_kotlin = "com.fasterxml.jackson.module:jackson-module-kotlin:$version"
+    }
+    object Ktorm {
+        private const val version = "4.1.1"
+        const val core = "org.ktorm:ktorm-core:$version"
+        const val support_postgresql = "org.ktorm:ktorm-support-postgresql:$version"
     }
 }
