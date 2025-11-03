@@ -17,7 +17,10 @@ class ApplicationPackageTest : StringSpec({
     }
 
     "application port package can depend on domain package" {
-        APPLICATION_PORT_PACKAGE onlyDependsOn DOMAIN_LAYER_PACKAGE
+        APPLICATION_PORT_PACKAGE onlyDependsOn packages(
+            DOMAIN_LAYER_PACKAGE,
+            APPLICATION_LAYER_PACKAGE,
+        )
     }
 
     "application query package can not depend on other packages" {

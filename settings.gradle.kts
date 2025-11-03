@@ -13,6 +13,7 @@ include("api:scheduler")
 include("infrastructure:orm")
 include("infrastructure:grpc")
 include("infrastructure:kafka")
+include("infrastructure:orm:in-outbox")
 include("infrastructure:persistence:in-memory")
 
 // Configuration of whole application

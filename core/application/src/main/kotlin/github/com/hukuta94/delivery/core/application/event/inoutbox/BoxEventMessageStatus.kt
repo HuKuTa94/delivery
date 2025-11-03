@@ -1,6 +1,6 @@
-package github.com.hukuta94.delivery.infrastructure.orm.model.entity.event
+package github.com.hukuta94.delivery.core.application.event.inoutbox
 
-enum class BoxEventStatus(
+enum class BoxEventMessageStatus(
     val id: Int,
 ) {
     /**
@@ -29,7 +29,7 @@ enum class BoxEventStatus(
         fun from(id: Int) = entries
             .firstOrNull { it.id == id }
             ?: throw IllegalArgumentException(
-                "Enum value for ${BoxEventStatus::class.simpleName} is not found by id: $id"
+                "Enum value for ${BoxEventMessageStatus::class.simpleName} is not found by id: $id"
             )
     }
 }
