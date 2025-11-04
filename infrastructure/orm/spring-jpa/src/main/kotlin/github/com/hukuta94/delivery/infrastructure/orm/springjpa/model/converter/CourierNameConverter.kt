@@ -1,7 +1,8 @@
 package github.com.hukuta94.delivery.infrastructure.orm.springjpa.model.converter
 
-import arrow.core.getOrElse
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.CourierName
+import github.com.hukuta94.delivery.infrastructure.orm.commons.fromDb
+import github.com.hukuta94.delivery.infrastructure.orm.commons.toDb
 import jakarta.persistence.AttributeConverter
 import jakarta.persistence.Converter
 
@@ -9,10 +10,10 @@ import jakarta.persistence.Converter
 class CourierNameConverter : AttributeConverter<CourierName, String> {
 
     override fun convertToDatabaseColumn(attribute: CourierName): String {
-        return attribute.value
+        return attribute.toDb()
     }
 
     override fun convertToEntityAttribute(dbData: String): CourierName {
-        return CourierName.of(dbData).getOrElse { error(it.message) }
+        return CourierName.fromDb(dbData)
     }
 }

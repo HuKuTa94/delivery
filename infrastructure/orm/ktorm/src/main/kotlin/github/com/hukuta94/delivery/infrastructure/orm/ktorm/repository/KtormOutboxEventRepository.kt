@@ -7,7 +7,6 @@ import github.com.hukuta94.delivery.core.application.port.repository.event.BoxEv
 import github.com.hukuta94.delivery.core.application.port.repository.event.OutboxEventRepositoryPort
 import github.com.hukuta94.delivery.core.domain.DomainEvent
 import github.com.hukuta94.delivery.infrastructure.orm.ktorm.table.BoxEventMessageStatusTable
-import github.com.hukuta94.delivery.infrastructure.orm.ktorm.table.InboxEventMessageTable
 import github.com.hukuta94.delivery.infrastructure.orm.ktorm.table.OutboxEventMessageTable
 import org.ktorm.database.Database
 import org.ktorm.dsl.*

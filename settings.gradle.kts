@@ -12,6 +12,7 @@ include("api:scheduler")
 // Out/Secondary/Driven adapters
 include("infrastructure:grpc")
 include("infrastructure:kafka")
+include("infrastructure:orm:commons")
 include("infrastructure:orm:ktorm")
 include("infrastructure:orm:spring-jpa")
 include("infrastructure:persistence:in-memory")

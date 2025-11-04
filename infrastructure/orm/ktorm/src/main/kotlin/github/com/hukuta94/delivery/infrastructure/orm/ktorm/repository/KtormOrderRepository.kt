@@ -1,10 +1,11 @@
 package github.com.hukuta94.delivery.infrastructure.orm.ktorm.repository
 
-import arrow.core.getOrElse
 import github.com.hukuta94.delivery.core.application.port.repository.domain.OrderRepositoryPort
 import github.com.hukuta94.delivery.core.domain.aggregate.order.Order
 import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderStatus
 import github.com.hukuta94.delivery.core.domain.common.Location
+import github.com.hukuta94.delivery.infrastructure.orm.commons.fromDb
+import github.com.hukuta94.delivery.infrastructure.orm.commons.toDb
 import github.com.hukuta94.delivery.infrastructure.orm.ktorm.table.CourierTable
 import github.com.hukuta94.delivery.infrastructure.orm.ktorm.table.OrderStatusTable
 import github.com.hukuta94.delivery.infrastructure.orm.ktorm.table.OrderTable
@@ -20,7 +21,7 @@ class KtormOrderRepository(
         database.insert(OrderTable) {
             set(it.id, aggregate.id)
             set(it.courierId, aggregate.courierId)
-            set(it.location, aggregate.location.stringValue())
+            set(it.location, aggregate.location.toDb())
             set(it.statusId, aggregate.status.id)
         }
     }
@@ -28,7 +29,7 @@ class KtormOrderRepository(
     override fun update(aggregate: Order) {
         database.update(OrderTable) {
             set(it.courierId, aggregate.courierId)
-            set(it.location, aggregate.location.stringValue())
+            set(it.location, aggregate.location.toDb())
             set(it.statusId, aggregate.status.id)
             where { it.id eq aggregate.id }
         }
@@ -81,14 +82,7 @@ class KtormOrderRepository(
         Order.create(
             id = row[OrderTable.id]!!,
             courierId = row[OrderTable.courierId],
-            location = row[OrderTable.location]!!.let { rawLocation ->
-                //TODO вынести общую логику в модуль orm:commons
-                val coordinate = rawLocation.split(',')
-                Location.of(
-                    x = coordinate[0].toInt(),
-                    y = coordinate[1].toInt(),
-                ).getOrElse { error(it.message) }
-            },
+            location = Location.fromDb(row[CourierTable.location]!!),
             status = OrderStatus.from(row[OrderStatusTable.id]!!),
         )
 }

@@ -17,9 +17,6 @@ data class Location private constructor(
         return abs(xDelta) + abs(yDelta)
     }
 
-    //TODO вынести общую логику в модуль orm:commons
-    fun stringValue() = "$x,$y"
-
     companion object {
 
         fun of(x: Int, y: Int) = either {
