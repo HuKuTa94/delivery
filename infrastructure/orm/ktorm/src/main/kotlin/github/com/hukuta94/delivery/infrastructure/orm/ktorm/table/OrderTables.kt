@@ -11,3 +11,5 @@ object OrderTable : Table<Nothing>("orders") {
     val courierId = uuid("courier_id")
     val location = varchar("location")
 }
+
+object OrderStatusTable : EnumTable("order_statuses")

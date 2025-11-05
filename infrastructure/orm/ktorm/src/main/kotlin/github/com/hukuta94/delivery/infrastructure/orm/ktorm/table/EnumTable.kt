@@ -4,7 +4,7 @@ import org.ktorm.schema.Table
 import org.ktorm.schema.int
 import org.ktorm.schema.varchar
 
-object CourierTransportTable : Table<Nothing>("courier_transports") {
+abstract class EnumTable(tableName: String) : Table<Nothing>(tableName)  {
     val id = int("id").primaryKey()
     val code = varchar("code")
 }

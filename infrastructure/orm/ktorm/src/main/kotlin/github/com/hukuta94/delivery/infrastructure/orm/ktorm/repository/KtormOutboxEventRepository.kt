@@ -1,81 +1,35 @@
 package github.com.hukuta94.delivery.infrastructure.orm.ktorm.repository
 
 import github.com.hukuta94.delivery.core.application.event.ApplicationEventSerializer
-import github.com.hukuta94.delivery.core.application.event.inoutbox.BoxEventMessage
 import github.com.hukuta94.delivery.core.application.event.inoutbox.BoxEventMessageStatus
-import github.com.hukuta94.delivery.core.application.port.repository.event.BoxEventMessageRelayRepositoryPort
 import github.com.hukuta94.delivery.core.application.port.repository.event.OutboxEventRepositoryPort
 import github.com.hukuta94.delivery.core.domain.DomainEvent
-import github.com.hukuta94.delivery.infrastructure.orm.ktorm.notNull
-import github.com.hukuta94.delivery.infrastructure.orm.ktorm.table.BoxEventMessageStatusTable
-import github.com.hukuta94.delivery.infrastructure.orm.ktorm.table.InboxEventMessageTable
 import github.com.hukuta94.delivery.infrastructure.orm.ktorm.table.OutboxEventMessageTable
 import org.ktorm.database.Database
-import org.ktorm.dsl.*
+import org.ktorm.dsl.batchInsert
 import java.time.LocalDateTime
 
 class KtormOutboxEventRepository(
-    private val database: Database,
-    private val eventSerializer: ApplicationEventSerializer,
-) : OutboxEventRepositoryPort, BoxEventMessageRelayRepositoryPort {
+    database: Database,
+    eventSerializer: ApplicationEventSerializer,
+) : OutboxEventRepositoryPort, KtormBoxEventRepository(
+    database,
+    eventSerializer,
+    OutboxEventMessageTable
+) {
 
     override fun saveDomainEvents(domainEvents: Collection<DomainEvent>) {
-        database.batchInsert(OutboxEventMessageTable) {
+        database.batchInsert(table) {
             domainEvents.forEach { event ->
                 item {
-                    set(it.id, event.eventId)
-                    set(it.version, 0)
-                    set(it.statusId, BoxEventMessageStatus.TO_BE_PROCESSED.id)
-                    set(it.createdAt, LocalDateTime.now())
-                    set(it.eventType, event.javaClass.name)
-                    set(it.payload, eventSerializer.serialize(event))
+                    set(table.id, event.eventId)
+                    set(table.version, 0)
+                    set(table.statusId, BoxEventMessageStatus.TO_BE_PROCESSED.id)
+                    set(table.createdAt, LocalDateTime.now())
+                    set(table.eventType, event.javaClass.name)
+                    set(table.payload, eventSerializer.serialize(event))
                 }
             }
         }
     }
-
-    override fun saveAll(messages: List<BoxEventMessage>) {
-        database.batchUpdate(OutboxEventMessageTable) {
-            messages.forEach { message ->
-                item {
-                    set(it.version, message.version)
-                    set(it.statusId, message.status.id)
-                    set(it.eventType, message.eventType.name)
-                    set(it.payload, message.payload)
-                    set(it.errorDescription, message.errorDescription)
-                    set(it.createdAt, message.createdAt)
-                    set(it.processedAt, message.processedAt)
-                    where { it.id eq message.id }
-                }
-            }
-        }
-    }
-
-    override fun findMessagesInStatuses(statuses: Set<BoxEventMessageStatus>): List<BoxEventMessage> {
-        if (statuses.isEmpty()) return emptyList()
-
-        val codes = statuses.map { it.name }
-
-        return database
-            .from(OutboxEventMessageTable)
-            .innerJoin(
-                BoxEventMessageStatusTable,
-                on = OutboxEventMessageTable.statusId eq BoxEventMessageStatusTable.id
-            )
-            .select()
-            .where { BoxEventMessageStatusTable.code inList codes }
-            .map { rowToMessage(it) }
-    }
-
-    private fun rowToMessage(row: QueryRowSet): BoxEventMessage =
-        BoxEventMessage().apply {
-            id = row.notNull(InboxEventMessageTable.id)
-            status = BoxEventMessageStatus.valueOf(row.notNull(BoxEventMessageStatusTable.code))
-            version = row.notNull(InboxEventMessageTable.version)
-            payload = row.notNull(InboxEventMessageTable.payload)
-            eventType = Class.forName(row.notNull(InboxEventMessageTable.eventType)) as Class<out DomainEvent>
-            createdAt = row.notNull(InboxEventMessageTable.createdAt)
-            processedAt = row[InboxEventMessageTable.processedAt]
-            errorDescription = row[InboxEventMessageTable.errorDescription]
-        }
 }

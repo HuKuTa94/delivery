@@ -7,7 +7,6 @@ import github.com.hukuta94.delivery.core.domain.common.Location
 import github.com.hukuta94.delivery.infrastructure.orm.commons.fromDb
 import github.com.hukuta94.delivery.infrastructure.orm.commons.toDb
 import github.com.hukuta94.delivery.infrastructure.orm.ktorm.notNull
-import github.com.hukuta94.delivery.infrastructure.orm.ktorm.table.CourierTable
 import github.com.hukuta94.delivery.infrastructure.orm.ktorm.table.OrderStatusTable
 import github.com.hukuta94.delivery.infrastructure.orm.ktorm.table.OrderTable
 import org.ktorm.database.Database
@@ -77,7 +76,7 @@ class KtormOrderRepository(
             .innerJoin(OrderStatusTable, on = OrderTable.statusId eq OrderStatusTable.id)
             .select()
             .where { OrderStatusTable.code notEq OrderStatus.COMPLETED.name }
-            .map { toOrder(it) }
+            .mapNotNull { toOrder(it) }
 
     private fun findByStatus(status: OrderStatus): Collection<Order> =
         database
@@ -85,13 +84,13 @@ class KtormOrderRepository(
             .innerJoin(OrderStatusTable, on = OrderTable.statusId eq OrderStatusTable.id)
             .select()
             .where { OrderStatusTable.code eq status.name }
-            .map { toOrder(it) }
+            .mapNotNull { toOrder(it) }
 
     private fun toOrder(row: QueryRowSet): Order =
         Order.create(
             id = row.notNull(OrderTable.id),
             status = OrderStatus.from(row.notNull(OrderStatusTable.id)),
-            location = Location.fromDb(row.notNull(CourierTable.location)),
+            location = Location.fromDb(row.notNull(OrderTable.location)),
             courierId = row[OrderTable.courierId]
         )
 }

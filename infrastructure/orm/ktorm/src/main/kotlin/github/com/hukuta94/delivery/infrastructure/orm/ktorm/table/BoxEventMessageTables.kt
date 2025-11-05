@@ -6,7 +6,7 @@ import org.ktorm.schema.int
 import org.ktorm.schema.uuid
 import org.ktorm.schema.varchar
 
-object OutboxEventMessageTable : Table<Nothing>("out_box") {
+abstract class BoxEventMessageTable(tableName: String) : Table<Nothing>(tableName) {
     val id = uuid("id").primaryKey()
     val eventType = varchar("event_type")
     val payload = varchar("payload")
@@ -16,3 +16,7 @@ object OutboxEventMessageTable : Table<Nothing>("out_box") {
     val statusId = int("status_id")
     val errorDescription = varchar("error_description")
 }
+
+object InboxEventMessageTable : BoxEventMessageTable("in_box")
+object OutboxEventMessageTable : BoxEventMessageTable("out_box")
+object BoxEventMessageStatusTable : EnumTable("in_out_box_status")

@@ -12,3 +12,6 @@ object CourierTable : Table<Nothing>("couriers") {
     val statusId = int("status_id")
     val transportId = int("transport_id")
 }
+
+object CourierStatusTable : EnumTable("courier_statuses")
+object CourierTransportTable : EnumTable("courier_transports")
