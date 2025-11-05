@@ -8,7 +8,7 @@ import github.com.hukuta94.delivery.core.domain.aggregate.courier.Transport
 import github.com.hukuta94.delivery.core.domain.common.Location
 import github.com.hukuta94.delivery.infrastructure.orm.commons.fromDb
 import github.com.hukuta94.delivery.infrastructure.orm.commons.toDb
-import github.com.hukuta94.delivery.infrastructure.orm.ktorm.require
+import github.com.hukuta94.delivery.infrastructure.orm.ktorm.notNull
 import github.com.hukuta94.delivery.infrastructure.orm.ktorm.table.CourierStatusTable
 import github.com.hukuta94.delivery.infrastructure.orm.ktorm.table.CourierTransportTable
 import github.com.hukuta94.delivery.infrastructure.orm.ktorm.table.CourierTable
@@ -90,10 +90,10 @@ class KtormCourierRepository(
             .totalRecordsInAllPages > 0
 
     private fun toCourier(row: QueryRowSet) = Courier.create(
-        id = row.require(CourierTable.id),
-        name = CourierName.fromDb(row.require(CourierTable.name)),
-        location = Location.fromDb(row.require(CourierTable.location)),
-        status = CourierStatus.from(row.require(CourierStatusTable.id)),
-        transport = Transport.from(row.require(CourierTransportTable.id)),
+        id = row.notNull(CourierTable.id),
+        name = CourierName.fromDb(row.notNull(CourierTable.name)),
+        status = CourierStatus.from(row.notNull(CourierStatusTable.id)),
+        location = Location.fromDb(row.notNull(CourierTable.location)),
+        transport = Transport.from(row.notNull(CourierTransportTable.id)),
     )
 }

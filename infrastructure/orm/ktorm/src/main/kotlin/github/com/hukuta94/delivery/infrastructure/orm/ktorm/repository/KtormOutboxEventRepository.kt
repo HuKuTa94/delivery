@@ -6,7 +6,9 @@ import github.com.hukuta94.delivery.core.application.event.inoutbox.BoxEventMess
 import github.com.hukuta94.delivery.core.application.port.repository.event.BoxEventMessageRelayRepositoryPort
 import github.com.hukuta94.delivery.core.application.port.repository.event.OutboxEventRepositoryPort
 import github.com.hukuta94.delivery.core.domain.DomainEvent
+import github.com.hukuta94.delivery.infrastructure.orm.ktorm.notNull
 import github.com.hukuta94.delivery.infrastructure.orm.ktorm.table.BoxEventMessageStatusTable
+import github.com.hukuta94.delivery.infrastructure.orm.ktorm.table.InboxEventMessageTable
 import github.com.hukuta94.delivery.infrastructure.orm.ktorm.table.OutboxEventMessageTable
 import org.ktorm.database.Database
 import org.ktorm.dsl.*
@@ -67,13 +69,13 @@ class KtormOutboxEventRepository(
 
     private fun rowToMessage(row: QueryRowSet): BoxEventMessage =
         BoxEventMessage().apply {
-            id = row[OutboxEventMessageTable.id]!!
-            eventType = Class.forName(row[OutboxEventMessageTable.eventType]!!) as Class<out DomainEvent>
-            payload = row[OutboxEventMessageTable.payload]!!
-            status = BoxEventMessageStatus.valueOf(row[BoxEventMessageStatusTable.code]!!)
-            errorDescription = row[OutboxEventMessageTable.errorDescription]
-            createdAt = row[OutboxEventMessageTable.createdAt]!!
-            processedAt = row[OutboxEventMessageTable.processedAt]
-            version = row[OutboxEventMessageTable.version]!!
+            id = row.notNull(InboxEventMessageTable.id)
+            status = BoxEventMessageStatus.valueOf(row.notNull(BoxEventMessageStatusTable.code))
+            version = row.notNull(InboxEventMessageTable.version)
+            payload = row.notNull(InboxEventMessageTable.payload)
+            eventType = Class.forName(row.notNull(InboxEventMessageTable.eventType)) as Class<out DomainEvent>
+            createdAt = row.notNull(InboxEventMessageTable.createdAt)
+            processedAt = row[InboxEventMessageTable.processedAt]
+            errorDescription = row[InboxEventMessageTable.errorDescription]
         }
 }

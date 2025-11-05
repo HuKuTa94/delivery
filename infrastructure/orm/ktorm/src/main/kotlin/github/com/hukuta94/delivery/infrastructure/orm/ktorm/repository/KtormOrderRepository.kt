@@ -6,7 +6,7 @@ import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderStatus
 import github.com.hukuta94.delivery.core.domain.common.Location
 import github.com.hukuta94.delivery.infrastructure.orm.commons.fromDb
 import github.com.hukuta94.delivery.infrastructure.orm.commons.toDb
-import github.com.hukuta94.delivery.infrastructure.orm.ktorm.require
+import github.com.hukuta94.delivery.infrastructure.orm.ktorm.notNull
 import github.com.hukuta94.delivery.infrastructure.orm.ktorm.table.CourierTable
 import github.com.hukuta94.delivery.infrastructure.orm.ktorm.table.OrderStatusTable
 import github.com.hukuta94.delivery.infrastructure.orm.ktorm.table.OrderTable
@@ -89,9 +89,9 @@ class KtormOrderRepository(
 
     private fun toOrder(row: QueryRowSet): Order =
         Order.create(
-            id = row.require(OrderTable.id),
-            courierId = row.require(OrderTable.courierId),
-            location = Location.fromDb(row.require(CourierTable.location)),
-            status = OrderStatus.from(row.require(OrderStatusTable.id)),
+            id = row.notNull(OrderTable.id),
+            status = OrderStatus.from(row.notNull(OrderStatusTable.id)),
+            location = Location.fromDb(row.notNull(CourierTable.location)),
+            courierId = row[OrderTable.courierId]
         )
 }

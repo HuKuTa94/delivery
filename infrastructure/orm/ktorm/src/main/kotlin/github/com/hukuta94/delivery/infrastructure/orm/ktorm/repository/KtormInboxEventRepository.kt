@@ -6,6 +6,7 @@ import github.com.hukuta94.delivery.core.application.event.inoutbox.BoxEventMess
 import github.com.hukuta94.delivery.core.application.port.repository.event.BoxEventMessageRelayRepositoryPort
 import github.com.hukuta94.delivery.core.application.port.repository.event.InboxEventRepositoryPort
 import github.com.hukuta94.delivery.core.domain.DomainEvent
+import github.com.hukuta94.delivery.infrastructure.orm.ktorm.notNull
 import github.com.hukuta94.delivery.infrastructure.orm.ktorm.table.BoxEventMessageStatusTable
 import github.com.hukuta94.delivery.infrastructure.orm.ktorm.table.InboxEventMessageTable
 import org.ktorm.database.Database
@@ -76,14 +77,14 @@ class KtormInboxEventRepository(
 
     private fun rowToMessage(row: QueryRowSet): BoxEventMessage =
         BoxEventMessage().apply {
-            id = row[InboxEventMessageTable.id]!!
-            eventType = Class.forName(row[InboxEventMessageTable.eventType]!!) as Class<out DomainEvent>
-            payload = row[InboxEventMessageTable.payload]!!
-            status = BoxEventMessageStatus.valueOf(row[BoxEventMessageStatusTable.code]!!)
-            errorDescription = row[InboxEventMessageTable.errorDescription]
-            createdAt = row[InboxEventMessageTable.createdAt]!!
+            id = row.notNull(InboxEventMessageTable.id)
+            status = BoxEventMessageStatus.valueOf(row.notNull(BoxEventMessageStatusTable.code))
+            version = row.notNull(InboxEventMessageTable.version)
+            payload = row.notNull(InboxEventMessageTable.payload)
+            eventType = Class.forName(row.notNull(InboxEventMessageTable.eventType)) as Class<out DomainEvent>
+            createdAt = row.notNull(InboxEventMessageTable.createdAt)
             processedAt = row[InboxEventMessageTable.processedAt]
-            version = row[InboxEventMessageTable.version]!!
+            errorDescription = row[InboxEventMessageTable.errorDescription]
         }
 
     companion object {

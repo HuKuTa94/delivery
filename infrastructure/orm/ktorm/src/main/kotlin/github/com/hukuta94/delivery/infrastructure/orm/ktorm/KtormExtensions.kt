@@ -4,7 +4,7 @@ import org.ktorm.dsl.QueryRowSet
 import org.ktorm.schema.Column
 
 /**
- * Extracts non-nullable data from [QueryRowSet] otherwise raises error
+ * Extracts not nullable data from [QueryRowSet] otherwise raises error
  */
-inline fun <reified T : Any> QueryRowSet.require(column: Column<T>): T =
+inline fun <reified T : Any> QueryRowSet.notNull(column: Column<T>): T =
     this[column] ?: error("Column ${column.name} is null but expected ${T::class.simpleName}")
