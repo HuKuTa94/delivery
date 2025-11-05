@@ -1,7 +1,7 @@
 package github.com.hukuta94.delivery.infrastructure.orm.springjpa.model.converter
 
 import github.com.hukuta94.delivery.core.domain.common.Location
-import github.com.hukuta94.delivery.infrastructure.orm.commons.fromDb
+import github.com.hukuta94.delivery.infrastructure.orm.commons.toLocation
 import github.com.hukuta94.delivery.infrastructure.orm.commons.toDb
 import jakarta.persistence.AttributeConverter
 import jakarta.persistence.Converter
@@ -14,6 +14,6 @@ class LocationConverter : AttributeConverter<Location, String> {
     }
 
     override fun convertToEntityAttribute(dbData: String): Location {
-        return Location.fromDb(dbData)
+        return dbData.toLocation()
     }
 }

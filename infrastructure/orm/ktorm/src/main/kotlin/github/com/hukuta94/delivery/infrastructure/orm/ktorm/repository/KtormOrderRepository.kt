@@ -3,8 +3,7 @@ package github.com.hukuta94.delivery.infrastructure.orm.ktorm.repository
 import github.com.hukuta94.delivery.core.application.port.repository.domain.OrderRepositoryPort
 import github.com.hukuta94.delivery.core.domain.aggregate.order.Order
 import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderStatus
-import github.com.hukuta94.delivery.core.domain.common.Location
-import github.com.hukuta94.delivery.infrastructure.orm.commons.fromDb
+import github.com.hukuta94.delivery.infrastructure.orm.commons.toLocation
 import github.com.hukuta94.delivery.infrastructure.orm.commons.toDb
 import github.com.hukuta94.delivery.infrastructure.orm.ktorm.notNull
 import github.com.hukuta94.delivery.infrastructure.orm.ktorm.table.OrderStatusTable
@@ -90,7 +89,7 @@ class KtormOrderRepository(
         Order.create(
             id = row.notNull(OrderTable.id),
             status = OrderStatus.from(row.notNull(OrderStatusTable.id)),
-            location = Location.fromDb(row.notNull(OrderTable.location)),
+            location = row.notNull(OrderTable.location).toLocation(),
             courierId = row[OrderTable.courierId]
         )
 }
