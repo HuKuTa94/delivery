@@ -6,6 +6,7 @@ import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderStatus
 import github.com.hukuta94.delivery.core.domain.common.Location
 import github.com.hukuta94.delivery.infrastructure.orm.commons.fromDb
 import github.com.hukuta94.delivery.infrastructure.orm.commons.toDb
+import github.com.hukuta94.delivery.infrastructure.orm.ktorm.require
 import github.com.hukuta94.delivery.infrastructure.orm.ktorm.table.CourierTable
 import github.com.hukuta94.delivery.infrastructure.orm.ktorm.table.OrderStatusTable
 import github.com.hukuta94.delivery.infrastructure.orm.ktorm.table.OrderTable
@@ -36,8 +37,16 @@ class KtormOrderRepository(
     }
 
     override fun update(aggregates: Collection<Order>) {
-        //TODO batchUpdate
-        aggregates.forEach { update(it) }
+        database.batchUpdate(OrderTable) {
+            aggregates.forEach { aggregate ->
+                item {
+                    set(it.courierId, aggregate.courierId)
+                    set(it.location, aggregate.location.toDb())
+                    set(it.statusId, aggregate.status.id)
+                    where { it.id eq aggregate.id }
+                }
+            }
+        }
     }
 
     override fun getById(id: UUID): Order =
@@ -80,9 +89,9 @@ class KtormOrderRepository(
 
     private fun toOrder(row: QueryRowSet): Order =
         Order.create(
-            id = row[OrderTable.id]!!,
-            courierId = row[OrderTable.courierId],
-            location = Location.fromDb(row[CourierTable.location]!!),
-            status = OrderStatus.from(row[OrderStatusTable.id]!!),
+            id = row.require(OrderTable.id),
+            courierId = row.require(OrderTable.courierId),
+            location = Location.fromDb(row.require(CourierTable.location)),
+            status = OrderStatus.from(row.require(OrderStatusTable.id)),
         )
 }

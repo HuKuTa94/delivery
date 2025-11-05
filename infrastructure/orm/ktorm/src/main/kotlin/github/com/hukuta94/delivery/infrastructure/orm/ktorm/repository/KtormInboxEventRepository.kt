@@ -4,24 +4,14 @@ import github.com.hukuta94.delivery.core.application.event.ApplicationEventSeria
 import github.com.hukuta94.delivery.core.application.event.inoutbox.BoxEventMessage
 import github.com.hukuta94.delivery.core.application.event.inoutbox.BoxEventMessageStatus
 import github.com.hukuta94.delivery.core.application.port.repository.event.BoxEventMessageRelayRepositoryPort
-import org.slf4j.LoggerFactory
 import github.com.hukuta94.delivery.core.application.port.repository.event.InboxEventRepositoryPort
 import github.com.hukuta94.delivery.core.domain.DomainEvent
 import github.com.hukuta94.delivery.infrastructure.orm.ktorm.table.BoxEventMessageStatusTable
 import github.com.hukuta94.delivery.infrastructure.orm.ktorm.table.InboxEventMessageTable
 import org.ktorm.database.Database
-import org.ktorm.dsl.QueryRowSet
-import org.ktorm.dsl.eq
-import org.ktorm.dsl.from
-import org.ktorm.dsl.inList
-import org.ktorm.dsl.innerJoin
-import org.ktorm.dsl.insert
-import org.ktorm.dsl.map
-import org.ktorm.dsl.select
-import org.ktorm.dsl.update
-import org.ktorm.dsl.where
+import org.ktorm.dsl.*
+import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
-import kotlin.collections.forEach
 
 class KtormInboxEventRepository(
     private val database: Database,
@@ -52,16 +42,9 @@ class KtormInboxEventRepository(
     }
 
     override fun saveAll(messages: List<BoxEventMessage>) {
-        messages.forEach { message ->
-            val exists = database
-                .from(InboxEventMessageTable)
-                .select(InboxEventMessageTable.id)
-                .where { InboxEventMessageTable.id eq message.id }
-                .totalRecordsInAllPages > 0
-
-            if (exists) {
-                //TODO batchUpdate
-                database.update(InboxEventMessageTable) {
+        database.batchUpdate(InboxEventMessageTable) {
+            messages.forEach { message ->
+                item {
                     set(it.version, message.version)
                     set(it.statusId, message.status.id)
                     set(it.eventType, message.eventType.name)
@@ -70,18 +53,6 @@ class KtormInboxEventRepository(
                     set(it.createdAt, message.createdAt)
                     set(it.processedAt, message.processedAt)
                     where { it.id eq message.id }
-                }
-            } else {
-                //TODO batchInsert
-                database.insert(InboxEventMessageTable) {
-                    set(it.id, message.id)
-                    set(it.version, message.version)
-                    set(it.statusId, message.status.id)
-                    set(it.eventType, message.eventType.name)
-                    set(it.payload, message.payload)
-                    set(it.errorDescription, message.errorDescription)
-                    set(it.createdAt, message.createdAt)
-                    set(it.processedAt, message.processedAt)
                 }
             }
         }

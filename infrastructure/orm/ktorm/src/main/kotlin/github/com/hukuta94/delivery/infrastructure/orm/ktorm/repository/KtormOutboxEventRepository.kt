@@ -18,30 +18,24 @@ class KtormOutboxEventRepository(
 ) : OutboxEventRepositoryPort, BoxEventMessageRelayRepositoryPort {
 
     override fun saveDomainEvents(domainEvents: Collection<DomainEvent>) {
-        //TODO batchUpdate
-        domainEvents.forEach { event ->
-            database.insert(OutboxEventMessageTable) {
-                set(it.id, event.eventId)
-                set(it.version, 0)
-                set(it.statusId, BoxEventMessageStatus.TO_BE_PROCESSED.id)
-                set(it.createdAt, LocalDateTime.now())
-                set(it.eventType, event.javaClass.name)
-                set(it.payload, eventSerializer.serialize(event))
+        database.batchInsert(OutboxEventMessageTable) {
+            domainEvents.forEach { event ->
+                item {
+                    set(it.id, event.eventId)
+                    set(it.version, 0)
+                    set(it.statusId, BoxEventMessageStatus.TO_BE_PROCESSED.id)
+                    set(it.createdAt, LocalDateTime.now())
+                    set(it.eventType, event.javaClass.name)
+                    set(it.payload, eventSerializer.serialize(event))
+                }
             }
         }
     }
 
     override fun saveAll(messages: List<BoxEventMessage>) {
-        messages.forEach { message ->
-            val exists = database
-                .from(OutboxEventMessageTable)
-                .select(OutboxEventMessageTable.id)
-                .where { OutboxEventMessageTable.id eq message.id }
-                .totalRecordsInAllPages > 0
-
-            if (exists) {
-                //TODO batchUpdate
-                database.update(OutboxEventMessageTable) {
+        database.batchUpdate(OutboxEventMessageTable) {
+            messages.forEach { message ->
+                item {
                     set(it.version, message.version)
                     set(it.statusId, message.status.id)
                     set(it.eventType, message.eventType.name)
@@ -50,18 +44,6 @@ class KtormOutboxEventRepository(
                     set(it.createdAt, message.createdAt)
                     set(it.processedAt, message.processedAt)
                     where { it.id eq message.id }
-                }
-            } else {
-                //TODO batchInsert
-                database.insert(OutboxEventMessageTable) {
-                    set(it.id, message.id)
-                    set(it.version, message.version)
-                    set(it.statusId, message.status.id)
-                    set(it.eventType, message.eventType.name)
-                    set(it.payload, message.payload)
-                    set(it.errorDescription, message.errorDescription)
-                    set(it.createdAt, message.createdAt)
-                    set(it.processedAt, message.processedAt)
                 }
             }
         }
