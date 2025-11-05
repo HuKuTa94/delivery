@@ -8,6 +8,8 @@ import github.com.hukuta94.delivery.core.application.port.repository.domain.Cour
 import github.com.hukuta94.delivery.core.application.port.repository.domain.OrderRepositoryPort
 import github.com.hukuta94.delivery.core.application.query.courier.GetBusyCouriersQuery
 import github.com.hukuta94.delivery.core.application.query.order.GetNotCompletedOrdersQuery
+import github.com.hukuta94.delivery.infrastructure.orm.commons.InboxEventMessageRelayJob
+import github.com.hukuta94.delivery.infrastructure.orm.commons.OutboxEventMessageRelayJob
 import github.com.hukuta94.delivery.infrastructure.orm.ktorm.KtormUnitOfWork
 import github.com.hukuta94.delivery.infrastructure.orm.ktorm.query.KtormGetBusyCouriersQuery
 import github.com.hukuta94.delivery.infrastructure.orm.ktorm.query.KtormGetNotCompletedOrdersQuery
@@ -15,8 +17,6 @@ import github.com.hukuta94.delivery.infrastructure.orm.ktorm.repository.KtormCou
 import github.com.hukuta94.delivery.infrastructure.orm.ktorm.repository.KtormInboxEventRepository
 import github.com.hukuta94.delivery.infrastructure.orm.ktorm.repository.KtormOrderRepository
 import github.com.hukuta94.delivery.infrastructure.orm.ktorm.repository.KtormOutboxEventRepository
-import github.com.hukuta94.delivery.infrastructure.orm.springjpa.inoutbox.SpringInboxEventMessageRelayJob
-import github.com.hukuta94.delivery.infrastructure.orm.springjpa.inoutbox.SpringOutboxEventMessageRelayJob
 import org.ktorm.database.Database
 import org.ktorm.support.postgresql.PostgreSqlDialect
 import org.springframework.context.annotation.Bean
@@ -67,25 +67,23 @@ open class KtormOrmConfiguration {
         eventSerializer = eventSerializer,
     )
 
-    //TODO вынести общую логику в модуль orm:commons
     @Bean
-    open fun springOutboxEventMessageRelayJob(
+    open fun outboxEventMessageRelayJob(
         eventRepository: KtormOutboxEventRepository,
         eventDeserializer: ApplicationEventDeserializer,
         eventPublisher: ApplicationEventPublisher,
-    ) = SpringOutboxEventMessageRelayJob(
+    ) = OutboxEventMessageRelayJob(
         eventRepository = eventRepository,
         eventDeserializer = eventDeserializer,
         eventPublisher = eventPublisher,
     )
 
-    //TODO вынести общую логику в модуль orm:commons
     @Bean
-    open fun springInboxEventMessageRelayJob(
+    open fun inboxEventMessageRelayJob(
         eventRepository: KtormInboxEventRepository,
         eventDeserializer: ApplicationEventDeserializer,
         eventPublisher: ApplicationEventPublisher,
-    ) = SpringInboxEventMessageRelayJob(
+    ) = InboxEventMessageRelayJob(
         eventRepository = eventRepository,
         eventDeserializer = eventDeserializer,
         eventPublisher = eventPublisher,

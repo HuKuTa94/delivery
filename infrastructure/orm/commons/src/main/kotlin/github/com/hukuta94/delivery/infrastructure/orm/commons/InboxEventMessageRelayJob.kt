@@ -1,4 +1,4 @@
-package github.com.hukuta94.delivery.infrastructure.orm.springjpa.inoutbox
+package github.com.hukuta94.delivery.infrastructure.orm.commons
 
 import github.com.hukuta94.delivery.core.application.event.ApplicationEventDeserializer
 import github.com.hukuta94.delivery.core.application.event.ApplicationEventPublisher
@@ -6,8 +6,7 @@ import github.com.hukuta94.delivery.core.application.event.inoutbox.BoxEventMess
 import github.com.hukuta94.delivery.core.application.port.repository.event.BoxEventMessageRelayRepositoryPort
 import org.springframework.scheduling.annotation.Scheduled
 
-//TODO вынести общую логику в модуль orm:commons
-class SpringOutboxEventMessageRelayJob(
+class InboxEventMessageRelayJob(
     eventRepository: BoxEventMessageRelayRepositoryPort,
     eventDeserializer: ApplicationEventDeserializer,
     eventPublisher: ApplicationEventPublisher,
@@ -18,7 +17,7 @@ class SpringOutboxEventMessageRelayJob(
 ) {
     //TODO Вынести все магические числа, а так же количество выгружаемых outbox сообщений за раз, в файл конфигурации
     @Scheduled(fixedDelay = 5000)
-    fun pullMessagesFromOutbox() {
+    fun pullMessagesFromInbox() {
         execute()
     }
 }

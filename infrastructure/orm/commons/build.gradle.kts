@@ -14,4 +14,7 @@ dependencies {
 
     testImplementation(testFixtures(project(":core:application")))
     testFixturesImplementation(testFixtures(project(":core:application")))
+
+    // spring context
+    implementation(Libs.Spring.context)
 }

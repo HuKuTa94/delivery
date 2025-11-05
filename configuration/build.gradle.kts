@@ -21,6 +21,7 @@ dependencies {
     api(project(":infrastructure:orm:ktorm"))
     api(project(":infrastructure:orm:spring-jpa"))
     api(project(":infrastructure:persistence:in-memory"))
+    implementation(project(":infrastructure:orm:commons"))
 
     // frameworks
     // spring

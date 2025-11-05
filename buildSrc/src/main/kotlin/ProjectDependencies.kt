@@ -112,9 +112,10 @@ object Libs {
         const val clients = "org.apache.kafka:kafka-clients:$version"
     }
     object Spring {
-        private const val version = "3.3.9"
-        const val kafka = "org.springframework.kafka:spring-kafka:$version"
-        const val tx = "org.springframework:spring-tx:6.2.12"
+        private const val version = "6.2.12"
+        const val kafka = "org.springframework.kafka:spring-kafka:3.3.9"
+        const val tx = "org.springframework:spring-tx:$version"
+        const val context = "org.springframework:spring-context:$version"
     }
     object SpringBoot {
         private const val version = "3.5.5"

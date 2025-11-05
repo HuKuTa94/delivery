@@ -5,6 +5,7 @@ import github.com.hukuta94.delivery.core.application.event.ApplicationEventPubli
 import github.com.hukuta94.delivery.core.application.event.inoutbox.BoxEventMessageStatus
 import github.com.hukuta94.delivery.core.application.port.repository.event.BoxEventMessageRelayRepositoryPort
 import github.com.hukuta94.delivery.core.domain.FakeDomainEvent
+import github.com.hukuta94.delivery.infrastructure.orm.commons.OutboxEventMessageRelayJob
 import github.com.hukuta94.delivery.infrastructure.orm.springjpa.model.entity.event.OutboxEventMessageJpaEntity
 import io.kotest.assertions.assertSoftly
 import io.kotest.core.spec.style.StringSpec
@@ -20,14 +21,14 @@ internal class SpringInOutboxEventMessageRelayJobTest : StringSpec({
     lateinit var eventPublisher: ApplicationEventPublisher
     lateinit var eventDeserializer: ApplicationEventDeserializer
 
-    lateinit var sut: SpringOutboxEventMessageRelayJob
+    lateinit var sut: OutboxEventMessageRelayJob
 
     beforeTest {
         outboxEventJpaRepository = mock()
         eventPublisher = mock()
         eventDeserializer = mock()
 
-        sut = SpringOutboxEventMessageRelayJob(
+        sut = OutboxEventMessageRelayJob(
             outboxEventJpaRepository,
             eventDeserializer,
             eventPublisher,

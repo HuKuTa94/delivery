@@ -1,12 +1,16 @@
-package github.com.hukuta94.delivery.configuration.infrastructure.orm
+package github.com.hukuta94.delivery.configuration.infrastructure.orm.springjpa
 
 import github.com.hukuta94.delivery.core.application.event.ApplicationEventDeserializer
 import github.com.hukuta94.delivery.core.application.event.ApplicationEventPublisher
 import github.com.hukuta94.delivery.core.application.event.ApplicationEventSerializer
 import github.com.hukuta94.delivery.core.application.port.repository.UnitOfWorkPort
-import github.com.hukuta94.delivery.infrastructure.orm.springjpa.inoutbox.SpringInboxEventMessageRelayJob
-import github.com.hukuta94.delivery.infrastructure.orm.springjpa.inoutbox.SpringOutboxEventMessageRelayJob
+import github.com.hukuta94.delivery.infrastructure.orm.commons.InboxEventMessageRelayJob
+import github.com.hukuta94.delivery.infrastructure.orm.commons.OutboxEventMessageRelayJob
 import github.com.hukuta94.delivery.infrastructure.orm.springjpa.repository.SpringJpaUnitOfWorkAdapter
+import github.com.hukuta94.delivery.infrastructure.orm.springjpa.repository.domain.CourierJpaRepository
+import github.com.hukuta94.delivery.infrastructure.orm.springjpa.repository.domain.OrderJpaRepository
+import github.com.hukuta94.delivery.infrastructure.orm.springjpa.repository.domain.OrmCourierRepositoryAdapter
+import github.com.hukuta94.delivery.infrastructure.orm.springjpa.repository.domain.OrmOrderRepositoryAdapter
 import github.com.hukuta94.delivery.infrastructure.orm.springjpa.repository.event.SpringJpaInboxEventRepository
 import github.com.hukuta94.delivery.infrastructure.orm.springjpa.repository.event.SpringJpaOutboxEventRepository
 import github.com.hukuta94.delivery.infrastructure.orm.springjpa.repository.event.SpringJpaInboxEventRepositoryAdapter
@@ -14,7 +18,6 @@ import github.com.hukuta94.delivery.infrastructure.orm.springjpa.repository.even
 import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.Import
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 import org.springframework.scheduling.annotation.EnableScheduling
 
@@ -30,11 +33,25 @@ import org.springframework.scheduling.annotation.EnableScheduling
         "github.com.hukuta94.delivery.infrastructure.orm.springjpa.repository"
     ]
 )
-@Import(
-    SpringOrderRepositoryConfiguration::class,
-    SpringJpaCourierRepositoryConfiguration::class,
-)
-open class SpringJpaRepositoryConfiguration {
+open class SpringOrmConfiguration {
+
+    @Bean
+    open fun courierRepository(
+        courierJpaRepository: CourierJpaRepository,
+        outboxRepository: SpringJpaOutboxEventRepositoryAdapter,
+    ) = OrmCourierRepositoryAdapter(
+        courierJpaRepository = courierJpaRepository,
+        outboxRepository = outboxRepository,
+    )
+
+    @Bean
+    open fun orderRepository(
+        orderJpaRepository: OrderJpaRepository,
+        outboxRepository: SpringJpaOutboxEventRepositoryAdapter,
+    ) = OrmOrderRepositoryAdapter(
+        orderJpaRepository = orderJpaRepository,
+        outboxRepository = outboxRepository,
+    )
 
     @Bean
     open fun springJpaUnitOfWork(): UnitOfWorkPort {
@@ -50,13 +67,12 @@ open class SpringJpaRepositoryConfiguration {
         eventSerializer = domainEventSerializer,
     )
 
-    //TODO вынести общую логику в модуль orm:commons
     @Bean
-    open fun springOutboxEventMessageRelayJob(
+    open fun outboxEventMessageRelayJob(
         eventRepository: SpringJpaOutboxEventRepositoryAdapter,
         eventDeserializer: ApplicationEventDeserializer,
         eventPublisher: ApplicationEventPublisher,
-    ) = SpringOutboxEventMessageRelayJob(
+    ) = OutboxEventMessageRelayJob(
         eventRepository = eventRepository,
         eventDeserializer = eventDeserializer,
         eventPublisher = eventPublisher,
@@ -71,13 +87,12 @@ open class SpringJpaRepositoryConfiguration {
         eventSerializer = integrationEventSerializer,
     )
 
-    //TODO вынести общую логику в модуль orm:commons
     @Bean
-    open fun springInboxEventMessageRelayJob(
+    open fun inboxEventMessageRelayJob(
         eventRepository: SpringJpaInboxEventRepositoryAdapter,
         eventDeserializer: ApplicationEventDeserializer,
         eventPublisher: ApplicationEventPublisher,
-    ) = SpringInboxEventMessageRelayJob(
+    ) = InboxEventMessageRelayJob(
         eventRepository = eventRepository,
         eventDeserializer = eventDeserializer,
         eventPublisher = eventPublisher,
