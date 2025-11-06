@@ -17,6 +17,6 @@ abstract class BoxEventMessageTable(tableName: String) : Table<Nothing>(tableNam
     val errorDescription = varchar("error_description")
 }
 
-object InboxEventMessageTable : BoxEventMessageTable("in_box")
-object OutboxEventMessageTable : BoxEventMessageTable("out_box")
-object BoxEventMessageStatusTable : EnumTable("in_out_box_status")
+object InboxEventMessageTable : BoxEventMessageTable("inbox_messages")
+object OutboxEventMessageTable : BoxEventMessageTable("outbox_messages")
+object BoxEventMessageStatusTable : EnumTable("message_statuses")

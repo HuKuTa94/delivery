@@ -16,12 +16,12 @@
                 <constraints primaryKey="true" nullable="false" primaryKeyName="pk_courier_status"/>
             </column>
             <column name="code" type="varchar(16)">
-                <constraints unique="true"/>
+                <constraints unique="true" nullable="false"/>
             </column>
         </createTable>
     </changeSet>
 
-    <changeSet id="insert_statuses_into_courier_status_table" author="Nikita Koshelev">
+    <changeSet id="insert_courier_statuses" author="Nikita Koshelev">
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="0">
                 SELECT count(*) FROM courier_statuses
@@ -50,12 +50,12 @@
                 <constraints primaryKey="true" nullable="false" primaryKeyName="pk_courier_transports"/>
             </column>
             <column name="code" type="varchar(16)">
-                <constraints unique="true"/>
+                <constraints unique="true" nullable="false"/>
             </column>
         </createTable>
     </changeSet>
 
-    <changeSet id="insert_transports_into_courier_transports_table" author="Nikita Koshelev">
+    <changeSet id="insert_courier_transports" author="Nikita Koshelev">
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="0">
                 SELECT count(*) FROM courier_transports
@@ -80,7 +80,7 @@
         </insert>
     </changeSet>
 
-    <changeSet id="create_courier_table" author="Nikita Koshelev">
+    <changeSet id="create_couriers_table" author="Nikita Koshelev">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="couriers"/>
@@ -91,8 +91,12 @@
             <column name="id" type="uuid">
                 <constraints primaryKey="true" nullable="false" primaryKeyName="pk_couriers"/>
             </column>
-            <column name="name" type="varchar(30)"/>
-            <column name="location" type="varchar(64)"/>
+            <column name="name" type="varchar(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="location" type="varchar(64)">
+                <constraints nullable="false"/>
+            </column>
             <column name="status_id" type="int">
                 <constraints nullable="false"/>
             </column>
@@ -115,12 +119,12 @@
         <addForeignKeyConstraint
                 baseTableName="couriers"
                 baseColumnNames="transport_id"
-                constraintName="fk_transport_id"
+                constraintName="fk_couriers_transport_id"
                 referencedTableName="courier_transports"
                 referencedColumnNames="id"/>
     </changeSet>
 
-    <changeSet id="module-4_infrastructure_postgres_adapter_7" author="Nikita Koshelev">
+    <changeSet id="insert_couriers" author="Nikita Koshelev">
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="0">
                 SELECT count(*)
@@ -175,7 +179,7 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="insert_statuses_into_order_statuses_table" author="Nikita Koshelev">
+    <changeSet id="insert_order_statuses" author="Nikita Koshelev">
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="0">
                 SELECT count(*) FROM order_statuses
@@ -196,7 +200,7 @@
         </insert>
     </changeSet>
 
-    <changeSet id="create_couriers_table" author="Nikita Koshelev">
+    <changeSet id="create_orders_table" author="Nikita Koshelev">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="orders"/>
@@ -211,7 +215,9 @@
                 <constraints nullable="false"/>
             </column>
             <column name="courier_id" type="uuid"/>
-            <column name="location" type="varchar(64)"/>
+            <column name="location" type="varchar(64)">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
 
         <createIndex indexName="idx_order_id" tableName="orders">
@@ -233,16 +239,16 @@
                 referencedColumnNames="id"/>
     </changeSet>
 
-    <changeSet id="create_in_out_box_status_table" author="Nikita Koshelev">
+    <changeSet id="create_message_statuses_table" author="Nikita Koshelev">
         <preConditions onFail="MARK_RAN">
             <not>
-                <tableExists tableName="in_out_box_status"/>
+                <tableExists tableName="message_statuses"/>
             </not>
         </preConditions>
 
-        <createTable tableName="in_out_box_status">
+        <createTable tableName="message_statuses">
             <column name="id" type="int">
-                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_in_out_box_status"/>
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_message_statuses"/>
             </column>
             <column name="code" type="varchar(32)">
                 <constraints unique="true"/>
@@ -250,41 +256,41 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="insert_statuses_into_in_out_box_status_table" author="Nikita Koshelev">
+    <changeSet id="insert_message_statuses" author="Nikita Koshelev">
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="0">
-                SELECT count(*) FROM in_out_box_status
+                SELECT count(*) FROM message_statuses
             </sqlCheck>
         </preConditions>
 
-        <insert tableName="in_out_box_status">
+        <insert tableName="message_statuses">
             <column name="id" value="1"/>
             <column name="code" value="TO_BE_PROCESSED"/>
         </insert>
-        <insert tableName="in_out_box_status">
+        <insert tableName="message_statuses">
             <column name="id" value="2"/>
-            <column name="code" value="SUCCESSFULLY"/>
+            <column name="code" value="SUCCESS"/>
         </insert>
-        <insert tableName="in_out_box_status">
+        <insert tableName="message_statuses">
             <column name="id" value="3"/>
             <column name="code" value="CONVERSION_ERROR"/>
         </insert>
-        <insert tableName="in_out_box_status">
+        <insert tableName="message_statuses">
             <column name="id" value="4"/>
             <column name="code" value="DELIVERY_ERROR"/>
         </insert>
     </changeSet>
 
-    <changeSet id="create_out_box_table" author="Nikita Koshelev">
+    <changeSet id="create_inbox_messages_table" author="Nikita Koshelev">
         <preConditions onFail="MARK_RAN">
             <not>
-                <tableExists tableName="out_box"/>
+                <tableExists tableName="inbox_messages"/>
             </not>
         </preConditions>
 
-        <createTable tableName="out_box">
+        <createTable tableName="inbox_messages">
             <column name="id" type="uuid">
-                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_out_box"/>
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_inbox_messages"/>
             </column>
             <column name="event_type" type="varchar(128)">
                 <constraints nullable="false"/>
@@ -310,23 +316,23 @@
         </createTable>
 
         <addForeignKeyConstraint
-                baseTableName="out_box"
+                baseTableName="inbox_messages"
                 baseColumnNames="status_id"
-                constraintName="fk_out_box_status_id"
-                referencedTableName="in_out_box_status"
+                constraintName="fk_inbox_messages_status_id"
+                referencedTableName="message_statuses"
                 referencedColumnNames="id"/>
     </changeSet>
 
-    <changeSet id="create_in_box_table" author="Nikita Koshelev">
+    <changeSet id="create_outbox_messages_table" author="Nikita Koshelev">
         <preConditions onFail="MARK_RAN">
             <not>
-                <tableExists tableName="in_box"/>
+                <tableExists tableName="outbox_messages"/>
             </not>
         </preConditions>
 
-        <createTable tableName="in_box">
+        <createTable tableName="outbox_messages">
             <column name="id" type="uuid">
-                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_in_box"/>
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_outbox_messages"/>
             </column>
             <column name="event_type" type="varchar(128)">
                 <constraints nullable="false"/>
@@ -352,10 +358,10 @@
         </createTable>
 
         <addForeignKeyConstraint
-                baseTableName="in_box"
+                baseTableName="outbox_messages"
                 baseColumnNames="status_id"
-                constraintName="fk_in_box_status_id"
-                referencedTableName="in_out_box_status"
+                constraintName="fk_outbox_messages_status_id"
+                referencedTableName="message_statuses"
                 referencedColumnNames="id"/>
     </changeSet>
 

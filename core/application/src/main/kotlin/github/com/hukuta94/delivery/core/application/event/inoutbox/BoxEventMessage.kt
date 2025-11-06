@@ -39,7 +39,7 @@ open class BoxEventMessage {
     }
 
     internal fun successfully(processedAt: LocalDateTime) {
-        this.status = BoxEventMessageStatus.SUCCESSFULLY
+        this.status = BoxEventMessageStatus.SUCCESS
         this.errorDescription = null
         this.processedAt = processedAt
         increaseVersion()

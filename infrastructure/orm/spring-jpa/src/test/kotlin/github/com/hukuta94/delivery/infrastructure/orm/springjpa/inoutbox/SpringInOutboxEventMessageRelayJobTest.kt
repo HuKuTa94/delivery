@@ -45,7 +45,7 @@ internal class SpringInOutboxEventMessageRelayJobTest : StringSpec({
 
         // Then
         assertSoftly {
-            OUTBOX_MESSAGE.status shouldBe BoxEventMessageStatus.SUCCESSFULLY
+            OUTBOX_MESSAGE.status shouldBe BoxEventMessageStatus.SUCCESS
             verify(outboxEventJpaRepository).saveAll(listOf(OUTBOX_MESSAGE))
         }
     }

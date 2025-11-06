@@ -12,7 +12,7 @@ import java.time.LocalDateTime
 class InboxEventMessageJpaEntity : BoxEventMessageJpaEntity() {
 
     companion object {
-        const val TABLE_NAME = "in_box"
+        const val TABLE_NAME = "inbox_messages"
 
         fun fromEvent(
             event: DomainEvent,

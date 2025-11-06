@@ -11,7 +11,7 @@ enum class BoxEventMessageStatus(
     /**
      * Event was processed successfully.
      */
-    SUCCESSFULLY(id = 2),
+    SUCCESS(id = 2),
 
     /**
      * Event was processed with a conversion error.
