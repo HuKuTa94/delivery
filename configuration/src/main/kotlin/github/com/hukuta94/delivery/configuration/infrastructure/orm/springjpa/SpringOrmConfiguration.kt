@@ -6,15 +6,15 @@ import github.com.hukuta94.delivery.core.application.event.ApplicationEventSeria
 import github.com.hukuta94.delivery.core.application.port.repository.UnitOfWorkPort
 import github.com.hukuta94.delivery.infrastructure.orm.commons.InboxEventMessageRelayJob
 import github.com.hukuta94.delivery.infrastructure.orm.commons.OutboxEventMessageRelayJob
-import github.com.hukuta94.delivery.infrastructure.orm.springjpa.repository.SpringJpaUnitOfWorkAdapter
-import github.com.hukuta94.delivery.infrastructure.orm.springjpa.repository.domain.CourierJpaRepository
-import github.com.hukuta94.delivery.infrastructure.orm.springjpa.repository.domain.OrderJpaRepository
-import github.com.hukuta94.delivery.infrastructure.orm.springjpa.repository.domain.OrmCourierRepositoryAdapter
-import github.com.hukuta94.delivery.infrastructure.orm.springjpa.repository.domain.OrmOrderRepositoryAdapter
-import github.com.hukuta94.delivery.infrastructure.orm.springjpa.repository.event.SpringJpaInboxEventRepository
-import github.com.hukuta94.delivery.infrastructure.orm.springjpa.repository.event.SpringJpaOutboxEventRepository
-import github.com.hukuta94.delivery.infrastructure.orm.springjpa.repository.event.SpringJpaInboxEventRepositoryAdapter
-import github.com.hukuta94.delivery.infrastructure.orm.springjpa.repository.event.SpringJpaOutboxEventRepositoryAdapter
+import github.com.hukuta94.delivery.infrastructure.orm.spring.repository.SpringJpaUnitOfWorkAdapter
+import github.com.hukuta94.delivery.infrastructure.orm.spring.repository.domain.CourierJpaRepository
+import github.com.hukuta94.delivery.infrastructure.orm.spring.repository.domain.OrderJpaRepository
+import github.com.hukuta94.delivery.infrastructure.orm.spring.repository.domain.OrmCourierRepositoryAdapter
+import github.com.hukuta94.delivery.infrastructure.orm.spring.repository.domain.OrmOrderRepositoryAdapter
+import github.com.hukuta94.delivery.infrastructure.orm.spring.repository.event.SpringJpaInboxEventRepository
+import github.com.hukuta94.delivery.infrastructure.orm.spring.repository.event.SpringJpaOutboxEventRepository
+import github.com.hukuta94.delivery.infrastructure.orm.spring.repository.event.SpringJpaInboxEventRepositoryAdapter
+import github.com.hukuta94.delivery.infrastructure.orm.spring.repository.event.SpringJpaOutboxEventRepositoryAdapter
 import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -25,12 +25,12 @@ import org.springframework.scheduling.annotation.EnableScheduling
 @EnableScheduling
 @EntityScan(
     basePackages = [
-        "github.com.hukuta94.delivery.infrastructure.orm.springjpa.model.entity"
+        "github.com.hukuta94.delivery.infrastructure.orm.spring.model.entity"
     ]
 )
 @EnableJpaRepositories(
     basePackages = [
-        "github.com.hukuta94.delivery.infrastructure.orm.springjpa.repository"
+        "github.com.hukuta94.delivery.infrastructure.orm.spring.repository"
     ]
 )
 open class SpringOrmConfiguration {

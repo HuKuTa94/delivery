@@ -14,7 +14,7 @@ include("infrastructure:grpc")
 include("infrastructure:kafka")
 include("infrastructure:orm:commons")
 include("infrastructure:orm:ktorm")
-include("infrastructure:orm:spring-jpa")
+include("infrastructure:orm:spring")
 include("infrastructure:persistence:in-memory")
 
 // Configuration of whole application
