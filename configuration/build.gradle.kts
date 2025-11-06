@@ -22,6 +22,7 @@ dependencies {
     api(project(":infrastructure:orm:spring"))
     api(project(":infrastructure:persistence:in-memory"))
     implementation(project(":infrastructure:orm:commons"))
+    implementation(project(":infrastructure:persistence:migrations"))
 
     // frameworks
     // spring

@@ -16,6 +16,7 @@ include("infrastructure:orm:commons")
 include("infrastructure:orm:ktorm")
 include("infrastructure:orm:spring")
 include("infrastructure:persistence:in-memory")
+include("infrastructure:persistence:migrations")
 
 // Configuration of whole application
 include("configuration")

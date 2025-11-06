@@ -1,0 +1,15 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: delivery application
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: username
+    password: secret
+    driver-class-name: org.postgresql.Driver
+
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml
