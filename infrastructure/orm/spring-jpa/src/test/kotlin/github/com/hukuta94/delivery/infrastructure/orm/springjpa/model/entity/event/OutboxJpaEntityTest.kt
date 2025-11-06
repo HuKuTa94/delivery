@@ -2,7 +2,6 @@ package github.com.hukuta94.delivery.infrastructure.orm.springjpa.model.entity.e
 
 import github.com.hukuta94.delivery.core.application.event.ApplicationEventSerializer
 import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderAssignedDomainEvent
-import github.com.hukuta94.delivery.infrastructure.orm.springjpa.model.entity.event.OutboxEventMessageJpaEntity
 import io.kotest.assertions.assertSoftly
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
@@ -35,7 +34,7 @@ class OutboxJpaEntityTest {
 
         // Then
         assertSoftly {
-            outboxEntity.id shouldBe domainEvent.eventId
+            outboxEntity.eventId shouldBe domainEvent.eventId
             outboxEntity.eventType shouldBe eventType.java
             outboxEntity.payload shouldBe serializedDomainEvent
             outboxEntity.createdAt shouldNotBe null

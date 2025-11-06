@@ -3,9 +3,13 @@ package github.com.hukuta94.delivery.infrastructure.orm.springjpa.model.entity
 import github.com.hukuta94.delivery.core.domain.aggregate.order.Order
 import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderStatus
 import github.com.hukuta94.delivery.core.domain.common.Location
+import github.com.hukuta94.delivery.infrastructure.orm.commons.Orders.Column.COURIER_ID
+import github.com.hukuta94.delivery.infrastructure.orm.commons.Orders.Column.ID
+import github.com.hukuta94.delivery.infrastructure.orm.commons.Orders.Column.LOCATION
+import github.com.hukuta94.delivery.infrastructure.orm.commons.Orders.Column.STATUS_ID
+import github.com.hukuta94.delivery.infrastructure.orm.commons.Orders.TABLE_NAME
 import github.com.hukuta94.delivery.infrastructure.orm.springjpa.model.converter.LocationConverter
 import github.com.hukuta94.delivery.infrastructure.orm.springjpa.model.converter.OrderStatusConverter
-import github.com.hukuta94.delivery.infrastructure.orm.springjpa.model.entity.OrderJpaEntity.Companion.TABLE_NAME
 import java.util.*
 import jakarta.persistence.*
 import kotlin.reflect.KClass
@@ -18,13 +22,14 @@ class OrderJpaEntity : JpaEntity<Order>() {
         get() = Order::class
 
     @Id
+    @Column(name = ID)
     var id: UUID? = null
 
     @Column(name = STATUS_ID)
     @Convert(converter = OrderStatusConverter::class)
     var status: OrderStatus? = null
 
-    @Column(name = "location")
+    @Column(name = LOCATION)
     @Convert(converter = LocationConverter::class)
     var location: Location? = null
 
@@ -32,9 +37,6 @@ class OrderJpaEntity : JpaEntity<Order>() {
     var courierId: UUID? = null
 
     companion object {
-        const val TABLE_NAME = "orders"
-        const val STATUS_ID = "status_id"
-        const val COURIER_ID = "courier_id"
 
         fun fromDomain(domain: Order) = OrderJpaEntity().apply {
             id = domain.id

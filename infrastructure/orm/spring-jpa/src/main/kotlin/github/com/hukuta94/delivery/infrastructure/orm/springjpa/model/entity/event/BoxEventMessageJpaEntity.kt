@@ -3,6 +3,14 @@ package github.com.hukuta94.delivery.infrastructure.orm.springjpa.model.entity.e
 import github.com.hukuta94.delivery.core.application.event.inoutbox.BoxEventMessage
 import github.com.hukuta94.delivery.core.application.event.inoutbox.BoxEventMessageStatus
 import github.com.hukuta94.delivery.core.domain.DomainEvent
+import github.com.hukuta94.delivery.infrastructure.orm.commons.Messages.Column.CREATED_AT
+import github.com.hukuta94.delivery.infrastructure.orm.commons.Messages.Column.ERROR_DESCRIPTION
+import github.com.hukuta94.delivery.infrastructure.orm.commons.Messages.Column.EVENT_ID
+import github.com.hukuta94.delivery.infrastructure.orm.commons.Messages.Column.EVENT_TYPE
+import github.com.hukuta94.delivery.infrastructure.orm.commons.Messages.Column.PAYLOAD
+import github.com.hukuta94.delivery.infrastructure.orm.commons.Messages.Column.PROCESSED_AT
+import github.com.hukuta94.delivery.infrastructure.orm.commons.Messages.Column.STATUS_ID
+import github.com.hukuta94.delivery.infrastructure.orm.commons.Messages.Column.VERSION
 import github.com.hukuta94.delivery.infrastructure.orm.springjpa.model.converter.BoxEventMessageStatusConverter
 import java.time.LocalDateTime
 import java.util.*
@@ -19,27 +27,28 @@ import jakarta.persistence.MappedSuperclass
 abstract class BoxEventMessageJpaEntity : BoxEventMessage() {
 
     @Id
-    override lateinit var id: UUID
+    @Column(name = EVENT_ID)
+    override lateinit var eventId: UUID
 
-    @Column(name = "payload")
+    @Column(name = PAYLOAD)
     override lateinit var payload: String
 
-    @Column(name = "created_at")
+    @Column(name = CREATED_AT)
     override lateinit var createdAt: LocalDateTime
 
-    @Column(name = "processed_at")
+    @Column(name = PROCESSED_AT)
     override var processedAt: LocalDateTime? = null
 
-    @get:Column(name = "event_type")
+    @get:Column(name = EVENT_TYPE)
     override lateinit var eventType: Class<out DomainEvent>
 
-    @Column(name = "version")
+    @Column(name = VERSION)
     override var version: Int = 0
 
-    @Column(name = "status_id")
+    @Column(name = STATUS_ID)
     @Convert(converter = BoxEventMessageStatusConverter::class)
     override var status: BoxEventMessageStatus = BoxEventMessageStatus.TO_BE_PROCESSED
 
-    @Column(name = "error_description")
+    @Column(name = ERROR_DESCRIPTION)
     override var errorDescription: String? = null
 }

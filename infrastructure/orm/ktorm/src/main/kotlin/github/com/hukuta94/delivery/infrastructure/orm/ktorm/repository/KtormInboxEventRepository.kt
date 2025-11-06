@@ -22,8 +22,8 @@ class KtormInboxEventRepository(
     override fun saveIntegrationEvent(integrationEvent: DomainEvent) {
         val exists = database
             .from(table)
-            .select(table.id)
-            .where { table.id eq integrationEvent.eventId }
+            .select(table.eventId)
+            .where { table.eventId eq integrationEvent.eventId }
             .totalRecordsInAllPages > 0
 
         if (exists) {
@@ -32,7 +32,7 @@ class KtormInboxEventRepository(
         }
 
         database.insert(table) {
-            set(table.id, integrationEvent.eventId)
+            set(table.eventId, integrationEvent.eventId)
             set(table.version, 0)
             set(table.statusId, BoxEventMessageStatus.TO_BE_PROCESSED.id)
             set(table.createdAt, LocalDateTime.now())

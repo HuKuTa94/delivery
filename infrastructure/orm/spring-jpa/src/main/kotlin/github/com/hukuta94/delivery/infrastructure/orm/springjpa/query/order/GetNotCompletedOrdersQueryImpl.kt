@@ -5,8 +5,11 @@ import github.com.hukuta94.delivery.core.application.query.order.GetNotCompleted
 import github.com.hukuta94.delivery.core.application.query.order.response.GetNotCompletedOrdersResponse
 import github.com.hukuta94.delivery.core.application.query.order.response.OrderResponse
 import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderStatus
+import github.com.hukuta94.delivery.infrastructure.orm.commons.Orders.Column.ID
+import github.com.hukuta94.delivery.infrastructure.orm.commons.Orders.Column.LOCATION
+import github.com.hukuta94.delivery.infrastructure.orm.commons.Orders.Column.STATUS_ID
+import github.com.hukuta94.delivery.infrastructure.orm.commons.Orders.TABLE_NAME
 import github.com.hukuta94.delivery.infrastructure.orm.springjpa.model.converter.LocationConverter
-import github.com.hukuta94.delivery.infrastructure.orm.springjpa.model.entity.OrderJpaEntity
 import github.com.hukuta94.delivery.infrastructure.orm.springjpa.query.AbstractQuery
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.sql.ResultSet
@@ -26,10 +29,10 @@ class GetNotCompletedOrdersQueryImpl(
 
     override fun mapRowToResponseDto(rs: ResultSet): OrderResponse {
         val location = locationConverter.convertToEntityAttribute(
-            rs.getString(OrderJpaEntity::location.name)
+            rs.getString(LOCATION)
         )
         return OrderResponse(
-            id = rs.getObject(OrderJpaEntity::id.name, UUID::class.java),
+            id = rs.getObject(ID, UUID::class.java),
             location = LocationResponse(
                 x = location.x,
                 y = location.y
@@ -44,8 +47,8 @@ class GetNotCompletedOrdersQueryImpl(
         )
         private val SQL = """
             SELECT * 
-            FROM ${OrderJpaEntity.TABLE_NAME}
-            WHERE ${OrderJpaEntity.STATUS_ID} IN (:status1, :status2)
+            FROM $TABLE_NAME
+            WHERE $STATUS_ID IN (:status1, :status2)
         """.trimIndent()
     }
 }

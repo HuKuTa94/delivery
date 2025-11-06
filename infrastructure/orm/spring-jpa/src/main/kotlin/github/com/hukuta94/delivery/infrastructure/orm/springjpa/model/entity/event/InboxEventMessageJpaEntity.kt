@@ -2,7 +2,7 @@ package github.com.hukuta94.delivery.infrastructure.orm.springjpa.model.entity.e
 
 import github.com.hukuta94.delivery.core.application.event.ApplicationEventSerializer
 import github.com.hukuta94.delivery.core.domain.DomainEvent
-import github.com.hukuta94.delivery.infrastructure.orm.springjpa.model.entity.event.InboxEventMessageJpaEntity.Companion.TABLE_NAME
+import github.com.hukuta94.delivery.infrastructure.orm.commons.Messages.Inbox.TABLE_NAME
 import jakarta.persistence.Entity
 import jakarta.persistence.Table
 import java.time.LocalDateTime
@@ -12,14 +12,13 @@ import java.time.LocalDateTime
 class InboxEventMessageJpaEntity : BoxEventMessageJpaEntity() {
 
     companion object {
-        const val TABLE_NAME = "inbox_messages"
 
         fun fromEvent(
             event: DomainEvent,
             eventSerializer: ApplicationEventSerializer,
             createdAt: LocalDateTime,
         ) = InboxEventMessageJpaEntity().apply {
-                id = event.eventId
+                eventId = event.eventId
                 eventType = event::class.java
                 payload = eventSerializer.serialize(event)
                 this.createdAt = createdAt

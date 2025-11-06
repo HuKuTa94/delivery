@@ -36,7 +36,7 @@ abstract class KtormBoxEventRepository(
                     set(table.errorDescription, message.errorDescription)
                     set(table.createdAt, message.createdAt)
                     set(table.processedAt, message.processedAt)
-                    where { table.id eq message.id }
+                    where { table.eventId eq message.eventId }
                 }
             }
         }
@@ -55,7 +55,7 @@ abstract class KtormBoxEventRepository(
 
     protected fun rowToMessage(row: QueryRowSet): BoxEventMessage =
         BoxEventMessage().apply {
-            id = row.notNull(table.id)
+            eventId = row.notNull(table.eventId)
             status = BoxEventMessageStatus.valueOf(row.notNull(BoxEventMessageStatusTable.code))
             version = row.notNull(table.version)
             payload = row.notNull(table.payload)

@@ -5,11 +5,16 @@ import github.com.hukuta94.delivery.core.domain.aggregate.courier.CourierName
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.CourierStatus
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.Transport
 import github.com.hukuta94.delivery.core.domain.common.Location
+import github.com.hukuta94.delivery.infrastructure.orm.commons.Couriers.Column.ID
+import github.com.hukuta94.delivery.infrastructure.orm.commons.Couriers.Column.LOCATION
+import github.com.hukuta94.delivery.infrastructure.orm.commons.Couriers.Column.NAME
+import github.com.hukuta94.delivery.infrastructure.orm.commons.Couriers.Column.STATUS_ID
+import github.com.hukuta94.delivery.infrastructure.orm.commons.Couriers.Column.TRANSPORT_ID
+import github.com.hukuta94.delivery.infrastructure.orm.commons.Couriers.TABLE_NAME
 import github.com.hukuta94.delivery.infrastructure.orm.springjpa.model.converter.CourierNameConverter
 import github.com.hukuta94.delivery.infrastructure.orm.springjpa.model.converter.CourierStatusConverter
 import github.com.hukuta94.delivery.infrastructure.orm.springjpa.model.converter.LocationConverter
 import github.com.hukuta94.delivery.infrastructure.orm.springjpa.model.converter.TransportConverter
-import github.com.hukuta94.delivery.infrastructure.orm.springjpa.model.entity.CourierJpaEntity.Companion.TABLE_NAME
 import java.util.*
 import jakarta.persistence.*
 import kotlin.reflect.KClass
@@ -22,13 +27,14 @@ class CourierJpaEntity : JpaEntity<Courier>() {
         get() = Courier::class
 
     @Id
+    @Column(name = ID)
     var id: UUID? = null
 
-    @Column(name = "name")
+    @Column(name = NAME)
     @Convert(converter = CourierNameConverter::class)
     var name: CourierName? = null
 
-    @Column(name = "location")
+    @Column(name = LOCATION)
     @Convert(converter = LocationConverter::class)
     var location: Location? = null
 
@@ -41,9 +47,6 @@ class CourierJpaEntity : JpaEntity<Courier>() {
     var status: CourierStatus? = null
 
     companion object {
-        const val TABLE_NAME = "couriers"
-        const val TRANSPORT_ID = "transport_id"
-        const val STATUS_ID = "status_id"
 
         fun fromDomain(domain: Courier) = CourierJpaEntity().apply {
             id = domain.id

@@ -10,7 +10,7 @@ import java.util.*
  */
 open class BoxEventMessage {
 
-    open lateinit var id: UUID
+    open lateinit var eventId: UUID
 
     open lateinit var payload: String
 

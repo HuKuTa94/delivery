@@ -22,7 +22,7 @@ class KtormOutboxEventRepository(
         database.batchInsert(table) {
             domainEvents.forEach { event ->
                 item {
-                    set(table.id, event.eventId)
+                    set(table.eventId, event.eventId)
                     set(table.version, 0)
                     set(table.statusId, BoxEventMessageStatus.TO_BE_PROCESSED.id)
                     set(table.createdAt, LocalDateTime.now())

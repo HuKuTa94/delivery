@@ -289,7 +289,7 @@
         </preConditions>
 
         <createTable tableName="inbox_messages">
-            <column name="id" type="uuid">
+            <column name="event_id" type="uuid">
                 <constraints primaryKey="true" nullable="false" primaryKeyName="pk_inbox_messages"/>
             </column>
             <column name="event_type" type="varchar(128)">
@@ -331,7 +331,7 @@
         </preConditions>
 
         <createTable tableName="outbox_messages">
-            <column name="id" type="uuid">
+            <column name="event_id" type="uuid">
                 <constraints primaryKey="true" nullable="false" primaryKeyName="pk_outbox_messages"/>
             </column>
             <column name="event_type" type="varchar(128)">
