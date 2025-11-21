@@ -12,7 +12,16 @@ import github.com.hukuta94.delivery.infrastructure.orm.ktorm.table.CourierStatus
 import github.com.hukuta94.delivery.infrastructure.orm.ktorm.table.CourierTransportTable
 import github.com.hukuta94.delivery.infrastructure.orm.ktorm.table.CourierTable
 import org.ktorm.database.Database
-import org.ktorm.dsl.*
+import org.ktorm.dsl.QueryRowSet
+import org.ktorm.dsl.batchUpdate
+import org.ktorm.dsl.eq
+import org.ktorm.dsl.from
+import org.ktorm.dsl.innerJoin
+import org.ktorm.dsl.insert
+import org.ktorm.dsl.map
+import org.ktorm.dsl.select
+import org.ktorm.dsl.update
+import org.ktorm.dsl.where
 import java.util.UUID
 
 class KtormCourierRepository(

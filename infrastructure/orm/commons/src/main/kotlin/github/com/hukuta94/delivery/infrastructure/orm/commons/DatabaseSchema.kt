@@ -64,4 +64,3 @@ object Messages {
 object MessageStatuses {
     const val TABLE_NAME = "message_statuses"
 }
-

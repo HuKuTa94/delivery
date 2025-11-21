@@ -95,7 +95,8 @@ class JpaEntityTest : StringSpec({
         assertFailsWith<IllegalArgumentException> {
             jpaEntity.toDomain()
         }.message shouldBe
-                "Mismatched type of the field $mismatchedFieldName for domain ${DomainAggregateFake::class.simpleName}. " +
+                "Mismatched type of the field $mismatchedFieldName " +
+                "for domain ${DomainAggregateFake::class.simpleName}. " +
                 "Must be ${DomainAggregateFake::class.field(mismatchedFieldName).type}. " +
                 "Actual is ${JpaEntityWithMismatchedFieldType::class.field(mismatchedFieldName).type}"
     }
@@ -111,6 +112,10 @@ class JpaEntityTest : StringSpec({
         var readOnlyField: Long? = null
             private set
 
+        @Suppress(
+            "UnusedPrivateProperty",
+            "Reason: this 'unused' property uses in test purposes to check specific test case"
+        )
         companion object {
             private const val STATIC_FIELD_MUST_BE_EXCLUDED_FROM_MAPPING = 1
         }
@@ -122,6 +127,10 @@ class JpaEntityTest : StringSpec({
         var publicField: String,
         var readOnlyField: Long? = null,
     ) : JpaEntity<DomainAggregateFake>() {
+        @Suppress(
+            "UnusedPrivateProperty",
+            "Reason: this 'unused' property uses in test purposes to check specific test case"
+        )
         companion object {
             private const val STATIC_FIELD_MUST_BE_EXCLUDED_FROM_MAPPING = 1
         }

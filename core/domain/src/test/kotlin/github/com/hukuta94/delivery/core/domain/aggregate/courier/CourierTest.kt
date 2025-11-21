@@ -17,7 +17,7 @@ import io.kotest.property.arbitrary.of
 import io.kotest.property.checkAll
 import kotlin.math.abs
 
-internal class CourierTest : StringSpec ({
+internal class CourierTest : StringSpec({
 
     "new courier is created in valid state and status" {
         checkAll(TRANSPORTS) { transport ->
@@ -272,7 +272,9 @@ internal class CourierTest : StringSpec ({
 
                 // Then
                 withClue(
-                    "Courier with transport = $transport must reach target $target from start $COURIER_START_LOCATION, actual is ${sut.location}"
+                    "Courier with transport = $transport " +
+                            "must reach target $target from start $COURIER_START_LOCATION, " +
+                            "actual is ${sut.location}"
                 ) {
                     sut.location shouldBe target
                 }

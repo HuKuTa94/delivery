@@ -9,7 +9,7 @@ import java.time.LocalDateTime
 
 @Entity
 @Table(name = TABLE_NAME)
-class OutboxEventMessageJpaEntity: BoxEventMessageJpaEntity() {
+class OutboxEventMessageJpaEntity : BoxEventMessageJpaEntity() {
 
     companion object {
 

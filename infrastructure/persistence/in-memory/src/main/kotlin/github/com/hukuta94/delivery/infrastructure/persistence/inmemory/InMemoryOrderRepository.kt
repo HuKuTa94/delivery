@@ -24,7 +24,7 @@ class InMemoryOrderRepository : OrderRepositoryPort {
     }
 
     override fun getById(id: UUID): Order {
-        return storage[id] ?:  error("The order with id=$id is not found")
+        return storage[id] ?: error("The order with id=$id is not found")
     }
 
     override fun existsById(id: UUID): Boolean {

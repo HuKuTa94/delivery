@@ -1,9 +1,10 @@
 package github.com.hukuta94.delivery.core.application.event.inoutbox
 
-import org.slf4j.LoggerFactory
+import com.fasterxml.jackson.core.JacksonException
 import github.com.hukuta94.delivery.core.application.event.ApplicationEventDeserializer
 import github.com.hukuta94.delivery.core.application.event.ApplicationEventPublisher
 import github.com.hukuta94.delivery.core.application.port.repository.event.BoxEventMessageRelayRepositoryPort
+import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 
 /**
@@ -64,7 +65,7 @@ abstract class BoxEventMessageRelay(
                 serializedEvent = message.payload,
                 eventClassType = message.eventType,
             )
-        } catch (ex: Exception) {
+        } catch (ex: JacksonException) {
             val error = "Deserialization error of " +
                 "${message.eventType.simpleName} event: " + ex.message
 
@@ -74,6 +75,10 @@ abstract class BoxEventMessageRelay(
             return
         }
 
+        @Suppress(
+            "TooGenericExceptionCaught",
+            "Reason: we do not know that type of exception could be in publish"
+        )
         try {
             eventPublisher.publish(event)
             message.successfully(LocalDateTime.now())

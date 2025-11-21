@@ -13,5 +13,4 @@ interface AggregateRepositoryPort<AGGREGATE : Aggregate<ID>, ID> {
     fun getById(id: ID): AGGREGATE
 
     fun existsById(id: ID): Boolean
-
 }

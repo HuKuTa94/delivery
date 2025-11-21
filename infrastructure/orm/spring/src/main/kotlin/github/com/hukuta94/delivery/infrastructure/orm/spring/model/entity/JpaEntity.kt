@@ -52,6 +52,10 @@ abstract class JpaEntity<DOMAIN_AGGREGATE : Aggregate<*>> {
             }
         }
 
+        @Suppress(
+            "SpreadOperator",
+            "Reason: reflection API requires spread operator"
+        )
         return constructor.call(*arguments)
     }
 
@@ -67,7 +71,8 @@ abstract class JpaEntity<DOMAIN_AGGREGATE : Aggregate<*>> {
                 // Convert "Can not set..." message into more explicit with more information
                 if (ex.message?.contains("Can not set", true) == true) {
                     throw IllegalArgumentException(
-                        "Mismatched type of the field ${jpaEntityField.name} for domain ${domainAggregateClass.simpleName}. " +
+                        "Mismatched type of the field ${jpaEntityField.name} " +
+                        "for domain ${domainAggregateClass.simpleName}. " +
                         "Must be ${domainField.type}. Actual is ${jpaEntityField.type}"
                     )
                 }

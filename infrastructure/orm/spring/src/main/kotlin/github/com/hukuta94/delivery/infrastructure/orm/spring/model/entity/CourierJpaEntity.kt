@@ -15,8 +15,12 @@ import github.com.hukuta94.delivery.infrastructure.orm.spring.model.converter.Co
 import github.com.hukuta94.delivery.infrastructure.orm.spring.model.converter.CourierStatusConverter
 import github.com.hukuta94.delivery.infrastructure.orm.spring.model.converter.LocationConverter
 import github.com.hukuta94.delivery.infrastructure.orm.spring.model.converter.TransportConverter
-import java.util.*
-import jakarta.persistence.*
+import jakarta.persistence.Column
+import jakarta.persistence.Convert
+import jakarta.persistence.Entity
+import jakarta.persistence.Id
+import jakarta.persistence.Table
+import java.util.UUID
 import kotlin.reflect.KClass
 
 @Entity

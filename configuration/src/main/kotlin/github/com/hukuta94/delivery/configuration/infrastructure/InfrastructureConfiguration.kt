@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Import
 
 @Configuration
 @Import(
-    //TODO Нужно как-то разбить конфигурацию на артефакты, чтобы удобно было выбирать нужную реализацию
+    // TODO Нужно как-то разбить конфигурацию на артефакты, чтобы удобно было выбирать нужную реализацию
     KtormOrmConfiguration::class,
     SpringOrmConfiguration::class,
     KafkaProducerConfiguration::class,

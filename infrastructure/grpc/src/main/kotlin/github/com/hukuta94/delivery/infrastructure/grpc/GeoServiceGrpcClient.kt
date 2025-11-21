@@ -8,7 +8,7 @@ import io.grpc.ManagedChannel
 
 class GeoServiceGrpcClient(
     private val managedChannel: ManagedChannel,
-): GeoGrpc.GeoImplBase(), GetLocationPort {
+) : GeoGrpc.GeoImplBase(), GetLocationPort {
 
     override fun fromStreet(street: String): Either<Location.Error, Location> {
         val stub = newBlockingStub(managedChannel)

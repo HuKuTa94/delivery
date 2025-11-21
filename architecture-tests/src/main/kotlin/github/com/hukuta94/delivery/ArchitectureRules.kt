@@ -78,8 +78,8 @@ infix fun String.onlyDependsOn(shouldDependOn: Collection<String>) {
         fromPackage = this,
         toPackages =
             shouldDependOn.toTypedArray() +
-            PROGRAMMING_LANGUAGE_PACKAGES + // include programming language packages
-            frameworkPackages,              // include frameworks for adapters only
+            PROGRAMMING_LANGUAGE_PACKAGES +
+            frameworkPackages,
         givenClasses = ArchRuleDefinition.classes(),
         importedClasses = importedClasses,
     )
@@ -93,6 +93,10 @@ infix fun String.onlyDependsOn(shouldDependOn: Collection<String>) {
     )
 }
 
+@Suppress(
+    "SpreadOperator",
+    "Reason: ArchUnit requires spread operator"
+)
 private fun checkDependencies(
     fromPackage: String,
     toPackages: Array<String>,

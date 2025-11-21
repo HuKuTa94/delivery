@@ -40,6 +40,7 @@ fun Project.applyCommonProjectSetup() {
 fun PluginDependenciesSpec.applyCommonProjectPlugins() {
     id("io.kotest")                version PrivateLibs.Kotest.version
     id("org.jetbrains.kotlin.jvm") version PrivateLibs.Kotlin.version
+    id(Plugins.Detekt.plugin)      version Plugins.Detekt.version
     `java-test-fixtures`
 }
 
@@ -159,5 +160,13 @@ object Libs {
         private const val version = "4.1.1"
         const val core = "org.ktorm:ktorm-core:$version"
         const val support_postgresql = "org.ktorm:ktorm-support-postgresql:$version"
+    }
+}
+
+object Plugins {
+    object Detekt {
+        const val version = "1.23.8"
+        const val plugin = "io.gitlab.arturbosch.detekt"
+        const val formatting = "io.gitlab.arturbosch.detekt:detekt-formatting:$version"
     }
 }

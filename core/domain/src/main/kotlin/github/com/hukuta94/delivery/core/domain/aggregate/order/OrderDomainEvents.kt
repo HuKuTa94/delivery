@@ -6,8 +6,8 @@ import java.util.*
 data class OrderAssignedDomainEvent(
     val orderId: UUID,
     val courierId: UUID,
-): DomainEvent()
+) : DomainEvent()
 
 data class OrderCompletedDomainEvent(
     val orderId: UUID,
-): DomainEvent()
+) : DomainEvent()

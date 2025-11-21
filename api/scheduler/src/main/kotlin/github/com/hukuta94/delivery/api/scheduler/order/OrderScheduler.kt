@@ -11,5 +11,4 @@ class OrderScheduler(
     fun assignCourierToOrders() {
         assignCourierToOrderUseCase.execute()
     }
-
 }

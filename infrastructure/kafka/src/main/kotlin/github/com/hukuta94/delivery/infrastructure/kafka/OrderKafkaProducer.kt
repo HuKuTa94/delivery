@@ -10,14 +10,15 @@ import java.util.*
 
 class OrderKafkaProducer(
     private val kafkaTemplate: KafkaTemplate<UUID, ByteArray>,
-): BusProducerPort {
+) : BusProducerPort {
 
     override fun publishOrderAssignedDomainEvent(
         orderAssignedDomainEvent: OrderAssignedDomainEvent
     ) {
         publishToTopicOrderStatusChanged(
             orderId = orderAssignedDomainEvent.eventId,
-            orderStatus = github.com.hukuta94.delivery.core.domain.aggregate.order.OrderStatus.ASSIGNED.toKafkaOrderStatus()
+            orderStatus =
+                github.com.hukuta94.delivery.core.domain.aggregate.order.OrderStatus.ASSIGNED.toKafkaOrderStatus()
         )
     }
 
@@ -26,7 +27,8 @@ class OrderKafkaProducer(
     ) {
         publishToTopicOrderStatusChanged(
             orderId = orderCompletedDomainEvent.eventId,
-            orderStatus = github.com.hukuta94.delivery.core.domain.aggregate.order.OrderStatus.COMPLETED.toKafkaOrderStatus()
+            orderStatus =
+                github.com.hukuta94.delivery.core.domain.aggregate.order.OrderStatus.COMPLETED.toKafkaOrderStatus()
         )
     }
 
@@ -39,12 +41,15 @@ class OrderKafkaProducer(
         val message = ProducerRecord(
             TOPIC_ORDER_STATUS_CHANGED,
             orderId,
-            integrationEvent.toByteArray() //TODO Отправлять в формате JSON
+            integrationEvent.toByteArray() // TODO Отправлять в формате JSON
         )
 
         kafkaTemplate.send(message)
 
-        LOG.info("Integration event OrderStatusChanged to \"${orderStatus.name}\" with key: $orderId was sent to topic: $TOPIC_ORDER_STATUS_CHANGED")
+        LOG.info(
+            "Integration event OrderStatusChanged to \"${orderStatus.name}\" " +
+            "with key: $orderId was sent to topic: $TOPIC_ORDER_STATUS_CHANGED"
+        )
     }
 
     private fun github.com.hukuta94.delivery.core.domain.aggregate.order.OrderStatus.toKafkaOrderStatus(): OrderStatus {

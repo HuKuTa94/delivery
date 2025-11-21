@@ -47,8 +47,8 @@ class Courier internal constructor(
         coordinateDelta: Int,
         availableCourierStepCount: Int,
     ) = when {
-        coordinateDelta > 0 -> -min( coordinateDelta, availableCourierStepCount)
-        coordinateDelta < 0 ->  min(-coordinateDelta, availableCourierStepCount)
+        coordinateDelta > 0 -> -min(coordinateDelta, availableCourierStepCount)
+        coordinateDelta < 0 -> min(-coordinateDelta, availableCourierStepCount)
         else -> 0
     }
 

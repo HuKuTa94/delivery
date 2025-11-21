@@ -62,7 +62,9 @@ class LocationTest : StringSpec({
             // Then
             result.shouldBeLeft().also {
                 it::class shouldBe Location.Error.CoordinatesOutOfRange::class
-                it.message shouldBe "Location coordinates must be in range $VALID_COORDINATE_RANGE. Actual coordinates are x=$x; y=$y"
+                it.message shouldBe
+                        "Location coordinates must be in range $VALID_COORDINATE_RANGE. " +
+                        "Actual coordinates are x=$x; y=$y"
             }
         }
     }

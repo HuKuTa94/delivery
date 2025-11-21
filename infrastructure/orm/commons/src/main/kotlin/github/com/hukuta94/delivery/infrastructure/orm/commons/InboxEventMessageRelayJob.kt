@@ -10,12 +10,12 @@ class InboxEventMessageRelayJob(
     eventRepository: BoxEventMessageRelayRepositoryPort,
     eventDeserializer: ApplicationEventDeserializer,
     eventPublisher: ApplicationEventPublisher,
-): BoxEventMessageRelay(
+) : BoxEventMessageRelay(
     eventRepository,
     eventDeserializer,
     eventPublisher,
 ) {
-    //TODO Вынести все магические числа, а так же количество выгружаемых outbox сообщений за раз, в файл конфигурации
+    // TODO Вынести все магические числа, а так же количество выгружаемых outbox сообщений за раз, в файл конфигурации
     @Scheduled(fixedDelay = 5000)
     fun pullMessagesFromInbox() {
         execute()

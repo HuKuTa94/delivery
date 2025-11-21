@@ -24,7 +24,6 @@ val FRAMEWORK_PACKAGES = arrayOf(
 const val API_LAYER_PACKAGE = "$GROUP_ID_PACKAGE.api.."
 /* ------------------------------------------------------------------------------------------------------------------ */
 
-
 /* -------------------------------------------- Core - application layer -------------------------------------------- */
 const val CORE_APPLICATION = "core.application"
 
@@ -34,7 +33,6 @@ const val APPLICATION_EVENT_PACKAGE = "$GROUP_ID_PACKAGE.$CORE_APPLICATION.event
 const val APPLICATION_QUERY_PACKAGE = "$GROUP_ID_PACKAGE.$CORE_APPLICATION.query.."
 const val APPLICATION_USECASE_PACKAGE = "$GROUP_ID_PACKAGE.$CORE_APPLICATION.usecase.."
 /* ------------------------------------------------------------------------------------------------------------------ */
-
 
 /* ---------------------------------------------- Core - domain layer ----------------------------------------------- */
 const val CORE_DOMAIN = "core.domain"
@@ -47,11 +45,9 @@ const val DOMAIN_BUSINESS_RULE_PACKAGE = "$GROUP_ID_PACKAGE.$CORE_DOMAIN.rule.."
 val DOMAIN_ALLOWED_OUTSIDE_PACKAGES = PROGRAMMING_LANGUAGE_PACKAGES
 /* ------------------------------------------------------------------------------------------------------------------ */
 
-
 /* -------------------------------- Infrastructure (secondary/output/drive) adapters -------------------------------- */
 const val INFRASTRUCTURE_LAYER_PACKAGE = "$GROUP_ID_PACKAGE.infrastructure.."
 /* ------------------------------------------------------------------------------------------------------------------ */
-
 
 /**
  * All existing packages by layer with nesting packages.

@@ -11,7 +11,7 @@ data class CourierName private constructor(
     companion object {
 
         fun of(value: String) = either {
-            if (value.isBlank() || value.isEmpty() ) {
+            if (value.isBlank() || value.isEmpty()) {
                 raise(Error.NameCanNotBeEmpty)
             }
 
@@ -21,7 +21,7 @@ data class CourierName private constructor(
 
             val trimmedName = value.trim()
             if (trimmedName.length > MAX_NAME_LENGTH) {
-                raise(Error.NameTooLong(trimmedName))}
+                raise(Error.NameTooLong(trimmedName)) }
 
             CourierName(trimmedName)
         }
@@ -34,7 +34,15 @@ data class CourierName private constructor(
         override val message: String,
     ) : BusinessError {
         data object NameCanNotBeEmpty : Error("Courier name can not be empty or blank")
-        data class NameTooLong(val value: String) : Error("Courier name is too long. Maximal length must be $MAX_NAME_LENGTH. Actual length of \"$value\" is ${value.length}")
-        data class NameTooShort(val value: String) : Error("Courier name is too short. Minimal length must be $MIN_NAME_LENGTH. Actual length of \"$value\" is ${value.length}")
+        data class NameTooLong(val value: String) : Error(
+            "Courier name is too long. " +
+                    "Maximal length must be $MAX_NAME_LENGTH. " +
+                    "Actual length of \"$value\" is ${value.length}"
+        )
+        data class NameTooShort(val value: String) : Error(
+            "Courier name is too short. " +
+                    "Minimal length must be $MIN_NAME_LENGTH. " +
+                    "Actual length of \"$value\" is ${value.length}"
+        )
     }
 }

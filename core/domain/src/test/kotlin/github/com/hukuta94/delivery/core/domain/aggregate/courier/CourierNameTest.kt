@@ -57,7 +57,10 @@ class CourierNameTest : StringSpec({
         val result = CourierName.of(string)
         result.shouldBeLeft().also {
             it::class shouldBe CourierName.Error.NameTooShort::class
-            it.message shouldBe "Courier name is too short. Minimal length must be $MIN_COURIER_NAME_LENGTH. Actual length of \"$string\" is ${string.length}"
+            it.message shouldBe
+                    "Courier name is too short. " +
+                    "Minimal length must be $MIN_COURIER_NAME_LENGTH. " +
+                    "Actual length of \"$string\" is ${string.length}"
         }
     }
 
@@ -69,7 +72,10 @@ class CourierNameTest : StringSpec({
         val result = CourierName.of(string)
         result.shouldBeLeft().also {
             it::class shouldBe CourierName.Error.NameTooLong::class
-            it.message shouldBe "Courier name is too long. Maximal length must be $MAX_COURIER_NAME_LENGTH. Actual length of \"$string\" is ${string.length}"
+            it.message shouldBe
+                    "Courier name is too long. " +
+                    "Maximal length must be $MAX_COURIER_NAME_LENGTH. " +
+                    "Actual length of \"$string\" is ${string.length}"
         }
     }
 

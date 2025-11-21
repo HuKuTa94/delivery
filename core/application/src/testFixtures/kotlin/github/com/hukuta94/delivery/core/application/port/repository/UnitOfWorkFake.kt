@@ -5,5 +5,4 @@ class UnitOfWorkFake : UnitOfWorkPort {
     override fun executeInTransaction(action: () -> Unit) {
         action.invoke()
     }
-
 }

@@ -2,20 +2,13 @@ package github.com.hukuta94.delivery.core.application.event
 
 import github.com.hukuta94.delivery.core.domain.DomainEvent
 import org.slf4j.LoggerFactory
-import kotlin.reflect.KClass
 
 class ApplicationEventPublisher(
     handlers: List<ApplicationEventHandler<out DomainEvent>>,
 ) {
-    private val handlers = mutableMapOf<KClass<out DomainEvent>, MutableList<ApplicationEventHandler<out DomainEvent>>>()
-
-    init {
-        handlers.forEach { handler ->
-            this.handlers.computeIfAbsent(handler.eventType) {
-                mutableListOf()
-            }.add(handler)
-        }
-    }
+    private val handlers = handlers
+        .groupBy { it.eventType }
+        .mapValues { it.value.toList() }
 
     fun publish(event: DomainEvent) {
         LOG.info("Processing event: $event")

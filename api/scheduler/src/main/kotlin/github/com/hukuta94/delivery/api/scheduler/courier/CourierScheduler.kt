@@ -11,5 +11,4 @@ class CourierScheduler(
     fun moveCouriers() {
         moveCouriersUseCase.execute()
     }
-
 }

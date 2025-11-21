@@ -1,0 +1,38 @@
+style:
+  NewLineAtEndOfFile:
+    active: false
+  ReturnCount:
+    max: 4
+
+formatting:
+  FinalNewline:
+    active: false
+  Indentation:
+    active: false
+  ImportOrdering:
+    active: false
+  Wrapping:
+    active: false
+  NoEmptyFirstLineInMethodBlock:
+    active: false
+  FunctionReturnTypeSpacing:
+    active: false
+
+complexity:
+  LongParameterList:
+    functionThreshold: 10
+    constructorThreshold: 10
+
+performance:
+  SpreadOperator:
+    active: false
+
+naming:
+  ConstructorParameterNaming:
+    active: true
+    privateParameterPattern: '[_a-z][A-Za-z0-9]*'
+
+build:
+  excludeCorrectable: false
+  # Исправляет ошибки без предупреждения, чтобы реже гонять detekt, но нужно следить за изменениями
+  # excludeCorrectable: true

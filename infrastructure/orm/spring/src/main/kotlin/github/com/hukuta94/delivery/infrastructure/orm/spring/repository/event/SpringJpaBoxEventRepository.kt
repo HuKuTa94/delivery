@@ -9,7 +9,9 @@ import org.springframework.data.repository.NoRepositoryBean
 import java.util.*
 
 @NoRepositoryBean
-sealed interface SpringJpaBoxEventRepository<BOX_EVENT_JPA_ENTITY : BoxEventMessage> : JpaRepository<BOX_EVENT_JPA_ENTITY, UUID> {
+sealed interface SpringJpaBoxEventRepository<
+        BOX_EVENT_JPA_ENTITY : BoxEventMessage
+> : JpaRepository<BOX_EVENT_JPA_ENTITY, UUID> {
 
     fun findAllByStatusIn(
         statuses: Set<BoxEventMessageStatus>,
