@@ -6,8 +6,8 @@ import github.com.hukuta94.delivery.core.domain.CourierNameSpecification.MIN_COU
 
 fun allowedLetter() = ALLOWED_LETTERS.first().toString()
 
-fun newCourierName(
+fun courierName(
     value: String = allowedLetter().repeat(MIN_COURIER_NAME_LENGTH),
 ) = CourierName.of(
-    value = value
+    value = value,
 ).getOrElse { error("Invalid courier name in test fixture") }

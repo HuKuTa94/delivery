@@ -4,11 +4,11 @@ import github.com.hukuta94.delivery.core.application.port.repository.UnitOfWorkF
 import github.com.hukuta94.delivery.core.application.port.repository.domain.CourierRepositoryFake
 import github.com.hukuta94.delivery.core.application.port.repository.domain.OrderRepositoryFake
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.CourierStatus
-import github.com.hukuta94.delivery.core.domain.aggregate.courier.newBusyCourier
-import github.com.hukuta94.delivery.core.domain.aggregate.courier.newFreeCourier
+import github.com.hukuta94.delivery.core.domain.aggregate.courier.busyCourier
+import github.com.hukuta94.delivery.core.domain.aggregate.courier.freeCourier
 import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderStatus
-import github.com.hukuta94.delivery.core.domain.aggregate.order.newAssignedOrder
-import github.com.hukuta94.delivery.core.domain.common.newLocation
+import github.com.hukuta94.delivery.core.domain.aggregate.order.assignedOrder
+import github.com.hukuta94.delivery.core.domain.common.location
 import github.com.hukuta94.delivery.core.domain.rule.impl.CompleteOrderBusinessRuleImpl
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
@@ -20,7 +20,7 @@ class MoveCouriersUseCaseImplTest : StringSpec({
     val completeOrderService = CompleteOrderBusinessRuleImpl()
     val unitOfWork = UnitOfWorkFake()
 
-    val sut = MoveCouriersUseCaseImpl(
+    val usecase = MoveCouriersUseCaseImpl(
         orderRepository = orderRepository,
         courierRepository = courierRepository,
         completeOrderBusinessRule = completeOrderService,
@@ -34,25 +34,25 @@ class MoveCouriersUseCaseImplTest : StringSpec({
 
     "must move courier and complete order when courier reaches its location" {
         // Given
-        val courierLocation = newLocation(5, 5)
-        val busyCourier = newBusyCourier(
+        val courierLocation = location(5, 5)
+        val busyCourier = busyCourier(
             location = courierLocation,
         )
 
-        val assignedOrder = newAssignedOrder(
-            location = newLocation(5, 6),
+        val assignedOrder = assignedOrder(
+            location = location(5, 6),
             courier = busyCourier,
         )
         orderRepository.add(assignedOrder)
 
         val couriers = (
-                List(999) { newFreeCourier() } + // free couriers must be ignored
+                List(999) { freeCourier() } + // free couriers must be ignored
                 listOf(busyCourier)
             ).shuffled()
         courierRepository.addAll(couriers)
 
         // When
-        sut.execute()
+        usecase.execute()
 
         // Then
         busyCourier.location shouldBe assignedOrder.location

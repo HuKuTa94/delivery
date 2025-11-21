@@ -1,9 +1,8 @@
 package github.com.hukuta94.delivery.infrastructure.persistence.inmemory
 
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.CourierStatus
-import github.com.hukuta94.delivery.core.domain.aggregate.courier.newBusyCourier
-import github.com.hukuta94.delivery.core.domain.aggregate.courier.newCourier
-import github.com.hukuta94.delivery.core.domain.aggregate.courier.newFreeCourier
+import github.com.hukuta94.delivery.core.domain.aggregate.courier.busyCourier
+import github.com.hukuta94.delivery.core.domain.aggregate.courier.freeCourier
 import io.kotest.assertions.assertSoftly
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
@@ -15,19 +14,19 @@ import java.util.UUID
 internal class InMemoryCourierRepositoryTest : StringSpec({
 
     // System Under Testing (sut)
-    lateinit var sut: InMemoryCourierRepository
+    lateinit var repository: InMemoryCourierRepository
 
     beforeTest {
-        sut = InMemoryCourierRepository()
+        repository = InMemoryCourierRepository()
     }
 
     "can add the courier" {
         // Given
-        val courier = newCourier()
-        sut.add(courier)
+        val courier = freeCourier()
+        repository.add(courier)
 
         // When
-        val actual = sut.getById(courier.id)
+        val actual = repository.getById(courier.id)
 
         // Then
         actual shouldBeSameInstanceAs courier
@@ -36,20 +35,20 @@ internal class InMemoryCourierRepositoryTest : StringSpec({
     "can update the courier" {
         // Given
         val courierId = UUID.randomUUID()
-        val courierInStorage = newFreeCourier(
+        val courierInStorage = freeCourier(
             id = courierId,
         )
-        val courierToUpdate = newBusyCourier(
+        val courierToUpdate = busyCourier(
             id = courierId,
             name = courierInStorage.name,
             location = courierInStorage.location,
             transport = courierInStorage.transport,
         )
-        sut.add(courierInStorage)
+        repository.add(courierInStorage)
 
         // When
-        sut.update(courierToUpdate)
-        val actual = sut.getById(courierId)
+        repository.update(courierToUpdate)
+        val actual = repository.getById(courierId)
 
         // Then
         assertSoftly {
@@ -67,12 +66,12 @@ internal class InMemoryCourierRepositoryTest : StringSpec({
         // Given
         val countOfFreeCouriers = 3
         repeat(countOfFreeCouriers) {
-            sut.add(newFreeCourier())
+            repository.add(freeCourier())
         }
-        sut.add(newBusyCourier())
+        repository.add(busyCourier())
 
         // When
-        val actual = sut.getAllFree()
+        val actual = repository.getAllFree()
 
         // Then
         actual.size shouldBe countOfFreeCouriers

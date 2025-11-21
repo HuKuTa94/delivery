@@ -104,7 +104,7 @@ class LocationTest : StringSpec({
 
     "distance between same locations is zero" {
         // Given
-        val location = newLocation(5, 5)
+        val location = location(5, 5)
 
         // When
         val result = location.distanceTo(location)
@@ -115,8 +115,8 @@ class LocationTest : StringSpec({
 
     "distance is symmetric" {
         // Given
-        val locationA = newLocation(1, 2)
-        val locationB = newLocation(7, 9)
+        val locationA = location(1, 2)
+        val locationB = location(7, 9)
 
         // When
         val resultAB = locationA.distanceTo(locationB)
@@ -128,8 +128,8 @@ class LocationTest : StringSpec({
 
     "distance is valid when only X changes" {
         // Given
-        val from = newLocation(1, 1)
-        val to = newLocation(5, 1)
+        val from = location(1, 1)
+        val to = location(5, 1)
 
         // When
         val result = from.distanceTo(to)
@@ -140,8 +140,8 @@ class LocationTest : StringSpec({
 
     "distance is valid when only Y changes" {
         // Given
-        val from = newLocation(1, 1)
-        val to = newLocation(1, 5)
+        val from = location(1, 1)
+        val to = location(1, 5)
 
         // When
         val result = from.distanceTo(to)
@@ -160,8 +160,8 @@ class LocationTest : StringSpec({
             validCoordinates,
         ) { x1, y1, x2, y2 ->
             // Given
-            val from = newLocation(x1, y1)
-            val to = newLocation(x2, y2)
+            val from = location(x1, y1)
+            val to = location(x2, y2)
 
             // When
             val result = from.distanceTo(to)
@@ -183,8 +183,8 @@ class LocationTest : StringSpec({
             validCoordinates,
         ) { x1, y1, x2, y2 ->
             // Given
-            val from = newLocation(x1, y1)
-            val to = newLocation(x2, y2)
+            val from = location(x1, y1)
+            val to = location(x2, y2)
 
             // When
             val result = from.distanceTo(to)
@@ -196,8 +196,8 @@ class LocationTest : StringSpec({
 
     "distance with large coordinates still is calculated" {
         // Given
-        val from = newLocationWithMinCoords()
-        val to = newLocationWithMaxCoords()
+        val from = minLocation()
+        val to = maxLocation()
 
         // When
         val result = from.distanceTo(to)

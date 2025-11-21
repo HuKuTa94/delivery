@@ -1,9 +1,9 @@
 package github.com.hukuta94.delivery.infrastructure.persistence.inmemory
 
 import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderStatus
-import github.com.hukuta94.delivery.core.domain.aggregate.order.newAssignedOrder
-import github.com.hukuta94.delivery.core.domain.aggregate.order.newCompletedOrder
-import github.com.hukuta94.delivery.core.domain.aggregate.order.newOrder
+import github.com.hukuta94.delivery.core.domain.aggregate.order.assignedOrder
+import github.com.hukuta94.delivery.core.domain.aggregate.order.completedOrder
+import github.com.hukuta94.delivery.core.domain.aggregate.order.createdOrder
 import io.kotest.assertions.assertSoftly
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
@@ -22,7 +22,7 @@ class InMemoryOrderRepositoryTest : StringSpec({
 
     "can add the order" {
         // Given
-        val order = newOrder()
+        val order = createdOrder()
 
         // When
         sut.add(order)
@@ -35,10 +35,10 @@ class InMemoryOrderRepositoryTest : StringSpec({
     "can update the order" {
         // Given
         val orderId = UUID.randomUUID()
-        val orderInStorage = newOrder(
+        val orderInStorage = createdOrder(
             id = orderId,
         )
-        val orderToUpdate = newCompletedOrder(
+        val orderToUpdate = completedOrder(
             id = orderId,
             location = orderInStorage.location,
         )
@@ -62,9 +62,9 @@ class InMemoryOrderRepositoryTest : StringSpec({
         // Given
         val countOfCreatedOrders = 3
         repeat(countOfCreatedOrders) {
-            sut.add(newOrder())
+            sut.add(createdOrder())
         }
-        val assignedOrder = newAssignedOrder()
+        val assignedOrder = assignedOrder()
         sut.add(assignedOrder)
 
         // When
@@ -78,9 +78,9 @@ class InMemoryOrderRepositoryTest : StringSpec({
         // Given
         val countOfAssignedOrders = 3
         repeat(countOfAssignedOrders) {
-            sut.add(newAssignedOrder())
+            sut.add(assignedOrder())
         }
-        val createdOrder = newOrder()
+        val createdOrder = createdOrder()
         sut.add(createdOrder)
 
         // When
