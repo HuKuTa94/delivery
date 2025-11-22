@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# Cross-platform launcher for Detekt git hook.
+
+echo "Running git hook Detekt..."
+
+# --- Gradle wrapper depending on OS ---
+if [[ "$OS" == "Windows_NT" ]]; then
+    GRADLEW="./gradlew.bat"
+else
+    GRADLEW="./gradlew"
+fi
+
+$GRADLEW detekt --console=plain --quiet || exit 1
