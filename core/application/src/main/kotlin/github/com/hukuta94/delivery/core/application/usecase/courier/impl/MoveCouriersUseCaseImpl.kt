@@ -6,6 +6,7 @@ import github.com.hukuta94.delivery.core.domain.rule.CompleteOrderBusinessRule
 import github.com.hukuta94.delivery.core.application.port.repository.domain.CourierRepositoryPort
 import github.com.hukuta94.delivery.core.application.port.repository.domain.OrderRepositoryPort
 import github.com.hukuta94.delivery.core.application.port.repository.UnitOfWorkPort
+import github.com.hukuta94.delivery.core.domain.aggregate.courier.Courier
 import org.slf4j.LoggerFactory
 
 class MoveCouriersUseCaseImpl(
@@ -16,46 +17,53 @@ class MoveCouriersUseCaseImpl(
 ) : MoveCouriersUseCase {
 
     override fun execute() {
-        unitOfWork.executeInTransaction {
-            val busyCouriers = courierRepository.getAllBusy().associateBy { it.id }
-            if (busyCouriers.keys.isEmpty()) {
-                return@executeInTransaction
-            }
+        // TODO эта функция может быть портом-интерфейсом
+        fun findCouriersWithOrders(): Map<Courier, Order> {
+            val couriers = courierRepository.getAllBusy()
+                .associateBy { it.id }
+                .takeIf { it.isNotEmpty() }
+                ?: return emptyMap()
 
-            val courierByOrderMap = orderRepository.getAllAssigned().associateBy {
-                requireNotNull(
-                    busyCouriers[it.courierId]
-                )
-            }
-            if (courierByOrderMap.isEmpty()) {
-                return@executeInTransaction
-            }
+            return orderRepository.getAllAssigned()
+                .associateBy { requireNotNull(couriers[it.courierId]) }
+                .takeIf { it.isNotEmpty() }
+                ?: return emptyMap()
+        }
 
+        fun moveCouriersToTheirOrders(couriersWithOrders: Map<Courier, Order>) {
             LOG.info("Move couriers to their orders")
 
-            val ordersToUpdate = mutableListOf<Order>()
-
-            courierByOrderMap.forEach { (courier, order) ->
-                // Move couriers to their orders
+            couriersWithOrders.forEach { (courier, order) ->
                 courier.moveTo(order.location)
+            }
+        }
 
-                // Try to complete the order
-                val isOrderCompleted = completeOrderBusinessRule.execute(order, courier).isRight()
-                if (isOrderCompleted) {
+        fun tryToCompleteOrders(couriersWithOrders: Map<Courier, Order>): Collection<Order> {
+            val completedOrders = mutableListOf<Order>()
+
+            couriersWithOrders.forEach { (courier, order) ->
+                completeOrderBusinessRule.execute(order, courier).onRight {
                     LOG.info("Order with id: ${order.id} was completed by courier with id: ${courier.id}")
-                    ordersToUpdate.add(order)
+                    completedOrders.add(order)
                 }
             }
 
-            // Always update couriers after movement
-            courierRepository.update(
-                courierByOrderMap.keys.toList()
-            )
+            return completedOrders
+        }
 
-            // Update completed orders
-            if (ordersToUpdate.isNotEmpty()) {
-                orderRepository.update(ordersToUpdate)
-            }
+        unitOfWork.executeInTransaction {
+            val couriersWithOrder = findCouriersWithOrders()
+                .takeIf { it.isNotEmpty() }
+                ?: return@executeInTransaction
+
+            moveCouriersToTheirOrders(couriersWithOrder)
+            tryToCompleteOrders(couriersWithOrder)
+                .takeIf { it.isNotEmpty() }
+                ?.let { orderRepository.update(it) }
+
+            courierRepository.update(
+                couriersWithOrder.keys.toList()
+            )
         }
     }
 

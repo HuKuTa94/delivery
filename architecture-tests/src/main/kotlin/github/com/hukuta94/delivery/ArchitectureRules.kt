@@ -4,8 +4,6 @@ import com.tngtech.archunit.core.domain.JavaClasses
 import com.tngtech.archunit.core.importer.ClassFileImporter
 import com.tngtech.archunit.core.importer.ImportOption
 import com.tngtech.archunit.lang.syntax.ArchRuleDefinition
-import com.tngtech.archunit.lang.syntax.elements.ClassesShould
-import com.tngtech.archunit.lang.syntax.elements.ClassesShouldConjunction
 import com.tngtech.archunit.lang.syntax.elements.GivenClasses
 import kotlin.reflect.KClass
 
@@ -27,25 +25,21 @@ infix fun String.onlyContains(classes: Collection<KClass<*>>) {
     val javaClasses = classes.map { it.java }
     val importedClasses = this.classes()
 
-    var rule: Any = ArchRuleDefinition.classes()
+    if (javaClasses.isEmpty()) return
+
+    val base = ArchRuleDefinition.classes()
         .that().resideInAnyPackage(this)
         .and().areNotEnums()
         .and().areNotMemberClasses()
         .should()
 
-    javaClasses.forEachIndexed { index, clazz ->
-        val isLast = index == javaClasses.lastIndex
+    var rule = base.beAssignableTo(javaClasses.first())
 
-        rule = when (rule) {
-            is ClassesShould -> when {
-                isLast -> rule.beAssignableTo(clazz)
-                else -> rule.beAssignableTo(clazz).orShould()
-            }
-            else -> error("Impossible and unreachable error of \"else\" branch")
-        }
+    for (clazz in javaClasses.drop(1)) {
+        rule = rule.orShould().beAssignableTo(clazz)
     }
 
-    (rule as ClassesShouldConjunction).check(importedClasses)
+    rule.check(importedClasses)
 }
 
 infix fun String.onlyDependsOn(shouldDependOn: String) {

@@ -1,6 +1,7 @@
 package github.com.hukuta94.delivery.core.domain.aggregate.courier
 
 import arrow.core.raise.either
+import arrow.core.raise.ensure
 import github.com.hukuta94.delivery.core.domain.BusinessError
 import github.com.hukuta94.delivery.core.domain.ValueObject
 
@@ -11,17 +12,17 @@ data class CourierName private constructor(
     companion object {
 
         fun of(value: String) = either {
-            if (value.isBlank() || value.isEmpty()) {
-                raise(Error.NameCanNotBeEmpty)
+            ensure(value.isNotBlank() && value.isNotEmpty()) {
+                Error.NameCanNotBeEmpty
             }
-
-            if (value.length < MIN_NAME_LENGTH) {
-                raise(Error.NameTooShort(value))
+            ensure(value.length >= MIN_NAME_LENGTH) {
+                Error.NameTooShort(value)
             }
 
             val trimmedName = value.trim()
-            if (trimmedName.length > MAX_NAME_LENGTH) {
-                raise(Error.NameTooLong(trimmedName)) }
+            ensure(trimmedName.length <= MAX_NAME_LENGTH) {
+                Error.NameTooLong(trimmedName)
+            }
 
             CourierName(trimmedName)
         }
