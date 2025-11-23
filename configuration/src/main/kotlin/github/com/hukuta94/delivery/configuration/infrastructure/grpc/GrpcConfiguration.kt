@@ -13,9 +13,10 @@ open class GrpcConfiguration {
 
     @Bean
     open fun geoServiceGrpChannelBean(): ManagedChannel {
-        return ManagedChannelBuilder.forAddress(ADDRESS_NAME, ADDRESS_PORT)
+        geoServiceGrpChannel = ManagedChannelBuilder.forAddress(ADDRESS_NAME, ADDRESS_PORT)
             .usePlaintext() // disable SSL/TLS
             .build()
+        return geoServiceGrpChannel
     }
 
     @PreDestroy

@@ -53,15 +53,20 @@ abstract class KtormBoxEventRepository(
             .map { rowToMessage(it) }
     }
 
-    protected fun rowToMessage(row: QueryRowSet): BoxEventMessage =
-        BoxEventMessage().apply {
+    protected fun rowToMessage(row: QueryRowSet): BoxEventMessage {
+        val eventType = Class
+            .forName(row.notNull(table.eventType))
+            .asSubclass(DomainEvent::class.java)
+
+        return BoxEventMessage().apply {
             eventId = row.notNull(table.eventId)
             status = BoxEventMessageStatus.valueOf(row.notNull(BoxEventMessageStatusTable.code))
             version = row.notNull(table.version)
             payload = row.notNull(table.payload)
-            eventType = Class.forName(row.notNull(table.eventType)) as Class<out DomainEvent>
+            this.eventType = eventType
             createdAt = row.notNull(table.createdAt)
             processedAt = row[table.processedAt]
             errorDescription = row[table.errorDescription]
         }
+    }
 }

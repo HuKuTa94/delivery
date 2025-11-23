@@ -19,6 +19,8 @@ data class Location private constructor(
 
     companion object {
 
+        private val VALID_COORDINATE_RANGE = 1..10
+
         fun of(x: Int, y: Int) = either {
             if (x !in VALID_COORDINATE_RANGE || y !in VALID_COORDINATE_RANGE) {
                 raise(Error.CoordinatesOutOfRange(x, y))
@@ -30,8 +32,6 @@ data class Location private constructor(
             x = (VALID_COORDINATE_RANGE).random(),
             y = (VALID_COORDINATE_RANGE).random(),
         )
-
-        private val VALID_COORDINATE_RANGE = 1..10
     }
 
     sealed class Error(

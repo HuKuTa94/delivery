@@ -11,6 +11,9 @@ data class CourierName private constructor(
 
     companion object {
 
+        private const val MIN_NAME_LENGTH = 2
+        private const val MAX_NAME_LENGTH = 30
+
         fun of(value: String) = either {
             ensure(value.isNotBlank() && value.isNotEmpty()) {
                 Error.NameCanNotBeEmpty
@@ -26,9 +29,6 @@ data class CourierName private constructor(
 
             CourierName(trimmedName)
         }
-
-        private const val MIN_NAME_LENGTH = 2
-        private const val MAX_NAME_LENGTH = 30
     }
 
     sealed class Error(

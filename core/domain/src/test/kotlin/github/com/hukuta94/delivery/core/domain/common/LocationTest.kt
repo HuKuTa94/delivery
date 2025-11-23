@@ -44,12 +44,12 @@ class LocationTest : StringSpec({
         val negativeOutOfRange = MIN_COORDINATE_VALUE - 1
         val positiveOutOfRange = MAX_COORDINATE_VALUE + 1
         val wrongCoordinateRanges = listOf(
-            Pair(negativeOutOfRange, MIN_COORDINATE_VALUE),
-            Pair(positiveOutOfRange, MIN_COORDINATE_VALUE),
-            Pair(MIN_COORDINATE_VALUE, negativeOutOfRange),
-            Pair(MIN_COORDINATE_VALUE, positiveOutOfRange),
-            Pair(negativeOutOfRange, negativeOutOfRange),
-            Pair(positiveOutOfRange, positiveOutOfRange),
+            negativeOutOfRange to MIN_COORDINATE_VALUE,
+            positiveOutOfRange to MIN_COORDINATE_VALUE,
+            MIN_COORDINATE_VALUE to negativeOutOfRange,
+            MIN_COORDINATE_VALUE to positiveOutOfRange,
+            negativeOutOfRange to negativeOutOfRange,
+            positiveOutOfRange to positiveOutOfRange,
         )
 
         checkAll(

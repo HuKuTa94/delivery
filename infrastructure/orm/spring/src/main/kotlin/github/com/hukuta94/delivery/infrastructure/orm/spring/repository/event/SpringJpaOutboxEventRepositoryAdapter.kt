@@ -33,7 +33,14 @@ class SpringJpaOutboxEventRepositoryAdapter(
     }
 
     override fun saveAll(messages: List<BoxEventMessage>) {
-        outboxEventJpaRepository.saveAll(messages as Iterable<OutboxEventMessageJpaEntity>)
+        val outboxMessages = messages.map {
+            it as? OutboxEventMessageJpaEntity
+                ?: throw IllegalArgumentException(
+                    "Expected OutboxEventMessageJpaEntity but got ${it::class.java.name}"
+                )
+        }
+
+        outboxEventJpaRepository.saveAll(outboxMessages)
     }
 
     override fun findMessagesInStatuses(statuses: Set<BoxEventMessageStatus>): List<OutboxEventMessageJpaEntity> {

@@ -20,7 +20,7 @@ class OrderControllerV1(
 ) {
 
     @PostMapping("orders/")
-    fun createOrder(): ResponseEntity<Void> {
+    fun createOrder(): ResponseEntity<Unit> {
         val event = BasketConfirmedIntegrationDomainEvent(
             basketId = UUID.randomUUID(),
             street = "Random street",

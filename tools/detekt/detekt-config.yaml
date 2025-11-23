@@ -3,6 +3,16 @@ style:
     active: false
   ReturnCount:
     max: 4
+  AlsoCouldBeApply:
+    active: true
+  CanBeNonNullable:
+    active: true
+  ClassOrdering:
+    active: true
+  PreferToOverPairSyntax:
+    active: true
+  UnnecessaryAbstractClass:
+    active: false
 
 formatting:
   FinalNewline:
@@ -36,6 +46,7 @@ naming:
     privateParameterPattern: '[_a-z][A-Za-z0-9]*'
 
 build:
+  excludes: '**/generated/**'
   excludeCorrectable: false
   # Исправляет ошибки без предупреждения, чтобы реже гонять detekt, но нужно следить за изменениями
   # excludeCorrectable: true
