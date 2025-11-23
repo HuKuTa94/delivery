@@ -39,3 +39,11 @@ build:
   excludeCorrectable: false
   # Исправляет ошибки без предупреждения, чтобы реже гонять detekt, но нужно следить за изменениями
   # excludeCorrectable: true
+
+comments:
+  active: true
+  OutdatedDocumentation:
+    active: true
+    matchTypeParameters: true
+    matchDeclarationsOrder: true
+    allowParamOnConstructorProperties: false

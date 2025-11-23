@@ -17,9 +17,9 @@ import java.time.LocalDateTime
  * Typical usage involves extending this class and invoking [execute] from a scheduled job
  * (e.g., a cron task) to process accumulated messages periodically.
  *
- * @property eventRepository repository for accessing and updating event messages
- * @property eventDeserializer utility for converting serialized payloads into event objects
- * @property eventPublisher component responsible for dispatching deserialized events
+ * @param eventRepository repository for accessing and updating event messages
+ * @param eventDeserializer utility for converting serialized payloads into event objects
+ * @param eventPublisher component responsible for dispatching deserialized events
  */
 abstract class BoxEventMessageRelay(
     private val eventRepository: BoxEventMessageRelayRepositoryPort,
