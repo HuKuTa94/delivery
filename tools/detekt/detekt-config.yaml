@@ -21,7 +21,7 @@ formatting:
 complexity:
   CognitiveComplexMethod:
     active: true
-    threshold: 6
+    threshold: 5
   LongParameterList:
     functionThreshold: 10
     constructorThreshold: 10

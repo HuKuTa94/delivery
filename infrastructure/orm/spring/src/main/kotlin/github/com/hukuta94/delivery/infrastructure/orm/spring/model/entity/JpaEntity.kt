@@ -63,27 +63,34 @@ abstract class JpaEntity<DOMAIN_AGGREGATE : Aggregate<*>> {
         domainAggregateInstance: DOMAIN_AGGREGATE,
         jpaEntityFields: Map<String, Field>
     ) {
-        domainAggregateInstance.fields().forEach { domainField ->
-            val jpaEntityField = jpaEntityFields.ofName(domainField.name)
+        getFieldsOf(domainAggregateInstance::class).forEach { domainField ->
+            val jpaField = jpaEntityFields.ofName(domainField.name)
             try {
-                domainAggregateInstance.mapJpaEntityFieldToDomainField(jpaEntityField, domainField)
+                domainAggregateInstance.mapJpaEntityFieldToDomainField(jpaField, domainField)
             } catch (ex: IllegalArgumentException) {
-                // Convert "Can not set..." message into more explicit with more information
-                if (ex.message?.contains("Can not set", true) == true) {
-                    throw IllegalArgumentException(
-                        "Mismatched type of the field ${jpaEntityField.name} " +
-                        "for domain ${domainAggregateClass.simpleName}. " +
-                        "Must be ${domainField.type}. Actual is ${jpaEntityField.type}"
-                    )
-                }
-                throw ex
+                throw enhanceMappingException(ex, jpaField, domainField)
             }
         }
     }
 
-    private fun jpaEntityFields() = getFieldsOf(this::class)
+    private fun enhanceMappingException(
+        ex: IllegalArgumentException,
+        jpaField: Field,
+        domainField: Field
+    ): IllegalArgumentException {
+        val isAssignmentError = ex.message?.contains("Can not set", ignoreCase = true) == true
+        return if (isAssignmentError) {
+            IllegalArgumentException(
+                "Mismatched type of the field ${jpaField.name} " +
+                        "for domain ${domainField.declaringClass.simpleName}. " +
+                        "Must be ${domainField.type}. Actual is ${jpaField.type}"
+            )
+        } else {
+            ex
+        }
+    }
 
-    private fun Aggregate<*>.fields() = getFieldsOf(this::class)
+    private fun jpaEntityFields() = getFieldsOf(this::class)
 
     /**
      * @return public and private fields of the class excluding static fields
