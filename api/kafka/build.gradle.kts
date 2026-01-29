@@ -35,3 +35,7 @@ protobuf {
         }
     }
 }
+
+tasks.jar {
+    archiveBaseName.set("api-kafka")
+}
