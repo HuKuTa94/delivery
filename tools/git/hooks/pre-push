@@ -10,4 +10,10 @@ else
     GRADLEW="./gradlew"
 fi
 
-$GRADLEW detekt --console=plain --quiet || exit 1
+"$GRADLEW" \
+    detekt \
+    detektTest \
+    detektTestFixtures \
+    --console=plain \
+    --quiet \
+    || exit 1
