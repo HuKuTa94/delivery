@@ -1,0 +1,13 @@
+FROM amazoncorretto:21-alpine3.21-jdk
+
+#ARG USER_ID
+#ARG GROUP_ID
+#USER $USER_ID:$GROUP_ID
+
+WORKDIR /app
+
+COPY configuration/build/libs/delivery.jar delivery.jar
+
+EXPOSE 8080
+
+ENTRYPOINT ["java", "-jar", "delivery.jar"]

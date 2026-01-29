@@ -169,4 +169,8 @@ object Plugins {
         const val plugin = "io.gitlab.arturbosch.detekt"
         const val formatting = "io.gitlab.arturbosch.detekt:detekt-formatting:$version"
     }
+    object Spring {
+        const val version = "3.5.4"
+        const val boot = "org.springframework.boot"
+    }
 }

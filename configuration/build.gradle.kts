@@ -2,6 +2,11 @@ applyCommonProjectSetup()
 
 plugins {
     applyCommonProjectPlugins()
+    id(Plugins.Spring.boot) version Plugins.Spring.version
+}
+
+tasks.bootJar {
+    archiveFileName.set("delivery.jar")
 }
 
 dependencies {
