@@ -1,5 +1,6 @@
 package github.com.hukuta94.delivery.configuration.infrastructure.orm.springjpa
 
+import github.com.hukuta94.delivery.configuration.infrastructure.RelayProperties
 import github.com.hukuta94.delivery.core.application.event.ApplicationEventDeserializer
 import github.com.hukuta94.delivery.core.application.event.ApplicationEventPublisher
 import github.com.hukuta94.delivery.core.application.event.ApplicationEventSerializer
@@ -77,10 +78,12 @@ open class SpringOrmConfiguration {
         eventRepository: SpringJpaOutboxEventRepositoryAdapter,
         eventDeserializer: ApplicationEventDeserializer,
         eventPublisher: ApplicationEventPublisher,
+        relayProperties: RelayProperties,
     ) = OutboxEventMessageRelayJob(
         eventRepository = eventRepository,
         eventDeserializer = eventDeserializer,
         eventPublisher = eventPublisher,
+        batchSize = relayProperties.batchSize,
     )
 
     @Bean
@@ -97,9 +100,11 @@ open class SpringOrmConfiguration {
         eventRepository: SpringJpaInboxEventRepositoryAdapter,
         eventDeserializer: ApplicationEventDeserializer,
         eventPublisher: ApplicationEventPublisher,
+        relayProperties: RelayProperties,
     ) = InboxEventMessageRelayJob(
         eventRepository = eventRepository,
         eventDeserializer = eventDeserializer,
         eventPublisher = eventPublisher,
+        batchSize = relayProperties.batchSize,
     )
 }

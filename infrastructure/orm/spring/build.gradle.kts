@@ -28,4 +28,7 @@ dependencies {
 
     // mockito
     testImplementation(Libs.Mockito.mockito_kotlin)
+
+    // jackson
+    testImplementation(Libs.Jackson.module_kotlin)
 }

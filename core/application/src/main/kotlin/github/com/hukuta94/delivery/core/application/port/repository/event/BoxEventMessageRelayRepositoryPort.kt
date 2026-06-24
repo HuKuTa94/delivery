@@ -7,5 +7,8 @@ interface BoxEventMessageRelayRepositoryPort {
 
     fun saveAll(messages: List<BoxEventMessage>)
 
-    fun findMessagesInStatuses(statuses: Set<BoxEventMessageStatus>): List<BoxEventMessage>
+    fun findMessagesInStatuses(
+        statuses: Set<BoxEventMessageStatus>,
+        batchSize: Int,
+    ): List<BoxEventMessage>
 }

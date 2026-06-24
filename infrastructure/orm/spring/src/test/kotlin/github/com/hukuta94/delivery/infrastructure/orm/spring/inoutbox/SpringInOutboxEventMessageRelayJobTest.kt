@@ -1,5 +1,6 @@
 package github.com.hukuta94.delivery.infrastructure.orm.spring.inoutbox
 
+import com.fasterxml.jackson.databind.JsonMappingException
 import github.com.hukuta94.delivery.core.application.event.ApplicationEventDeserializer
 import github.com.hukuta94.delivery.core.application.event.ApplicationEventPublisher
 import github.com.hukuta94.delivery.core.application.event.inoutbox.BoxEventMessageStatus
@@ -32,9 +33,10 @@ internal class SpringInOutboxEventMessageRelayJobTest : StringSpec({
             outboxEventJpaRepository,
             eventDeserializer,
             eventPublisher,
+            batchSize = 50,
         )
 
-        whenever(outboxEventJpaRepository.findMessagesInStatuses(any()))
+        whenever(outboxEventJpaRepository.findMessagesInStatuses(any(), any()))
             .thenReturn(listOf(OUTBOX_MESSAGE))
     }
 
@@ -52,7 +54,8 @@ internal class SpringInOutboxEventMessageRelayJobTest : StringSpec({
 
     "must handle deserialization error" {
         // When
-        whenever(eventDeserializer.deserialize(any(), any())).thenThrow(RuntimeException("Deserialization error"))
+        whenever(eventDeserializer.deserialize(any(), any()))
+            .thenAnswer { throw JsonMappingException("Deserialization error") }
         sut.pullMessagesFromOutbox()
 
         // Then

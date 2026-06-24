@@ -1,6 +1,9 @@
 delivery:
   # spring-jpa | ktorm | inmemory
   orm: spring-jpa
+  relay:
+    # Number of inbox/outbox messages fetched and processed per relay run.
+    batch-size: 50
 
   cors:
     allowed-origins:
@@ -26,6 +29,8 @@ spring:
     username: username
     password: secret
     driver-class-name: org.postgresql.Driver
+    hikari:
+      connection-init-sql: "SET SESSION idle_in_transaction_session_timeout = '10000'"
 
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.xml

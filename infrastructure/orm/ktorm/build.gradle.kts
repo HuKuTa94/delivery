@@ -19,6 +19,7 @@ dependencies {
 
     // ktorm
     implementation(Libs.Ktorm.core)
+    implementation(Libs.Ktorm.support_postgresql)
 
     // mockito
     testImplementation(Libs.Mockito.mockito_kotlin)
