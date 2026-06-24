@@ -31,4 +31,8 @@ dependencies {
 
     // jackson
     testImplementation(Libs.Jackson.module_kotlin)
+
+    // integration test foundation (Testcontainers + Liquibase) + Spring test support
+    testImplementation(testFixtures(project(":infrastructure:orm:commons")))
+    testImplementation(Libs.SpringBoot.starter_test)
 }
