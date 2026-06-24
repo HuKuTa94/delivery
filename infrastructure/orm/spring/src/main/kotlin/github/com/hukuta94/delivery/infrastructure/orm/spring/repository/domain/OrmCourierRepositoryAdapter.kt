@@ -4,25 +4,21 @@ import github.com.hukuta94.delivery.core.domain.aggregate.courier.Courier
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.CourierStatus
 import github.com.hukuta94.delivery.core.application.port.repository.domain.CourierRepositoryPort
 import github.com.hukuta94.delivery.infrastructure.orm.spring.model.entity.CourierJpaEntity
-import github.com.hukuta94.delivery.infrastructure.orm.spring.repository.event.SpringJpaOutboxEventRepositoryAdapter
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
 
 class OrmCourierRepositoryAdapter(
     private val courierJpaRepository: CourierJpaRepository,
-    private val outboxRepository: SpringJpaOutboxEventRepositoryAdapter,
 ) : CourierRepositoryPort {
 
     override fun add(aggregate: Courier) {
         val jpaEntity = CourierJpaEntity.fromDomain(aggregate)
         courierJpaRepository.save(jpaEntity)
-        outboxRepository.saveDomainEvents(aggregate.popDomainEvents())
     }
 
     override fun update(aggregate: Courier) {
         val jpaEntity = CourierJpaEntity.fromDomain(aggregate)
         courierJpaRepository.save(jpaEntity)
-        outboxRepository.saveDomainEvents(aggregate.popDomainEvents())
     }
 
     override fun update(aggregates: Collection<Courier>) {
@@ -30,9 +26,6 @@ class OrmCourierRepositoryAdapter(
             CourierJpaEntity.fromDomain(it)
         }
         courierJpaRepository.saveAll(jpaEntities)
-
-        val domainEvents = aggregates.flatMap { it.popDomainEvents() }
-        outboxRepository.saveDomainEvents(domainEvents)
     }
 
     override fun getById(id: UUID): Courier {

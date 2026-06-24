@@ -44,19 +44,15 @@ open class SpringOrmConfiguration {
     @Bean
     open fun courierRepository(
         courierJpaRepository: CourierJpaRepository,
-        outboxRepository: SpringJpaOutboxEventRepositoryAdapter,
     ) = OrmCourierRepositoryAdapter(
         courierJpaRepository = courierJpaRepository,
-        outboxRepository = outboxRepository,
     )
 
     @Bean
     open fun orderRepository(
         orderJpaRepository: OrderJpaRepository,
-        outboxRepository: SpringJpaOutboxEventRepositoryAdapter,
     ) = OrmOrderRepositoryAdapter(
         orderJpaRepository = orderJpaRepository,
-        outboxRepository = outboxRepository,
     )
 
     @Bean
