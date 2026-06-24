@@ -2,6 +2,18 @@ delivery:
   # spring-jpa | ktorm | inmemory
   orm: spring-jpa
 
+  cors:
+    allowed-origins:
+      - http://localhost:8086
+    allowed-methods:
+      - GET
+      - POST
+
+  grpc:
+    geo:
+      address: localhost
+      port: 8084
+
 server:
   port: 8080
 
