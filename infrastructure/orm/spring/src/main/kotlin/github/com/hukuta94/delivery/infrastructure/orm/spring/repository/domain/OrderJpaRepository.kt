@@ -10,4 +10,6 @@ import java.util.*
 interface OrderJpaRepository : JpaRepository<OrderJpaEntity, UUID> {
 
     fun findAllByStatusIs(status: OrderStatus): List<OrderJpaEntity>
+
+    fun findAllByStatusNot(status: OrderStatus): List<OrderJpaEntity>
 }
