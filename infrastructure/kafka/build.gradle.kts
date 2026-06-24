@@ -20,6 +20,9 @@ dependencies {
 
     // protobuf
     applyCommonProtobufDependencies()
+
+    // mockito
+    testImplementation(Libs.Mockito.mockito_kotlin)
 }
 
 protobuf {

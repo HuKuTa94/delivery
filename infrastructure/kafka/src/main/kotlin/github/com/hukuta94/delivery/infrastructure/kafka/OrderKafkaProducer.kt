@@ -16,7 +16,7 @@ class OrderKafkaProducer(
         orderAssignedDomainEvent: OrderAssignedDomainEvent
     ) {
         publishToTopicOrderStatusChanged(
-            orderId = orderAssignedDomainEvent.eventId,
+            orderId = orderAssignedDomainEvent.orderId,
             orderStatus =
                 github.com.hukuta94.delivery.core.domain.aggregate.order.OrderStatus.ASSIGNED.toKafkaOrderStatus()
         )
@@ -26,7 +26,7 @@ class OrderKafkaProducer(
         orderCompletedDomainEvent: OrderCompletedDomainEvent
     ) {
         publishToTopicOrderStatusChanged(
-            orderId = orderCompletedDomainEvent.eventId,
+            orderId = orderCompletedDomainEvent.orderId,
             orderStatus =
                 github.com.hukuta94.delivery.core.domain.aggregate.order.OrderStatus.COMPLETED.toKafkaOrderStatus()
         )
