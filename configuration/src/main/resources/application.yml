@@ -1,3 +1,7 @@
+delivery:
+  # spring-jpa | ktorm | inmemory
+  orm: spring-jpa
+
 server:
   port: 8080
 

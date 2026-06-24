@@ -19,11 +19,17 @@ import github.com.hukuta94.delivery.infrastructure.orm.ktorm.repository.KtormOrd
 import github.com.hukuta94.delivery.infrastructure.orm.ktorm.repository.KtormOutboxEventRepository
 import org.ktorm.database.Database
 import org.ktorm.support.postgresql.PostgreSqlDialect
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import javax.sql.DataSource
 
 @Configuration
+@ConditionalOnProperty(
+    prefix = "delivery",
+    name = ["orm"],
+    havingValue = "ktorm",
+)
 open class KtormOrmConfiguration {
 
     @Bean
@@ -68,7 +74,7 @@ open class KtormOrmConfiguration {
     )
 
     @Bean
-    open fun outboxEventMessageRelayJob(
+    open fun ktormOutboxEventMessageRelayJob(
         eventRepository: KtormOutboxEventRepository,
         eventDeserializer: ApplicationEventDeserializer,
         eventPublisher: ApplicationEventPublisher,
@@ -79,7 +85,7 @@ open class KtormOrmConfiguration {
     )
 
     @Bean
-    open fun inboxEventMessageRelayJob(
+    open fun ktormInboxEventMessageRelayJob(
         eventRepository: KtormInboxEventRepository,
         eventDeserializer: ApplicationEventDeserializer,
         eventPublisher: ApplicationEventPublisher,
