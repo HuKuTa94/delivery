@@ -5,7 +5,6 @@ import github.com.hukuta94.delivery.core.application.query.order.response.GetNot
 import github.com.hukuta94.delivery.core.application.query.order.response.OrderResponse
 import github.com.hukuta94.delivery.infrastructure.orm.commons.toLocationResponse
 import github.com.hukuta94.delivery.infrastructure.orm.ktorm.notNull
-import github.com.hukuta94.delivery.infrastructure.orm.ktorm.table.CourierTable
 import github.com.hukuta94.delivery.infrastructure.orm.ktorm.table.OrderTable
 import org.ktorm.database.Database
 import org.ktorm.dsl.from
@@ -24,8 +23,8 @@ class KtormGetNotCompletedOrdersQuery(
             )
             .map { row ->
                 OrderResponse(
-                    id = row.notNull(CourierTable.id),
-                    location = row.notNull(CourierTable.location).toLocationResponse(),
+                    id = row.notNull(OrderTable.id),
+                    location = row.notNull(OrderTable.location).toLocationResponse(),
                 )
             }
         return GetNotCompletedOrdersResponse(orders)
