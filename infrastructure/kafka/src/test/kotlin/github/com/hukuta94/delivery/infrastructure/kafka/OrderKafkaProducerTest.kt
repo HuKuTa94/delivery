@@ -3,15 +3,20 @@ package github.com.hukuta94.delivery.infrastructure.kafka
 import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderAssignedDomainEvent
 import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderCompletedDomainEvent
 import io.kotest.assertions.assertSoftly
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import org.apache.kafka.clients.producer.ProducerRecord
+import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.springframework.kafka.core.KafkaTemplate
+import org.springframework.kafka.support.SendResult
 import java.util.UUID
+import java.util.concurrent.CompletableFuture
 
 internal class OrderKafkaProducerTest : StringSpec({
 
@@ -20,6 +25,8 @@ internal class OrderKafkaProducerTest : StringSpec({
 
     beforeTest {
         kafkaTemplate = mock()
+        whenever(kafkaTemplate.send(any<ProducerRecord<UUID, ByteArray>>()))
+            .thenReturn(CompletableFuture.completedFuture(mock<SendResult<UUID, ByteArray>>()))
         sut = OrderKafkaProducer(kafkaTemplate)
     }
 
@@ -52,6 +59,38 @@ internal class OrderKafkaProducerTest : StringSpec({
             val payload = OrderStatusChangedIntegrationEvent.parseFrom(record.value())
             payload.orderId shouldBe orderId.toString()
             payload.orderStatus shouldBe OrderStatus.Completed
+        }
+    }
+
+    "Publishing fails when the broker rejects the message" {
+        whenever(kafkaTemplate.send(any<ProducerRecord<UUID, ByteArray>>()))
+            .thenReturn(
+                CompletableFuture<SendResult<UUID, ByteArray>>().apply {
+                    completeExceptionally(RuntimeException("broker is down"))
+                }
+            )
+
+        shouldThrow<IllegalStateException> {
+            sut.publishOrderAssignedDomainEvent(
+                OrderAssignedDomainEvent(orderId = UUID.randomUUID(), courierId = UUID.randomUUID())
+            )
+        }
+    }
+
+    "Publishing fails when delivery times out" {
+        whenever(kafkaTemplate.send(any<ProducerRecord<UUID, ByteArray>>()))
+            .thenReturn(
+                CompletableFuture<SendResult<UUID, ByteArray>>().apply {
+                    completeExceptionally(
+                        org.apache.kafka.common.errors.TimeoutException("delivery timeout")
+                    )
+                }
+            )
+
+        shouldThrow<IllegalStateException> {
+            sut.publishOrderCompletedDomainEvent(
+                OrderCompletedDomainEvent(orderId = UUID.randomUUID())
+            )
         }
     }
 })

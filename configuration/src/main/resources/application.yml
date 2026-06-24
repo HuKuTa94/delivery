@@ -35,5 +35,9 @@ spring:
     producer:
       key-serializer: org.apache.kafka.common.serialization.UUIDSerializer
       value-serializer: org.apache.kafka.common.serialization.ByteArraySerializer
+      acks: all
       properties:
         max.block.ms: 5000
+        enable.idempotence: true
+        request.timeout.ms: 5000
+        delivery.timeout.ms: 7000

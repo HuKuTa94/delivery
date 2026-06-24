@@ -7,6 +7,7 @@ import org.apache.kafka.clients.producer.ProducerRecord
 import org.slf4j.LoggerFactory
 import org.springframework.kafka.core.KafkaTemplate
 import java.util.*
+import java.util.concurrent.ExecutionException
 
 class OrderKafkaProducer(
     private val kafkaTemplate: KafkaTemplate<UUID, ByteArray>,
@@ -44,11 +45,24 @@ class OrderKafkaProducer(
             integrationEvent.toByteArray() // TODO Отправлять в формате JSON
         )
 
-        kafkaTemplate.send(message)
+        try {
+            kafkaTemplate.send(message).get()
+        } catch (ex: ExecutionException) {
+            throw IllegalStateException(
+                "Broker did not acknowledge message with key: $orderId: ${ex.cause?.message}",
+                ex,
+            )
+        } catch (ex: InterruptedException) {
+            Thread.currentThread().interrupt()
+            throw IllegalStateException(
+                "Interrupted while waiting ack for key: $orderId",
+                ex,
+            )
+        }
 
         LOG.info(
             "Integration event OrderStatusChanged to \"${orderStatus.name}\" " +
-            "with key: $orderId was sent to topic: $TOPIC_ORDER_STATUS_CHANGED"
+            "with key: $orderId was acknowledged by topic: $TOPIC_ORDER_STATUS_CHANGED"
         )
     }
 
