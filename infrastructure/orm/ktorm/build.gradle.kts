@@ -1,7 +1,5 @@
-applyCommonProjectSetup()
-
 plugins {
-    applyCommonProjectPlugins()
+    id("common-setup")
 }
 
 dependencies {
@@ -21,19 +19,19 @@ dependencies {
     testImplementation(testFixtures(project(":infrastructure:orm:commons")))
 
     // jackson — ApplicationEventSerializer runtime in box-event integration tests
-    testImplementation(Libs.Jackson.module_kotlin)
+    testImplementation(libs.jackson.module.kotlin)
 
     // ktorm
-    implementation(Libs.Ktorm.core)
-    implementation(Libs.Ktorm.support_postgresql)
+    implementation(libs.ktorm.core)
+    implementation(libs.ktorm.support.postgresql)
 
     // mockito
-    testImplementation(Libs.Mockito.mockito_kotlin)
+    testImplementation(libs.mockito.kotlin)
 
     // spring
-    implementation(Libs.Spring.tx)
-    implementation(platform(Libs.SpringBoot.bom))
-    implementation(Libs.SpringBoot.starter_logging)
-    testImplementation(Libs.Spring.jdbc)
-    testImplementation(Libs.Spring.context)
+    implementation(libs.spring.tx)
+    implementation(platform(libs.spring.boot.bom))
+    implementation(libs.spring.boot.starter.logging)
+    testImplementation(libs.spring.jdbc)
+    testImplementation(libs.spring.context)
 }

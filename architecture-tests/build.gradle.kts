@@ -1,7 +1,5 @@
-applyCommonProjectSetup()
-
 plugins {
-    applyCommonProjectPlugins()
+    id("common-setup")
 }
 
 dependencies {
@@ -9,5 +7,5 @@ dependencies {
     implementation(project(":configuration"))
 
     // arch unit
-    implementation(Libs.ArchUnit.junit5)
+    implementation(libs.archunit.junit5)
 }

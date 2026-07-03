@@ -1,9 +1,7 @@
-applyCommonProjectSetup()
-
 plugins {
-    applyCommonProjectPlugins()
+    id("common-setup")
 }
 
 dependencies {
-    implementation(Libs.Liquibase.core)
+    implementation(libs.liquibase.core)
 }

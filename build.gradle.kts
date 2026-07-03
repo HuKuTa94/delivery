@@ -1,10 +1,8 @@
 group = "delivery"
 version = "1.0.0-SNAPSHOT"
 
-applyCommonProjectSetup()
-
 plugins {
-    applyCommonProjectPlugins()
+    id("common-setup")
 }
 
 kotlin {
@@ -13,7 +11,7 @@ kotlin {
 
 subprojects {
     apply {
-        plugin(Plugins.Detekt.plugin)
+        plugin(rootProject.libs.plugins.detekt.get().pluginId)
     }
 
     tasks {
@@ -36,7 +34,7 @@ subprojects {
         )
 
         dependencies {
-            detektPlugins(Plugins.Detekt.formatting)
+            detektPlugins(rootProject.libs.detekt.formatting)
         }
     }
 }

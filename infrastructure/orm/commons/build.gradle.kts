@@ -1,7 +1,5 @@
-applyCommonProjectSetup()
-
 plugins {
-    applyCommonProjectPlugins()
+    id("common-setup")
 }
 
 dependencies {
@@ -16,13 +14,13 @@ dependencies {
     testFixturesImplementation(testFixtures(project(":core:application")))
 
     // spring context
-    implementation(Libs.Spring.tx)
-    implementation(Libs.Spring.context)
+    implementation(libs.spring.tx)
+    implementation(libs.spring.context)
 
     // Integration-test foundation (Testcontainers + Liquibase), exposed to consumers via testFixtures.
-    testFixturesApi(platform(Libs.TestContainers.bom))
-    testFixturesApi(Libs.TestContainers.postgresql)
-    testFixturesApi(Libs.Postgresql.postgresql)
-    testFixturesApi(Libs.Liquibase.core)
+    testFixturesApi(platform(libs.testcontainers.bom))
+    testFixturesApi(libs.testcontainers.postgresql)
+    testFixturesApi(libs.postgresql)
+    testFixturesApi(libs.liquibase.core)
     testFixturesApi(project(":infrastructure:persistence:migrations"))
 }

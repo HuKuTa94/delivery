@@ -7,10 +7,8 @@ Core application layer:
 - event handlers to execute business logic or rules (reacting on domain/integration events);
 """
 
-applyCommonProjectSetup()
-
 plugins {
-    applyCommonProjectPlugins()
+    id("common-setup")
 }
 
 dependencies {
@@ -20,7 +18,7 @@ dependencies {
     testImplementation(testFixtures(project(":core:domain")))
 
     // frameworks
-    implementation(Libs.Jackson.module_kotlin)
-    implementation(platform(Libs.SpringBoot.bom))
-    implementation(Libs.SpringBoot.starter_logging)
+    implementation(libs.jackson.module.kotlin)
+    implementation(platform(libs.spring.boot.bom))
+    implementation(libs.spring.boot.starter.logging)
 }

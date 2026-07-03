@@ -2,6 +2,8 @@ import java.io.File
 
 rootProject.name = "delivery"
 
+includeBuild("build-logic")
+
 // Core
 include("core:domain")
 include("core:application")

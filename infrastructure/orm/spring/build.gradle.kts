@@ -1,7 +1,5 @@
-applyCommonProjectSetup()
-
 plugins {
-    applyCommonProjectPlugins()
+    id("common-setup")
 }
 
 dependencies {
@@ -18,21 +16,21 @@ dependencies {
     implementation(project(":infrastructure:orm:commons"))
 
     // spring jpa
-    implementation(platform(Libs.SpringBoot.bom))
-    implementation(Libs.SpringBoot.starter_jdbc)
-    implementation(Libs.SpringBoot.starter_data_jpa)
+    implementation(platform(libs.spring.boot.bom))
+    implementation(libs.spring.boot.starter.jdbc)
+    implementation(libs.spring.boot.starter.data.jpa)
 
     // data base
-    implementation(Libs.Liquibase.core)
-    runtimeOnly(Libs.Postgresql.postgresql)
+    implementation(libs.liquibase.core)
+    runtimeOnly(libs.postgresql)
 
     // mockito
-    testImplementation(Libs.Mockito.mockito_kotlin)
+    testImplementation(libs.mockito.kotlin)
 
     // jackson
-    testImplementation(Libs.Jackson.module_kotlin)
+    testImplementation(libs.jackson.module.kotlin)
 
     // integration test foundation (Testcontainers + Liquibase) + Spring test support
     testImplementation(testFixtures(project(":infrastructure:orm:commons")))
-    testImplementation(Libs.SpringBoot.starter_test)
+    testImplementation(libs.spring.boot.starter.test)
 }

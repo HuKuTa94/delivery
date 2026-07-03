@@ -35,7 +35,7 @@ target/
 
 ### Gradle ###
 .gradle
-gradle/
+gradle/wrapper
 build/
 
 ### Maven ###

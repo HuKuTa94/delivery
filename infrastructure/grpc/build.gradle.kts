@@ -1,8 +1,6 @@
-applyCommonProjectSetup()
-
 plugins {
-    applyCommonProjectPlugins()
-    applyCommonProtobufPlugins()
+    id("common-setup")
+    id("protobuf-dependencies")
 }
 
 dependencies {
@@ -11,24 +9,23 @@ dependencies {
     implementation(project(":core:application"))
 
     // protobuf & grpc
-    applyCommonProtobufDependencies()
-    implementation(platform(Libs.Grpc.bom))
-    implementation(Libs.Grpc.protobuf)
-    implementation(Libs.Grpc.kotlin_stub)
-    runtimeOnly(Libs.Grpc.netty_shadded)
+    implementation(platform(libs.grpc.bom))
+    implementation(libs.grpc.protobuf)
+    implementation(libs.grpc.kotlin.stub)
+    runtimeOnly(libs.grpc.netty.shaded)
 }
 
 protobuf {
     protoc {
-        artifact = Libs.Protobuf.protoc
+        artifact = libs.protobuf.protoc.get().toString()
     }
 
     plugins {
         create("grpc") {
-            artifact = Libs.Grpc.proto_java
+            artifact = libs.grpc.protoc.gen.java.get().toString()
         }
         create("grpckt") {
-            artifact = Libs.Grpc.proto_kotlin
+            artifact = libs.grpc.protoc.gen.kotlin.get().toString()
         }
     }
 

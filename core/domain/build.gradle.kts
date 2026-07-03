@@ -8,8 +8,6 @@ Core domain layer:
 - any framework dependencies are not allowed here;
 """
 
-applyCommonProjectSetup()
-
 plugins {
-    applyCommonProjectPlugins()
+    id("common-setup")
 }

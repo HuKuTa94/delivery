@@ -1,8 +1,6 @@
-applyCommonProjectSetup()
-
 plugins {
-    applyCommonProjectPlugins()
-    id(Plugins.Spring.boot) version Plugins.Spring.version
+    id("common-setup")
+    alias(libs.plugins.spring.boot)
 }
 
 tasks.bootJar {
@@ -29,22 +27,22 @@ dependencies {
     implementation(project(":infrastructure:orm:commons"))
     implementation(project(":infrastructure:persistence:migrations"))
 
-    // frameworks
-    // spring
-    implementation(platform(Libs.SpringBoot.bom))
-    implementation(Libs.SpringBoot.starter_web)
-    implementation(Libs.SpringBoot.starter_jdbc)
-    implementation(Libs.SpringBoot.starter_data_jpa)
-    implementation(Libs.Spring.kafka)
-
-    // grpc
-    implementation(platform(Libs.Grpc.bom))
-    implementation(Libs.Grpc.kotlin_stub)
-
-    // ktorm
-    implementation(Libs.Ktorm.core)
-    implementation(Libs.Ktorm.support_postgresql)
-
     // integration test foundation (Testcontainers + Liquibase)
     testImplementation(testFixtures(project(":infrastructure:orm:commons")))
+
+    // frameworks
+    // spring
+    implementation(platform(libs.spring.boot.bom))
+    implementation(libs.spring.boot.starter.web)
+    implementation(libs.spring.boot.starter.jdbc)
+    implementation(libs.spring.boot.starter.data.jpa)
+    implementation(libs.spring.kafka)
+
+    // grpc
+    implementation(platform(libs.grpc.bom))
+    implementation(libs.grpc.kotlin.stub)
+
+    // ktorm
+    implementation(libs.ktorm.core)
+    implementation(libs.ktorm.support.postgresql)
 }

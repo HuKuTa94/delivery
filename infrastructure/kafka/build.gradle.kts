@@ -1,8 +1,6 @@
-applyCommonProjectSetup()
-
 plugins {
-    applyCommonProjectPlugins()
-    applyCommonProtobufPlugins()
+    id("common-setup")
+    id("protobuf-dependencies")
 }
 
 dependencies {
@@ -11,28 +9,25 @@ dependencies {
     implementation(project(":core:application"))
 
     // spring & logging
-    implementation(platform(Libs.SpringBoot.bom))
-    implementation(Libs.SpringBoot.starter_logging)
+    implementation(platform(libs.spring.boot.bom))
+    implementation(libs.spring.boot.starter.logging)
 
     // kafka
-    implementation(Libs.Spring.kafka)
-    implementation(Libs.Kafka.clients)
-
-    // protobuf
-    applyCommonProtobufDependencies()
+    implementation(libs.spring.kafka)
+    implementation(libs.kafka.clients)
 
     // mockito
-    testImplementation(Libs.Mockito.mockito_kotlin)
+    testImplementation(libs.mockito.kotlin)
 
     // integration test: Kafka container
-    testImplementation(platform(Libs.TestContainers.bom))
-    testImplementation(Libs.Kafka.testcontainers)
-    testImplementation(Libs.Spring.kafka_test)
+    testImplementation(platform(libs.testcontainers.bom))
+    testImplementation(libs.testcontainers.kafka)
+    testImplementation(libs.spring.kafka.test)
 }
 
 protobuf {
     protoc {
-        artifact = Libs.Protobuf.protoc
+        artifact = libs.protobuf.protoc.get().toString()
     }
 
     generateProtoTasks {

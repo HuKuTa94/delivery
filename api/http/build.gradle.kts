@@ -1,7 +1,5 @@
-applyCommonProjectSetup()
-
 plugins {
-    applyCommonProjectPlugins()
+    id("common-setup")
 }
 
 dependencies {
@@ -10,6 +8,6 @@ dependencies {
     implementation(project(":core:application"))
 
     // frameworks
-    implementation(platform(Libs.SpringBoot.bom))
-    implementation(Libs.SpringBoot.starter_web)
+    implementation(platform(libs.spring.boot.bom))
+    implementation(libs.spring.boot.starter.web)
 }
