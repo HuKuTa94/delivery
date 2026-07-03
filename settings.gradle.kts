@@ -28,6 +28,19 @@ include("configuration")
 // Architecture tests of dependencies between modules of whole application
 include("architecture-tests")
 
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+    }
+}
+
+dependencyResolutionManagement {
+    repositories {
+        mavenCentral()
+    }
+}
+
 // Git hooks setup
 val gitDir = File(rootDir, ".git")
 val hooksDir = File(rootDir, "tools/git/hooks")
