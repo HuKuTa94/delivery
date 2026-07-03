@@ -6,18 +6,22 @@ import github.com.hukuta94.delivery.core.application.event.inoutbox.BoxEventMess
 import github.com.hukuta94.delivery.core.application.port.repository.event.BoxEventMessageRelayRepositoryPort
 import github.com.hukuta94.delivery.core.domain.DomainEvent
 import github.com.hukuta94.delivery.infrastructure.orm.ktorm.notNull
-import github.com.hukuta94.delivery.infrastructure.orm.ktorm.table.BoxEventMessageStatusTable
 import github.com.hukuta94.delivery.infrastructure.orm.ktorm.table.BoxEventMessageTable
 import org.ktorm.database.Database
 import org.ktorm.dsl.QueryRowSet
+import org.ktorm.dsl.asc
 import org.ktorm.dsl.batchUpdate
 import org.ktorm.dsl.eq
 import org.ktorm.dsl.from
 import org.ktorm.dsl.inList
-import org.ktorm.dsl.innerJoin
+import org.ktorm.dsl.limit
 import org.ktorm.dsl.map
+import org.ktorm.dsl.orderBy
 import org.ktorm.dsl.select
 import org.ktorm.dsl.where
+import org.ktorm.support.postgresql.LockingMode
+import org.ktorm.support.postgresql.LockingWait
+import org.ktorm.support.postgresql.locking
 
 abstract class KtormBoxEventRepository(
     protected val database: Database,
@@ -42,14 +46,19 @@ abstract class KtormBoxEventRepository(
         }
     }
 
-    override fun findMessagesInStatuses(statuses: Set<BoxEventMessageStatus>): List<BoxEventMessage> {
+    override fun findMessagesInStatuses(
+        statuses: Set<BoxEventMessageStatus>,
+        batchSize: Int,
+    ): List<BoxEventMessage> {
         if (statuses.isEmpty()) return emptyList()
 
         return database
             .from(table)
-            .innerJoin(BoxEventMessageStatusTable, on = table.statusId eq BoxEventMessageStatusTable.id)
             .select()
-            .where { BoxEventMessageStatusTable.id inList statuses.map { it.id } }
+            .where { table.statusId inList statuses.map { it.id } }
+            .orderBy(table.createdAt.asc())
+            .limit(batchSize)
+            .locking(LockingMode.FOR_UPDATE, wait = LockingWait.SKIP_LOCKED)
             .map { rowToMessage(it) }
     }
 
@@ -60,7 +69,7 @@ abstract class KtormBoxEventRepository(
 
         return BoxEventMessage().apply {
             eventId = row.notNull(table.eventId)
-            status = BoxEventMessageStatus.valueOf(row.notNull(BoxEventMessageStatusTable.code))
+            status = BoxEventMessageStatus.from(row.notNull(table.statusId))
             version = row.notNull(table.version)
             payload = row.notNull(table.payload)
             this.eventType = eventType

@@ -44,4 +44,7 @@ dependencies {
     // ktorm
     implementation(Libs.Ktorm.core)
     implementation(Libs.Ktorm.support_postgresql)
+
+    // integration test foundation (Testcontainers + Liquibase)
+    testImplementation(testFixtures(project(":infrastructure:orm:commons")))
 }

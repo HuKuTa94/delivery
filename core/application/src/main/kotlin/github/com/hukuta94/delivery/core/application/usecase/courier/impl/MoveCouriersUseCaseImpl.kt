@@ -6,6 +6,7 @@ import github.com.hukuta94.delivery.core.domain.rule.CompleteOrderBusinessRule
 import github.com.hukuta94.delivery.core.application.port.repository.domain.CourierRepositoryPort
 import github.com.hukuta94.delivery.core.application.port.repository.domain.OrderRepositoryPort
 import github.com.hukuta94.delivery.core.application.port.repository.UnitOfWorkPort
+import github.com.hukuta94.delivery.core.application.port.repository.event.OutboxEventRepositoryPort
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.Courier
 import org.slf4j.LoggerFactory
 
@@ -14,6 +15,7 @@ class MoveCouriersUseCaseImpl(
     private val courierRepository: CourierRepositoryPort,
     private val completeOrderBusinessRule: CompleteOrderBusinessRule,
     private val unitOfWork: UnitOfWorkPort,
+    private val outboxEventRepositoryPort: OutboxEventRepositoryPort,
 ) : MoveCouriersUseCase {
 
     override fun execute() {
@@ -57,13 +59,18 @@ class MoveCouriersUseCaseImpl(
                 ?: return@executeInTransaction
 
             moveCouriersToTheirOrders(couriersWithOrder)
-            tryToCompleteOrders(couriersWithOrder)
+            val completedOrders = tryToCompleteOrders(couriersWithOrder)
+            val couriers = couriersWithOrder.keys.toList()
+
+            // Single explicit place to collect domain events from all mutated aggregates
+            val domainEvents = (completedOrders + couriers).flatMap { it.popDomainEvents() }
+            outboxEventRepositoryPort.saveDomainEvents(domainEvents)
+
+            completedOrders
                 .takeIf { it.isNotEmpty() }
                 ?.let { orderRepository.update(it) }
 
-            courierRepository.update(
-                couriersWithOrder.keys.toList()
-            )
+            courierRepository.update(couriers)
         }
     }
 

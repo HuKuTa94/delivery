@@ -17,17 +17,23 @@ dependencies {
 
     implementation(project(":infrastructure:orm:commons"))
 
+    // integration test foundation (Testcontainers + Liquibase)
+    testImplementation(testFixtures(project(":infrastructure:orm:commons")))
+
+    // jackson — ApplicationEventSerializer runtime in box-event integration tests
+    testImplementation(Libs.Jackson.module_kotlin)
+
     // ktorm
     implementation(Libs.Ktorm.core)
+    implementation(Libs.Ktorm.support_postgresql)
 
     // mockito
     testImplementation(Libs.Mockito.mockito_kotlin)
-
-    // kotest
-    testImplementation(Libs.Kotest.kotest_extensions_spring)
 
     // spring
     implementation(Libs.Spring.tx)
     implementation(platform(Libs.SpringBoot.bom))
     implementation(Libs.SpringBoot.starter_logging)
+    testImplementation(Libs.Spring.jdbc)
+    testImplementation(Libs.Spring.context)
 }

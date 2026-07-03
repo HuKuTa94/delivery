@@ -47,22 +47,19 @@ class SpringJpaInboxEventRepositoryAdapter(
         inboxJpaRepository.saveAll(inboxMessages)
     }
 
-    override fun findMessagesInStatuses(statuses: Set<BoxEventMessageStatus>): List<InboxEventMessageJpaEntity> {
-        return inboxJpaRepository.findAllByStatusIn(
-            statuses = statuses,
-            pageable = LIMITED_COUNT_OF_BOX_MESSAGES
-        ).content
+    override fun findMessagesInStatuses(
+        statuses: Set<BoxEventMessageStatus>,
+        batchSize: Int,
+    ): List<InboxEventMessageJpaEntity> {
+        val pageable = PageRequest.of(
+            0,
+            batchSize,
+            Sort.by(Sort.Direction.ASC, InboxEventMessageJpaEntity::createdAt.name),
+        )
+        return inboxJpaRepository.findAllByStatusIn(statuses, pageable)
     }
 
     companion object {
         private val LOG = LoggerFactory.getLogger(SpringJpaInboxEventRepositoryAdapter::class.java)
-
-        private const val BOX_MESSAGES_LIMIT = 20
-
-        private val LIMITED_COUNT_OF_BOX_MESSAGES = PageRequest.of(
-            0,
-            BOX_MESSAGES_LIMIT,
-            Sort.by(Sort.Direction.ASC, InboxEventMessageJpaEntity::createdAt.name)
-        )
     }
 }

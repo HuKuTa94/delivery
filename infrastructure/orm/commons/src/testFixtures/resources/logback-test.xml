@@ -1,0 +1,21 @@
+<configuration>
+    <!--
+      Reduces test log noise (Liquibase, Testcontainers/docker-java/HTTP chatter)
+      so the test output stays readable and results are easier to analyze.
+    -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Quiet down noisy integration-test infrastructure -->
+    <logger name="liquibase" level="WARN"/>
+    <logger name="org.apache.hc" level="WARN"/>
+    <logger name="org.testcontainers" level="INFO"/>
+    <logger name="com.github.dockerjava" level="WARN"/>
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>

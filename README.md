@@ -1,5 +1,36 @@
 # Delivery
 
+## Integration tests (Testcontainers)
+
+Integration tests (classes suffixed `*IT`) run against a real PostgreSQL started via Testcontainers.
+The schema is applied from the Liquibase changelog of `:infrastructure:persistence:migrations`.
+
+**Docker is required** to run them. Without a running Docker daemon these tests fail (they are not
+silently skipped). The shared foundation lives in `:infrastructure:orm:commons` test fixtures
+(`PostgresTestContainer`): a singleton container per test JVM, reused across specs; mutable tables are
+truncated before each test.
+
+Run all tests (unit + integration):
+
+```bash
+./gradlew test
+```
+
+Run integration tests of a single module, e.g.:
+
+```bash
+./gradlew :infrastructure:orm:ktorm:test
+./gradlew :infrastructure:orm:spring:test
+./gradlew :configuration:test
+```
+
+Kafka integration tests (`:infrastructure:kafka`) start an Apache Kafka (KRaft) container and verify the
+producer against a real broker (`OrderKafkaProducerIT`).
+
+Notes:
+- Containers use pinned images (`postgres:15.3`, `apache/kafka:3.8.0`); the Testcontainers Ryuk reaper is
+  disabled (`TESTCONTAINERS_RYUK_DISABLED=true`), containers are stopped via the JVM shutdown hook.
+
 ## Тесты
 Конвенция по написанию тестов.
 

@@ -5,19 +5,23 @@ import github.com.hukuta94.delivery.core.application.event.ApplicationEventPubli
 import github.com.hukuta94.delivery.core.application.event.inoutbox.BoxEventMessageRelay
 import github.com.hukuta94.delivery.core.application.port.repository.event.BoxEventMessageRelayRepositoryPort
 import org.springframework.scheduling.annotation.Scheduled
+import org.springframework.transaction.annotation.Transactional
 
-class InboxEventMessageRelayJob(
+open class InboxEventMessageRelayJob(
     eventRepository: BoxEventMessageRelayRepositoryPort,
     eventDeserializer: ApplicationEventDeserializer,
     eventPublisher: ApplicationEventPublisher,
+    batchSize: Int,
 ) : BoxEventMessageRelay(
     eventRepository,
     eventDeserializer,
     eventPublisher,
+    batchSize,
 ) {
-    // TODO Вынести все магические числа, а так же количество выгружаемых outbox сообщений за раз, в файл конфигурации
+    // TODO Move the polling interval to configuration
     @Scheduled(fixedDelay = 5000)
-    fun pullMessagesFromInbox() {
+    @Transactional(timeout = 12)
+    open fun pullMessagesFromInbox() {
         execute()
     }
 }

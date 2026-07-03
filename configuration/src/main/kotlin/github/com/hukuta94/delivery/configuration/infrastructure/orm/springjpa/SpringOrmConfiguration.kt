@@ -1,5 +1,6 @@
 package github.com.hukuta94.delivery.configuration.infrastructure.orm.springjpa
 
+import github.com.hukuta94.delivery.configuration.infrastructure.RelayProperties
 import github.com.hukuta94.delivery.core.application.event.ApplicationEventDeserializer
 import github.com.hukuta94.delivery.core.application.event.ApplicationEventPublisher
 import github.com.hukuta94.delivery.core.application.event.ApplicationEventSerializer
@@ -15,14 +16,19 @@ import github.com.hukuta94.delivery.infrastructure.orm.spring.repository.event.S
 import github.com.hukuta94.delivery.infrastructure.orm.spring.repository.event.SpringJpaOutboxEventRepository
 import github.com.hukuta94.delivery.infrastructure.orm.spring.repository.event.SpringJpaInboxEventRepositoryAdapter
 import github.com.hukuta94.delivery.infrastructure.orm.spring.repository.event.SpringJpaOutboxEventRepositoryAdapter
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
-import org.springframework.scheduling.annotation.EnableScheduling
 
 @Configuration
-@EnableScheduling
+@ConditionalOnProperty(
+    prefix = "delivery",
+    name = ["orm"],
+    havingValue = "spring-jpa",
+    matchIfMissing = true,
+)
 @EntityScan(
     basePackages = [
         "github.com.hukuta94.delivery.infrastructure.orm.spring.model.entity"
@@ -38,19 +44,15 @@ open class SpringOrmConfiguration {
     @Bean
     open fun courierRepository(
         courierJpaRepository: CourierJpaRepository,
-        outboxRepository: SpringJpaOutboxEventRepositoryAdapter,
     ) = OrmCourierRepositoryAdapter(
         courierJpaRepository = courierJpaRepository,
-        outboxRepository = outboxRepository,
     )
 
     @Bean
     open fun orderRepository(
         orderJpaRepository: OrderJpaRepository,
-        outboxRepository: SpringJpaOutboxEventRepositoryAdapter,
     ) = OrmOrderRepositoryAdapter(
         orderJpaRepository = orderJpaRepository,
-        outboxRepository = outboxRepository,
     )
 
     @Bean
@@ -68,14 +70,16 @@ open class SpringOrmConfiguration {
     )
 
     @Bean
-    open fun outboxEventMessageRelayJob(
+    open fun springJpaOutboxEventMessageRelayJob(
         eventRepository: SpringJpaOutboxEventRepositoryAdapter,
         eventDeserializer: ApplicationEventDeserializer,
         eventPublisher: ApplicationEventPublisher,
+        relayProperties: RelayProperties,
     ) = OutboxEventMessageRelayJob(
         eventRepository = eventRepository,
         eventDeserializer = eventDeserializer,
         eventPublisher = eventPublisher,
+        batchSize = relayProperties.batchSize,
     )
 
     @Bean
@@ -88,13 +92,15 @@ open class SpringOrmConfiguration {
     )
 
     @Bean
-    open fun inboxEventMessageRelayJob(
+    open fun springJpaInboxEventMessageRelayJob(
         eventRepository: SpringJpaInboxEventRepositoryAdapter,
         eventDeserializer: ApplicationEventDeserializer,
         eventPublisher: ApplicationEventPublisher,
+        relayProperties: RelayProperties,
     ) = InboxEventMessageRelayJob(
         eventRepository = eventRepository,
         eventDeserializer = eventDeserializer,
         eventPublisher = eventPublisher,
+        batchSize = relayProperties.batchSize,
     )
 }

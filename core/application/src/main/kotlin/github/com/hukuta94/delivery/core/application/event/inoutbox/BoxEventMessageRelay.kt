@@ -20,11 +20,13 @@ import java.time.LocalDateTime
  * @param eventRepository repository for accessing and updating event messages
  * @param eventDeserializer utility for converting serialized payloads into event objects
  * @param eventPublisher component responsible for dispatching deserialized events
+ * @param batchSize maximum number of messages fetched and processed per relay run
  */
 abstract class BoxEventMessageRelay(
     private val eventRepository: BoxEventMessageRelayRepositoryPort,
     private val eventDeserializer: ApplicationEventDeserializer,
     private val eventPublisher: ApplicationEventPublisher,
+    private val batchSize: Int,
 ) {
     /**
      * Executes the Inbox/Outbox processing workflow.
@@ -37,6 +39,7 @@ abstract class BoxEventMessageRelay(
     protected fun execute() {
         val messages = eventRepository.findMessagesInStatuses(
             BOX_EVENT_MESSAGE_STATUSES_TO_BE_PROCESSED,
+            batchSize,
         )
 
         if (messages.isEmpty()) {

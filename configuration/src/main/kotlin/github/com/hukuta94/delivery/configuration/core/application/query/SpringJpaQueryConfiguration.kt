@@ -5,12 +5,19 @@ import github.com.hukuta94.delivery.core.application.query.order.GetNotCompleted
 import github.com.hukuta94.delivery.infrastructure.orm.spring.model.converter.LocationConverter
 import github.com.hukuta94.delivery.infrastructure.orm.spring.query.courier.GetBusyCouriersQueryImpl
 import github.com.hukuta94.delivery.infrastructure.orm.spring.query.order.GetNotCompletedOrdersQueryImpl
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 
 @Configuration
-open class QueryConfiguration {
+@ConditionalOnProperty(
+    prefix = "delivery",
+    name = ["orm"],
+    havingValue = "spring-jpa",
+    matchIfMissing = true,
+)
+open class SpringJpaQueryConfiguration {
 
     @Bean
     open fun locationConverter() = LocationConverter()

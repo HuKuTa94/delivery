@@ -43,20 +43,15 @@ class SpringJpaOutboxEventRepositoryAdapter(
         outboxEventJpaRepository.saveAll(outboxMessages)
     }
 
-    override fun findMessagesInStatuses(statuses: Set<BoxEventMessageStatus>): List<OutboxEventMessageJpaEntity> {
-        return outboxEventJpaRepository.findAllByStatusIn(
-            statuses = statuses,
-            pageable = LIMITED_COUNT_OF_BOX_MESSAGES,
-        ).content
-    }
-
-    companion object {
-        private const val BOX_MESSAGES_LIMIT = 20
-
-        private val LIMITED_COUNT_OF_BOX_MESSAGES = PageRequest.of(
+    override fun findMessagesInStatuses(
+        statuses: Set<BoxEventMessageStatus>,
+        batchSize: Int,
+    ): List<OutboxEventMessageJpaEntity> {
+        val pageable = PageRequest.of(
             0,
-            BOX_MESSAGES_LIMIT,
-            Sort.by(Sort.Direction.ASC, OutboxEventMessageJpaEntity::createdAt.name)
+            batchSize,
+            Sort.by(Sort.Direction.ASC, OutboxEventMessageJpaEntity::createdAt.name),
         )
+        return outboxEventJpaRepository.findAllByStatusIn(statuses, pageable)
     }
 }

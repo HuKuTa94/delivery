@@ -19,6 +19,9 @@ subprojects {
     tasks {
         withType<Test> {
             useJUnitPlatform()
+            // Testcontainers: use the locally available image and skip the Ryuk reaper
+            // (containers are stopped via the JVM shutdown hook). Integration tests require Docker.
+            environment("TESTCONTAINERS_RYUK_DISABLED", "true")
         }
     }
 

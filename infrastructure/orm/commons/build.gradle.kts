@@ -16,5 +16,13 @@ dependencies {
     testFixturesImplementation(testFixtures(project(":core:application")))
 
     // spring context
+    implementation(Libs.Spring.tx)
     implementation(Libs.Spring.context)
+
+    // Integration-test foundation (Testcontainers + Liquibase), exposed to consumers via testFixtures.
+    testFixturesApi(platform(Libs.TestContainers.bom))
+    testFixturesApi(Libs.TestContainers.postgresql)
+    testFixturesApi(Libs.Postgresql.postgresql)
+    testFixturesApi(Libs.Liquibase.core)
+    testFixturesApi(project(":infrastructure:persistence:migrations"))
 }

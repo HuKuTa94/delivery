@@ -20,6 +20,14 @@ dependencies {
 
     // protobuf
     applyCommonProtobufDependencies()
+
+    // mockito
+    testImplementation(Libs.Mockito.mockito_kotlin)
+
+    // integration test: Kafka container
+    testImplementation(platform(Libs.TestContainers.bom))
+    testImplementation(Libs.Kafka.testcontainers)
+    testImplementation(Libs.Spring.kafka_test)
 }
 
 protobuf {

@@ -3,14 +3,17 @@ package github.com.hukuta94.delivery.core.application.usecase.courier.impl
 import github.com.hukuta94.delivery.core.application.port.repository.UnitOfWorkFake
 import github.com.hukuta94.delivery.core.application.port.repository.domain.CourierRepositoryFake
 import github.com.hukuta94.delivery.core.application.port.repository.domain.OrderRepositoryFake
+import github.com.hukuta94.delivery.core.application.port.repository.event.OutboxEventRepositoryFake
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.CourierStatus
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.busyCourier
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.freeCourier
+import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderCompletedDomainEvent
 import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderStatus
 import github.com.hukuta94.delivery.core.domain.aggregate.order.assignedOrder
 import github.com.hukuta94.delivery.core.domain.common.location
 import github.com.hukuta94.delivery.core.domain.rule.impl.CompleteOrderBusinessRuleImpl
 import io.kotest.core.spec.style.StringSpec
+import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.shouldBe
 
 class MoveCouriersUseCaseImplTest : StringSpec({
@@ -19,17 +22,20 @@ class MoveCouriersUseCaseImplTest : StringSpec({
     val courierRepository = CourierRepositoryFake()
     val completeOrderService = CompleteOrderBusinessRuleImpl()
     val unitOfWork = UnitOfWorkFake()
+    val outboxEventRepository = OutboxEventRepositoryFake()
 
     val usecase = MoveCouriersUseCaseImpl(
         orderRepository = orderRepository,
         courierRepository = courierRepository,
         completeOrderBusinessRule = completeOrderService,
         unitOfWork = unitOfWork,
+        outboxEventRepositoryPort = outboxEventRepository,
     )
 
     beforeTest {
         orderRepository.clear()
         courierRepository.clear()
+        outboxEventRepository.clear()
     }
 
     "must move courier and complete order when courier reaches its location" {
@@ -58,5 +64,8 @@ class MoveCouriersUseCaseImplTest : StringSpec({
         busyCourier.location shouldBe assignedOrder.location
         busyCourier.status shouldBe CourierStatus.FREE
         assignedOrder.status shouldBe OrderStatus.COMPLETED
+        outboxEventRepository.savedEvents
+            .filterIsInstance<OrderCompletedDomainEvent>()
+            .map { it.orderId } shouldContain assignedOrder.id
     }
 })

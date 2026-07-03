@@ -27,7 +27,7 @@ class AssignCourierToOrderUseCaseImpl(
             orders.forEach { order ->
                 dispatchOrderToCourierBusinessRule.execute(order, couriers)
             }
-            val domainEvents = orders.flatMap { it.popDomainEvents() }
+            val domainEvents = (orders + couriers).flatMap { it.popDomainEvents() }
 
             outboxEventRepositoryPort.saveDomainEvents(domainEvents)
             orderRepository.update(orders)

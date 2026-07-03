@@ -94,11 +94,9 @@ object PrivateLibs {
  */
 object Libs {
     object TestContainers {
-        private const val version = "1.18.0"
-        const val postgresql = "org.testcontainers:postgresql:$version"
-    }
-    object Kotest {
-        const val kotest_extensions_spring = "io.kotest:kotest-extensions-spring-jvm:${PrivateLibs.Kotest.version}"
+        private const val version = "1.20.4"
+        const val bom = "org.testcontainers:testcontainers-bom:$version"
+        const val postgresql = "org.testcontainers:postgresql"
     }
     object Mockito {
         private const val version = "5.4.0"
@@ -111,11 +109,15 @@ object Libs {
     object Kafka {
         private const val version = "3.9.1"
         const val clients = "org.apache.kafka:kafka-clients:$version"
+        const val testcontainers = "org.testcontainers:kafka"
     }
     object Spring {
         private const val version = "6.2.12"
-        const val kafka = "org.springframework.kafka:spring-kafka:3.3.9"
+        private const val kafka_version = "3.3.9"
+        const val kafka = "org.springframework.kafka:spring-kafka:$kafka_version"
+        const val kafka_test = "org.springframework.kafka:spring-kafka-test:$kafka_version"
         const val tx = "org.springframework:spring-tx:$version"
+        const val jdbc = "org.springframework:spring-jdbc:$version"
         const val context = "org.springframework:spring-context:$version"
     }
     object SpringBoot {
