@@ -1,6 +1,6 @@
 ---
 name: kotlin-code-style
-description: Project Kotlin style rules for return types, parameter and argument layout, named arguments, and class member order. Use whenever writing, editing or reviewing .kt or .kts files in this repo.
+description: Project Kotlin style rules for return types, parameter and argument layout, named arguments, class member order, and Detekt static analysis. Use whenever writing, editing or reviewing .kt or .kts files in this repo.
 ---
 
 # Kotlin code style
@@ -262,3 +262,9 @@ class Foo(private val repo: Repo) : FooBase() {
     }
 }
 ```
+
+## 5. Static analysis
+
+Detekt (+ formatting) runs with `tools/detekt/detekt-config.yaml`: `make detekt`.
+The pre-push git hook (`tools/git/hooks/pre-push`, auto-configured by `settings.gradle.kts`) runs
+`detekt detektTest detektTestFixtures`. Keep Detekt clean before pushing.

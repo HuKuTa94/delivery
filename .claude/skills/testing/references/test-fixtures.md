@@ -1,8 +1,3 @@
----
-name: test-fixtures
-description: How to create test data for domain objects via Gradle testFixtures factory functions. Use when writing or changing Kotlin tests that need domain objects, or when adding/changing fixture files.
----
-
 # Test fixtures for domain objects
 
 Tests get domain objects from fixture functions in the `testFixtures` source set of the module that owns the class.
