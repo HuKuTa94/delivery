@@ -4,7 +4,7 @@ kotest = "6.0.3"
 kotest-arrow = "2.0.0"
 arrow = "2.1.2"
 
-testcontainers = "1.20.4"
+testcontainers = "1.21.4"
 mockito = "5.4.0"
 archunit = "1.4.1"
 
