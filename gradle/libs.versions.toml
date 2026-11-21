@@ -13,7 +13,7 @@ spring = "6.2.12"
 spring-kafka = "3.3.9"
 spring-boot = "3.5.5"
 
-liquibase = "4.6.1"
+liquibase = "4.8.0"
 postgresql = "42.3.1"
 
 protobuf = "4.32.0"
