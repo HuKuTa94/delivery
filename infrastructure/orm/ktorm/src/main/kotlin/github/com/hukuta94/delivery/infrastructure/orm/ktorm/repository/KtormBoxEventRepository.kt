@@ -8,6 +8,7 @@ import github.com.hukuta94.delivery.core.domain.DomainEvent
 import github.com.hukuta94.delivery.infrastructure.orm.ktorm.notNull
 import github.com.hukuta94.delivery.infrastructure.orm.ktorm.table.BoxEventMessageTable
 import org.ktorm.database.Database
+import org.ktorm.dsl.AssignmentsBuilder
 import org.ktorm.dsl.QueryRowSet
 import org.ktorm.dsl.asc
 import org.ktorm.dsl.batchUpdate
@@ -22,10 +23,11 @@ import org.ktorm.dsl.where
 import org.ktorm.support.postgresql.LockingMode
 import org.ktorm.support.postgresql.LockingWait
 import org.ktorm.support.postgresql.locking
+import java.time.LocalDateTime
 
 abstract class KtormBoxEventRepository(
     protected val database: Database,
-    protected val eventSerializer: ApplicationEventSerializer,
+    private val eventSerializer: ApplicationEventSerializer,
     protected val table: BoxEventMessageTable,
 ) : BoxEventMessageRelayRepositoryPort {
 
@@ -77,5 +79,14 @@ abstract class KtormBoxEventRepository(
             processedAt = row[table.processedAt]
             errorDescription = row[table.errorDescription]
         }
+    }
+
+    protected fun AssignmentsBuilder.setInsertColumns(event: DomainEvent) {
+        set(table.eventId, event.eventId)
+        set(table.version, 0)
+        set(table.statusId, BoxEventMessageStatus.TO_BE_PROCESSED.id)
+        set(table.createdAt, LocalDateTime.now())
+        set(table.eventType, event.javaClass.name)
+        set(table.payload, eventSerializer.serialize(event))
     }
 }
