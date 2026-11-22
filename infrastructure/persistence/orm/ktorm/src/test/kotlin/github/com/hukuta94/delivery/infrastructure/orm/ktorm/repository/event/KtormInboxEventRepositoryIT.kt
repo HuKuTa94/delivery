@@ -1,4 +1,4 @@
-package github.com.hukuta94.delivery.infrastructure.orm.ktorm.repository
+package github.com.hukuta94.delivery.infrastructure.orm.ktorm.repository.event
 
 import github.com.hukuta94.delivery.core.application.event.ApplicationEventSerializer
 import github.com.hukuta94.delivery.core.application.event.basketConfirmedIntegrationDomainEvent

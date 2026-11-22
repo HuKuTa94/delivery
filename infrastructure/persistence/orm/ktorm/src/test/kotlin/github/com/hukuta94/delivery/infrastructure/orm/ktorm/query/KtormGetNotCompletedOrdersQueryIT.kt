@@ -7,8 +7,8 @@ import github.com.hukuta94.delivery.core.domain.aggregate.order.completedOrder
 import github.com.hukuta94.delivery.core.domain.aggregate.order.createdOrder
 import github.com.hukuta94.delivery.core.domain.common.location
 import github.com.hukuta94.delivery.infrastructure.orm.ktorm.integration.KtormIntegrationSpec
-import github.com.hukuta94.delivery.infrastructure.orm.ktorm.repository.KtormCourierRepository
-import github.com.hukuta94.delivery.infrastructure.orm.ktorm.repository.KtormOrderRepository
+import github.com.hukuta94.delivery.infrastructure.orm.ktorm.repository.domain.KtormCourierRepository
+import github.com.hukuta94.delivery.infrastructure.orm.ktorm.repository.domain.KtormOrderRepository
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.shouldBe
 

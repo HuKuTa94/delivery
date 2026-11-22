@@ -4,7 +4,7 @@ import github.com.hukuta94.delivery.core.application.port.repository.UnitOfWorkP
 import github.com.hukuta94.delivery.core.application.port.repository.domain.CourierRepositoryPort
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.freeCourier
 import github.com.hukuta94.delivery.infrastructure.orm.commons.integration.PostgresTestContainer
-import github.com.hukuta94.delivery.infrastructure.orm.ktorm.repository.KtormCourierRepository
+import github.com.hukuta94.delivery.infrastructure.orm.ktorm.repository.domain.KtormCourierRepository
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe

@@ -14,10 +14,10 @@ import github.com.hukuta94.delivery.infrastructure.orm.commons.OutboxEventMessag
 import github.com.hukuta94.delivery.infrastructure.orm.ktorm.KtormUnitOfWork
 import github.com.hukuta94.delivery.infrastructure.orm.ktorm.query.KtormGetBusyCouriersQuery
 import github.com.hukuta94.delivery.infrastructure.orm.ktorm.query.KtormGetNotCompletedOrdersQuery
-import github.com.hukuta94.delivery.infrastructure.orm.ktorm.repository.KtormCourierRepository
-import github.com.hukuta94.delivery.infrastructure.orm.ktorm.repository.KtormInboxEventRepository
-import github.com.hukuta94.delivery.infrastructure.orm.ktorm.repository.KtormOrderRepository
-import github.com.hukuta94.delivery.infrastructure.orm.ktorm.repository.KtormOutboxEventRepository
+import github.com.hukuta94.delivery.infrastructure.orm.ktorm.repository.domain.KtormCourierRepository
+import github.com.hukuta94.delivery.infrastructure.orm.ktorm.repository.event.KtormInboxEventRepository
+import github.com.hukuta94.delivery.infrastructure.orm.ktorm.repository.domain.KtormOrderRepository
+import github.com.hukuta94.delivery.infrastructure.orm.ktorm.repository.event.KtormOutboxEventRepository
 import org.ktorm.database.Database
 import org.ktorm.support.postgresql.PostgreSqlDialect
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty

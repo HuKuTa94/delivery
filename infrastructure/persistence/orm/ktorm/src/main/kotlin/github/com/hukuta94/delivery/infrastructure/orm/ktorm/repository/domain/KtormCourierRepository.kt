@@ -1,4 +1,4 @@
-package github.com.hukuta94.delivery.infrastructure.orm.ktorm.repository
+package github.com.hukuta94.delivery.infrastructure.orm.ktorm.repository.domain
 
 import github.com.hukuta94.delivery.core.application.port.repository.domain.CourierRepositoryPort
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.Courier

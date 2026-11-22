@@ -1,4 +1,4 @@
-package github.com.hukuta94.delivery.infrastructure.orm.ktorm.repository
+package github.com.hukuta94.delivery.infrastructure.orm.ktorm.repository.domain
 
 import github.com.hukuta94.delivery.core.application.event.ApplicationEventSerializer
 import github.com.hukuta94.delivery.core.application.event.inoutbox.BoxEventMessageStatus
@@ -11,6 +11,7 @@ import github.com.hukuta94.delivery.core.domain.aggregate.order.assignedOrder
 import github.com.hukuta94.delivery.core.domain.common.location
 import github.com.hukuta94.delivery.core.domain.rule.impl.CompleteOrderBusinessRuleImpl
 import github.com.hukuta94.delivery.infrastructure.orm.ktorm.integration.KtormIntegrationSpec
+import github.com.hukuta94.delivery.infrastructure.orm.ktorm.repository.event.KtormOutboxEventRepository
 import io.kotest.matchers.shouldBe
 
 /**

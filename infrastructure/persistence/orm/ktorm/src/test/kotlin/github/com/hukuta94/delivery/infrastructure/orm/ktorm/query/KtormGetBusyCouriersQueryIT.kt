@@ -5,7 +5,7 @@ import github.com.hukuta94.delivery.core.domain.aggregate.courier.Transport
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.busyCourier
 import github.com.hukuta94.delivery.core.domain.common.location
 import github.com.hukuta94.delivery.infrastructure.orm.ktorm.integration.KtormIntegrationSpec
-import github.com.hukuta94.delivery.infrastructure.orm.ktorm.repository.KtormCourierRepository
+import github.com.hukuta94.delivery.infrastructure.orm.ktorm.repository.domain.KtormCourierRepository
 import io.kotest.matchers.shouldBe
 
 internal class KtormGetBusyCouriersQueryIT : KtormIntegrationSpec() {
