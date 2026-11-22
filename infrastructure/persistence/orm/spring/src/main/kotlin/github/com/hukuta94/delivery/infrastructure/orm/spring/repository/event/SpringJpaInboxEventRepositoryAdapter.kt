@@ -18,22 +18,17 @@ class SpringJpaInboxEventRepositoryAdapter(
 ) : InboxEventRepositoryPort, BoxEventMessageRelayRepositoryPort {
 
     override fun saveIntegrationEvent(integrationEvent: DomainEvent) {
-        // Don't save duplicates
-        val integrationEventExists = inboxJpaRepository.existsById(integrationEvent.eventId)
-        if (integrationEventExists) {
-            LOG.info(
-                "Integration event with id: ${integrationEvent.eventId} skipped because it already exists"
-            )
-            return
-        }
-
-        val inboxMessage = InboxEventMessageJpaEntity.fromEvent(
-            integrationEvent,
-            eventSerializer,
-            createdAt = LocalDateTime.now()
+        val insertedRows = inboxJpaRepository.insertIfAbsent(
+            eventId = integrationEvent.eventId,
+            eventType = integrationEvent.javaClass.name,
+            payload = eventSerializer.serialize(integrationEvent),
+            createdAt = LocalDateTime.now(),
+            statusId = BoxEventMessageStatus.TO_BE_PROCESSED.id,
         )
 
-        inboxJpaRepository.save(inboxMessage)
+        if (insertedRows == 0) {
+            LOG.info("Integration event with id: ${integrationEvent.eventId} skipped because it already exists")
+        }
     }
 
     override fun saveAll(messages: List<BoxEventMessage>) {
