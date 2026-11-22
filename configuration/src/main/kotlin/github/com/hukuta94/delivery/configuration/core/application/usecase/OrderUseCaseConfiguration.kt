@@ -2,8 +2,6 @@ package github.com.hukuta94.delivery.configuration.core.application.usecase
 
 import github.com.hukuta94.delivery.core.application.usecase.order.AssignCourierToOrderUseCase
 import github.com.hukuta94.delivery.core.application.usecase.order.CreateOrderUseCase
-import github.com.hukuta94.delivery.core.application.usecase.order.impl.AssignCourierToOrderUseCaseImpl
-import github.com.hukuta94.delivery.core.application.usecase.order.impl.CreateOrderUseCaseImpl
 import github.com.hukuta94.delivery.core.domain.rule.DispatchOrderToCourierBusinessRule
 import github.com.hukuta94.delivery.core.application.port.repository.domain.CourierRepositoryPort
 import github.com.hukuta94.delivery.core.application.port.GetLocationPort
@@ -20,19 +18,19 @@ open class OrderUseCaseConfiguration {
     open fun createOrderUseCase(
         orderRepository: OrderRepositoryPort,
         getLocationPort: GetLocationPort,
-    ): CreateOrderUseCase = CreateOrderUseCaseImpl(
+    ) = CreateOrderUseCase(
         orderRepository = orderRepository,
         getLocationPort = getLocationPort,
     )
 
     @Bean
-    open fun AssignCourierToOrderUseCase(
+    open fun assignCourierToOrderUseCase(
         orderRepository: OrderRepositoryPort,
         courierRepository: CourierRepositoryPort,
         dispatchOrderToCourierBusinessRule: DispatchOrderToCourierBusinessRule,
         unitOfWork: UnitOfWorkPort,
         outboxEventRepositoryPort: OutboxEventRepositoryPort,
-    ): AssignCourierToOrderUseCase = AssignCourierToOrderUseCaseImpl(
+    ) = AssignCourierToOrderUseCase(
         orderRepository = orderRepository,
         courierRepository = courierRepository,
         dispatchOrderToCourierBusinessRule = dispatchOrderToCourierBusinessRule,

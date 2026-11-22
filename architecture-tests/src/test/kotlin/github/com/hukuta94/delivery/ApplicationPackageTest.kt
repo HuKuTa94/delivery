@@ -40,8 +40,7 @@ class ApplicationPackageTest : StringSpec({
             .resideInAPackage(APPLICATION_USECASE_PACKAGE)
             .and().areNotMemberClasses()
             .and().areNotAnonymousClasses()
-            .should().haveSimpleNameEndingWith("UseCase").andShould().beInterfaces()
-            .orShould().haveSimpleNameEndingWith("Impl").andShould().beAssignableTo(UseCase::class.java)
+            .should().haveSimpleNameEndingWith("UseCase").andShould().beAssignableTo(UseCase::class.java)
             .orShould().haveSimpleNameEndingWith("Command")
             .check(APPLICATION_USECASE_PACKAGE.classes())
     }

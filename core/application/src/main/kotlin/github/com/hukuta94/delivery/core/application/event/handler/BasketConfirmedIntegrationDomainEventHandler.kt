@@ -16,6 +16,6 @@ class BasketConfirmedIntegrationDomainEventHandler(
             basketId = event.basketId,
             street = event.street,
         )
-        createOrderUseCase.execute(command)
+        createOrderUseCase(command)
     }
 }

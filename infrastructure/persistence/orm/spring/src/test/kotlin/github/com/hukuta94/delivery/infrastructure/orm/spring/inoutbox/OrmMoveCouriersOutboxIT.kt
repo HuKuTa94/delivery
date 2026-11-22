@@ -3,7 +3,7 @@ package github.com.hukuta94.delivery.infrastructure.orm.spring.inoutbox
 import github.com.hukuta94.delivery.core.application.event.ApplicationEventSerializer
 import github.com.hukuta94.delivery.core.application.event.inoutbox.BoxEventMessageStatus
 import github.com.hukuta94.delivery.core.application.port.repository.UnitOfWorkFake
-import github.com.hukuta94.delivery.core.application.usecase.courier.impl.MoveCouriersUseCaseImpl
+import github.com.hukuta94.delivery.core.application.usecase.courier.MoveCouriersUseCase
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.busyCourier
 import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderCompletedDomainEvent
 import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderStatus
@@ -36,7 +36,7 @@ internal class OrmMoveCouriersOutboxIT : SpringJpaIntegrationSpec() {
         val transaction = TransactionTemplate(context.getBean(PlatformTransactionManager::class.java))
 
         "MoveCouriers completes an order and writes its OrderCompletedDomainEvent to the outbox" {
-            val useCase = MoveCouriersUseCaseImpl(
+            val useCase = MoveCouriersUseCase(
                 orderAdapter,
                 courierAdapter,
                 CompleteOrderBusinessRuleImpl(),
@@ -50,7 +50,7 @@ internal class OrmMoveCouriersOutboxIT : SpringJpaIntegrationSpec() {
             val order = assignedOrder(location = deliveryLocation, courier = courier)
             orderAdapter.add(order)
 
-            useCase.execute()
+            useCase()
 
             orderAdapter.getById(order.id).status shouldBe OrderStatus.COMPLETED
             val outboxMessages = transaction.execute {

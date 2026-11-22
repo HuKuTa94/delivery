@@ -29,7 +29,7 @@ class BasketKafkaConsumer(
             street = basketConfirmedEvent.address.street,
         )
 
-        saveIntegrationEventUseCase.execute(integrationEvent)
+        saveIntegrationEventUseCase(integrationEvent)
 
         LOG.info("Finish handling message with key: ${message.key()}")
     }

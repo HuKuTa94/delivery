@@ -25,7 +25,7 @@ class OrderControllerV1(
             basketId = UUID.randomUUID(),
             street = "Random street",
         )
-        saveIntegrationEventUseCase.execute(event)
+        saveIntegrationEventUseCase(event)
         return ResponseEntity.status(HttpStatus.CREATED).build()
     }
 

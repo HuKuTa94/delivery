@@ -1,7 +1,6 @@
 package github.com.hukuta94.delivery.configuration.core.application.usecase
 
 import github.com.hukuta94.delivery.core.application.usecase.courier.MoveCouriersUseCase
-import github.com.hukuta94.delivery.core.application.usecase.courier.impl.MoveCouriersUseCaseImpl
 import github.com.hukuta94.delivery.core.domain.rule.CompleteOrderBusinessRule
 import github.com.hukuta94.delivery.core.application.port.repository.domain.CourierRepositoryPort
 import github.com.hukuta94.delivery.core.application.port.repository.domain.OrderRepositoryPort
@@ -14,13 +13,13 @@ import org.springframework.context.annotation.Configuration
 open class CourierUseCaseConfiguration {
 
     @Bean
-    open fun MoveCouriersUseCase(
+    open fun moveCouriersUseCase(
         orderRepository: OrderRepositoryPort,
         courierRepository: CourierRepositoryPort,
         completeOrderBusinessRule: CompleteOrderBusinessRule,
         unitOfWork: UnitOfWorkPort,
         outboxEventRepositoryPort: OutboxEventRepositoryPort,
-    ): MoveCouriersUseCase = MoveCouriersUseCaseImpl(
+    ) = MoveCouriersUseCase(
         orderRepository = orderRepository,
         courierRepository = courierRepository,
         completeOrderBusinessRule = completeOrderBusinessRule,

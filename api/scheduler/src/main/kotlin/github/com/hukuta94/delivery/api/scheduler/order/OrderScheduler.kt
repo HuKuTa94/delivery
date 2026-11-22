@@ -9,6 +9,6 @@ class OrderScheduler(
 
     @Scheduled(fixedDelay = 2000)
     fun assignCourierToOrders() {
-        assignCourierToOrderUseCase.execute()
+        assignCourierToOrderUseCase()
     }
 }

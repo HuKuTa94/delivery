@@ -3,7 +3,7 @@ package github.com.hukuta94.delivery.infrastructure.orm.ktorm.repository.domain
 import github.com.hukuta94.delivery.core.application.event.ApplicationEventSerializer
 import github.com.hukuta94.delivery.core.application.event.inoutbox.BoxEventMessageStatus
 import github.com.hukuta94.delivery.core.application.port.repository.UnitOfWorkFake
-import github.com.hukuta94.delivery.core.application.usecase.courier.impl.MoveCouriersUseCaseImpl
+import github.com.hukuta94.delivery.core.application.usecase.courier.MoveCouriersUseCase
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.busyCourier
 import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderCompletedDomainEvent
 import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderStatus
@@ -24,7 +24,7 @@ internal class KtormMoveCouriersOutboxIT : KtormIntegrationSpec() {
             val orderRepository = KtormOrderRepository(database)
             val courierRepository = KtormCourierRepository(database)
             val outboxRepository = KtormOutboxEventRepository(database, ApplicationEventSerializer())
-            val useCase = MoveCouriersUseCaseImpl(
+            val useCase = MoveCouriersUseCase(
                 orderRepository,
                 courierRepository,
                 CompleteOrderBusinessRuleImpl(),
@@ -43,7 +43,7 @@ internal class KtormMoveCouriersOutboxIT : KtormIntegrationSpec() {
             )
             orderRepository.add(order)
 
-            useCase.execute()
+            useCase()
 
             orderRepository.getById(order.id).status shouldBe OrderStatus.COMPLETED
             val outboxMessages = outboxRepository.findMessagesInStatuses(

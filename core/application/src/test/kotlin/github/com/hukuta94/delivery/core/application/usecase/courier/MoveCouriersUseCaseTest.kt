@@ -1,4 +1,4 @@
-package github.com.hukuta94.delivery.core.application.usecase.courier.impl
+package github.com.hukuta94.delivery.core.application.usecase.courier
 
 import github.com.hukuta94.delivery.core.application.port.repository.UnitOfWorkFake
 import github.com.hukuta94.delivery.core.application.port.repository.domain.CourierRepositoryFake
@@ -16,7 +16,7 @@ import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.shouldBe
 
-class MoveCouriersUseCaseImplTest : StringSpec({
+class MoveCouriersUseCaseTest : StringSpec({
 
     val orderRepository = OrderRepositoryFake()
     val courierRepository = CourierRepositoryFake()
@@ -24,7 +24,7 @@ class MoveCouriersUseCaseImplTest : StringSpec({
     val unitOfWork = UnitOfWorkFake()
     val outboxEventRepository = OutboxEventRepositoryFake()
 
-    val usecase = MoveCouriersUseCaseImpl(
+    val usecase = MoveCouriersUseCase(
         orderRepository = orderRepository,
         courierRepository = courierRepository,
         completeOrderBusinessRule = completeOrderService,
@@ -58,7 +58,7 @@ class MoveCouriersUseCaseImplTest : StringSpec({
         courierRepository.addAll(couriers)
 
         // When
-        usecase.execute()
+        usecase()
 
         // Then
         busyCourier.location shouldBe assignedOrder.location

@@ -9,6 +9,6 @@ class CourierScheduler(
 
     @Scheduled(fixedDelay = 1000)
     fun moveCouriers() {
-        moveCouriersUseCase.execute()
+        moveCouriersUseCase()
     }
 }
