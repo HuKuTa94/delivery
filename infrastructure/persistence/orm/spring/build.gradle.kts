@@ -13,7 +13,7 @@ dependencies {
     testImplementation(testFixtures(project(":core:application")))
     testFixturesImplementation(testFixtures(project(":core:application")))
 
-    implementation(project(":infrastructure:orm:commons"))
+    implementation(project(":infrastructure:persistence:orm:commons"))
 
     // spring jpa
     implementation(platform(libs.spring.boot.bom))
@@ -31,6 +31,6 @@ dependencies {
     testImplementation(libs.jackson.module.kotlin)
 
     // integration test foundation (Testcontainers + Liquibase) + Spring test support
-    testImplementation(testFixtures(project(":infrastructure:orm:commons")))
+    testImplementation(testFixtures(project(":infrastructure:persistence:orm:commons")))
     testImplementation(libs.spring.boot.starter.test)
 }

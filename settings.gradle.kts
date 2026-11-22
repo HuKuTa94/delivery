@@ -16,9 +16,9 @@ include("api:scheduler")
 // Out/Secondary/Driven adapters
 include("infrastructure:grpc")
 include("infrastructure:kafka")
-include("infrastructure:orm:commons")
-include("infrastructure:orm:ktorm")
-include("infrastructure:orm:spring")
+include("infrastructure:persistence:orm:commons")
+include("infrastructure:persistence:orm:ktorm")
+include("infrastructure:persistence:orm:spring")
 include("infrastructure:persistence:in-memory")
 include("infrastructure:persistence:migrations")
 

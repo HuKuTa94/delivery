@@ -6,7 +6,7 @@ Integration tests (classes suffixed `*IT`) run against a real PostgreSQL started
 The schema is applied from the Liquibase changelog of `:infrastructure:persistence:migrations`.
 
 **Docker is required** to run them. Without a running Docker daemon these tests fail (they are not
-silently skipped). The shared foundation lives in `:infrastructure:orm:commons` test fixtures
+silently skipped). The shared foundation lives in `:infrastructure:persistence:orm:commons` test fixtures
 (`PostgresTestContainer`): a singleton container per test JVM, reused across specs; mutable tables are
 truncated before each test.
 
@@ -19,8 +19,8 @@ Run all tests (unit + integration):
 Run integration tests of a single module, e.g.:
 
 ```bash
-./gradlew :infrastructure:orm:ktorm:test
-./gradlew :infrastructure:orm:spring:test
+./gradlew :infrastructure:persistence:orm:ktorm:test
+./gradlew :infrastructure:persistence:orm:spring:test
 ./gradlew :configuration:test
 ```
 

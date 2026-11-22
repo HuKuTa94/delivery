@@ -21,9 +21,9 @@ api/               Primary (driving / input) adapters
 infrastructure/    Secondary (driven / output) adapters
   grpc/            GeoService gRPC client -> GetLocationPort
   kafka/           Kafka producer -> BusProducerPort
-  orm/commons/     Shared DB schema constants, inbox/outbox relay jobs, Postgres Testcontainer fixture
-  orm/spring/      Spring Data JPA implementation of repository/query/unit-of-work ports
-  orm/ktorm/       Ktorm implementation of the same ports
+  persistence/orm/commons/ Shared DB schema constants, inbox/outbox relay jobs, Postgres Testcontainer fixture
+  persistence/orm/spring/  Spring Data JPA implementation of repository/query/unit-of-work ports
+  persistence/orm/ktorm/   Ktorm implementation of the same ports
   persistence/in-memory/   In-memory repositories
   persistence/migrations/  Liquibase changelog (db/changelog/db.changelog-master.xml)
 configuration/     Spring Boot app (DeliveryApplication), wires everything with explicit @Bean configs
@@ -70,7 +70,7 @@ Conventions:
 ## Event flow (inbox / outbox)
 
 1. `api/kafka` `BasketKafkaConsumer` (or `POST /api/v1/orders/`) → `SaveIntegrationEventUseCase` stores a `BasketConfirmedIntegrationDomainEvent` in the **inbox**.
-2. `InboxEventMessageRelayJob` (scheduled, `orm/commons`) → `ApplicationEventPublisher` → `BasketConfirmedIntegrationDomainEventHandler` → `CreateOrderUseCase` (location via gRPC `GetLocationPort`).
+2. `InboxEventMessageRelayJob` (scheduled, `persistence/orm/commons`) → `ApplicationEventPublisher` → `BasketConfirmedIntegrationDomainEventHandler` → `CreateOrderUseCase` (location via gRPC `GetLocationPort`).
 3. `OrderScheduler` → `AssignCourierToOrderUseCase`; `CourierScheduler` → `MoveCouriersUseCase`. Domain events go to the **outbox**.
 4. `OutboxEventMessageRelayJob` → handlers → `BusProducerPort` → Kafka producer (`OrderStatusChangedContract.proto`).
 

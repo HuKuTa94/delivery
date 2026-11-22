@@ -13,10 +13,10 @@ dependencies {
     testImplementation(testFixtures(project(":core:application")))
     testFixturesImplementation(testFixtures(project(":core:application")))
 
-    implementation(project(":infrastructure:orm:commons"))
+    implementation(project(":infrastructure:persistence:orm:commons"))
 
     // integration test foundation (Testcontainers + Liquibase)
-    testImplementation(testFixtures(project(":infrastructure:orm:commons")))
+    testImplementation(testFixtures(project(":infrastructure:persistence:orm:commons")))
 
     // jackson — ApplicationEventSerializer runtime in box-event integration tests
     testImplementation(libs.jackson.module.kotlin)

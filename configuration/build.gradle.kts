@@ -21,14 +21,14 @@ dependencies {
     // infrastructure adapters
     api(project(":infrastructure:grpc"))
     api(project(":infrastructure:kafka"))
-    api(project(":infrastructure:orm:ktorm"))
-    api(project(":infrastructure:orm:spring"))
+    api(project(":infrastructure:persistence:orm:ktorm"))
+    api(project(":infrastructure:persistence:orm:spring"))
     api(project(":infrastructure:persistence:in-memory"))
-    implementation(project(":infrastructure:orm:commons"))
+    implementation(project(":infrastructure:persistence:orm:commons"))
     implementation(project(":infrastructure:persistence:migrations"))
 
     // integration test foundation (Testcontainers + Liquibase)
-    testImplementation(testFixtures(project(":infrastructure:orm:commons")))
+    testImplementation(testFixtures(project(":infrastructure:persistence:orm:commons")))
 
     // frameworks
     // spring
