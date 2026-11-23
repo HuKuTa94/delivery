@@ -1,5 +1,6 @@
 package github.com.hukuta94.delivery
 
+import com.tngtech.archunit.base.DescribedPredicate.not
 import com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes
 import com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses
 import github.com.hukuta94.delivery.core.application.query.Query
@@ -81,8 +82,34 @@ class ApplicationPackageTest : StringSpec({
         classes()
             .that()
             .resideInAPackage(APPLICATION_PORT_PACKAGE)
+            .and(not(KOTLIN_FILE_FACADE_OR_SYNTHETIC_CLASS))
             .should().beInterfaces()
             .andShould().haveSimpleNameEndingWith("Port")
+            .check(APPLICATION_PORT_PACKAGE.classes())
+    }
+
+    "top-level declarations of application port package hold no state" {
+        classes()
+            .that()
+            .resideInAPackage(APPLICATION_PORT_PACKAGE)
+            .and(KOTLIN_FILE_FACADE)
+            .should(HAVE_NO_FIELDS)
+            .allowEmptyShould(true)
+            .check(APPLICATION_PORT_PACKAGE.classes())
+    }
+
+    "top-level declarations of application port package use only ports, domain and the language" {
+        classes()
+            .that()
+            .resideInAPackage(APPLICATION_PORT_PACKAGE)
+            .and(KOTLIN_FILE_FACADE_OR_SYNTHETIC_CLASS)
+            .should().onlyDependOnClassesThat()
+            .resideInAnyPackage(
+                APPLICATION_PORT_PACKAGE,
+                DOMAIN_LAYER_PACKAGE,
+                *PROGRAMMING_LANGUAGE_PACKAGES,
+            )
+            .allowEmptyShould(true)
             .check(APPLICATION_PORT_PACKAGE.classes())
     }
 }) {

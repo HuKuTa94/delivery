@@ -16,6 +16,10 @@ dependencies {
     // spring context
     implementation(libs.spring.tx)
     implementation(libs.spring.context)
+    testImplementation(libs.spring.jdbc)
+
+    // coroutines
+    implementation(libs.kotlinx.coroutines.core)
 
     // Integration-test foundation (Testcontainers + Liquibase), exposed to consumers via testFixtures.
     testFixturesApi(platform(libs.testcontainers.bom))

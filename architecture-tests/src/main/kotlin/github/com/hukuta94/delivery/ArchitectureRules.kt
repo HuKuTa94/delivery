@@ -1,11 +1,51 @@
 package github.com.hukuta94.delivery
 
+import com.tngtech.archunit.base.DescribedPredicate
+import com.tngtech.archunit.core.domain.JavaClass
 import com.tngtech.archunit.core.domain.JavaClasses
 import com.tngtech.archunit.core.importer.ClassFileImporter
 import com.tngtech.archunit.core.importer.ImportOption
+import com.tngtech.archunit.lang.ArchCondition
+import com.tngtech.archunit.lang.ConditionEvents
+import com.tngtech.archunit.lang.SimpleConditionEvent
 import com.tngtech.archunit.lang.syntax.ArchRuleDefinition
 import com.tngtech.archunit.lang.syntax.elements.GivenClasses
 import kotlin.reflect.KClass
+
+// Kinds of `@kotlin.Metadata(k = ...)` the compiler writes into every class file.
+private const val KOTLIN_FILE_FACADE_KIND = 2
+private const val KOTLIN_SYNTHETIC_CLASS_KIND = 3
+
+/**
+ * Class the Kotlin compiler generates for the top-level declarations of a file (`FooKt`).
+ */
+val KOTLIN_FILE_FACADE: DescribedPredicate<JavaClass> = kotlinClassOfKind(
+    description = "Kotlin file facades",
+    KOTLIN_FILE_FACADE_KIND,
+)
+
+/**
+ * [KOTLIN_FILE_FACADE] or a synthetic class, e.g. a lambda of a top-level function (`FooKt$bar$1`).
+ */
+val KOTLIN_FILE_FACADE_OR_SYNTHETIC_CLASS: DescribedPredicate<JavaClass> = kotlinClassOfKind(
+    description = "Kotlin file facades or synthetic classes",
+    KOTLIN_FILE_FACADE_KIND,
+    KOTLIN_SYNTHETIC_CLASS_KIND,
+)
+
+/**
+ * The class declares no fields. On a [KOTLIN_FILE_FACADE] it means the file has no top-level properties (state).
+ */
+val HAVE_NO_FIELDS: ArchCondition<JavaClass> = object : ArchCondition<JavaClass>("have no fields") {
+    override fun check(
+        item: JavaClass,
+        events: ConditionEvents,
+    ) {
+        item.fields.forEach { field ->
+            events.add(SimpleConditionEvent.violated(field, "${field.description} is not allowed"))
+        }
+    }
+}
 
 fun <T> self(): Set<T> = emptySet()
 
@@ -85,6 +125,15 @@ infix fun String.onlyDependsOn(shouldDependOn: Collection<String>) {
         givenClasses = ArchRuleDefinition.noClasses(),
         importedClasses = importedClasses,
     )
+}
+
+private fun kotlinClassOfKind(
+    description: String,
+    vararg kinds: Int,
+): DescribedPredicate<JavaClass> = DescribedPredicate.describe(description) { javaClass ->
+    javaClass.tryGetAnnotationOfType(Metadata::class.java)
+        .map { metadata -> metadata.kind in kinds }
+        .orElse(false)
 }
 
 @Suppress(
