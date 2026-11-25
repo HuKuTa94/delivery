@@ -5,7 +5,6 @@ import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderStatus
 import github.com.hukuta94.delivery.core.application.port.repository.domain.OrderRepositoryPort
 import github.com.hukuta94.delivery.infrastructure.orm.commons.toDb
 import github.com.hukuta94.delivery.infrastructure.orm.spring.model.entity.OrderJpaEntity
-import org.slf4j.LoggerFactory
 import java.util.UUID
 import kotlin.jvm.optionals.getOrNull
 
@@ -13,17 +12,14 @@ class OrmOrderRepositoryAdapter(
     private val orderJpaRepository: OrderJpaRepository,
 ) : OrderRepositoryPort {
 
-    override fun add(aggregate: Order) {
+    override fun add(aggregate: Order): Boolean {
         val insertedRows = orderJpaRepository.insertIfAbsent(
             id = aggregate.id,
             statusId = aggregate.status.id,
             courierId = aggregate.courierId,
             location = aggregate.location.toDb(),
         )
-
-        if (insertedRows == 0) {
-            LOG.info("Order with id: ${aggregate.id} skipped because it already exists")
-        }
+        return insertedRows > 0
     }
 
     override fun update(aggregate: Order) {
@@ -63,9 +59,5 @@ class OrmOrderRepositoryAdapter(
 
     private fun getAllByStatus(status: OrderStatus): Collection<Order> {
         return orderJpaRepository.findAllByStatusIs(status).map { it.toDomain() }
-    }
-
-    companion object {
-        private val LOG = LoggerFactory.getLogger(OrmOrderRepositoryAdapter::class.java)
     }
 }

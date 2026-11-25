@@ -14,9 +14,7 @@ abstract class AggregateRepositoryFake<AGGREGATE : Aggregate<ID>, ID> : Aggregat
 
     protected val storage = ConcurrentHashMap<ID, AGGREGATE>()
 
-    override fun add(aggregate: AGGREGATE) {
-        storage[aggregate.id] = aggregate
-    }
+    override fun add(aggregate: AGGREGATE): Boolean = storage.putIfAbsent(aggregate.id, aggregate) == null
 
     override fun update(aggregate: AGGREGATE) {
         storage[aggregate.id] = aggregate

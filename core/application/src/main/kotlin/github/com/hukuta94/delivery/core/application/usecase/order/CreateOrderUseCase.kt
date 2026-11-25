@@ -21,9 +21,12 @@ class CreateOrderUseCase(
             location = orderLocation,
         )
 
-        orderRepository.add(newOrder)
-
-        LOG.info("Order with basket id: $orderId was created")
+        val added = orderRepository.add(newOrder)
+        if (added) {
+            LOG.info("Order with basket id: $orderId was created")
+        } else {
+            LOG.info("Order with basket id: $orderId already exists, skipped")
+        }
     }
 
     companion object {

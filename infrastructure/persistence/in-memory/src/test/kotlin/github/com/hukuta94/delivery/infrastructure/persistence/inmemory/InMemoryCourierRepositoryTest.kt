@@ -32,6 +32,29 @@ internal class InMemoryCourierRepositoryTest : StringSpec({
         actual shouldBeSameInstanceAs courier
     }
 
+    "reports a new courier as added" {
+        // When
+        val added = repository.add(freeCourier())
+
+        // Then
+        added shouldBe true
+    }
+
+    "keeps the stored courier when the same courier is added again" {
+        // Given
+        val stored = busyCourier()
+        repository.add(stored)
+
+        // When
+        val added = repository.add(freeCourier(id = stored.id))
+
+        // Then
+        assertSoftly {
+            added shouldBe false
+            repository.getById(stored.id) shouldBeSameInstanceAs stored
+        }
+    }
+
     "can update the courier" {
         // Given
         val courierId = UUID.randomUUID()

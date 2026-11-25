@@ -9,9 +9,7 @@ class InMemoryCourierRepository : CourierRepositoryPort {
 
     private val storage = mutableMapOf<UUID, Courier>()
 
-    override fun add(aggregate: Courier) {
-        storage[aggregate.id] = aggregate
-    }
+    override fun add(aggregate: Courier): Boolean = storage.putIfAbsent(aggregate.id, aggregate) == null
 
     override fun update(aggregate: Courier) {
         storage[aggregate.id] = aggregate

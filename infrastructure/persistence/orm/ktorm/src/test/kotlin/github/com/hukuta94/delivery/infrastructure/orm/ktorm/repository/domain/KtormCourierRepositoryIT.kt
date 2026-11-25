@@ -13,6 +13,8 @@ import io.kotest.matchers.shouldBe
 
 internal class KtormCourierRepositoryIT : KtormIntegrationSpec() {
     init {
+        val sut = KtormCourierRepository(database)
+
         "add then getById round-trips a courier" {
             val repository = KtormCourierRepository(database)
             val courier = freeCourier(
@@ -56,6 +58,41 @@ internal class KtormCourierRepositoryIT : KtormIntegrationSpec() {
 
             repository.getAllBusy().map { it.id } shouldContainExactlyInAnyOrder listOf(first.id, second.id)
             repository.getAllFree().shouldBeEmpty()
+        }
+
+        "a new courier is reported as added" {
+            // When
+            val added = sut.add(freeCourier())
+
+            // Then
+            added shouldBe true
+        }
+
+        "a courier added again is reported as not added and keeps its stored state" {
+            // Given
+            val stored = busyCourier(
+                location = location(4, 5),
+                transport = Transport.CAR,
+            )
+            sut.add(stored)
+            val again = freeCourier(
+                id = stored.id,
+                location = location(9, 9),
+                transport = Transport.BICYCLE,
+            )
+
+            // When
+            val readd = runCatching { sut.add(again) }
+
+            // Then
+            val loaded = sut.getById(stored.id)
+            assertSoftly {
+                readd shouldBe Result.success(false)
+                loaded.name.value shouldBe stored.name.value
+                loaded.status shouldBe CourierStatus.BUSY
+                loaded.location shouldBe location(4, 5)
+                loaded.transport shouldBe Transport.CAR
+            }
         }
     }
 }

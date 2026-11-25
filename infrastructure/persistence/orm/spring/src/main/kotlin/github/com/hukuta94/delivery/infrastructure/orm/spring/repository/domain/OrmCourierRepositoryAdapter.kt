@@ -3,6 +3,7 @@ package github.com.hukuta94.delivery.infrastructure.orm.spring.repository.domain
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.Courier
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.CourierStatus
 import github.com.hukuta94.delivery.core.application.port.repository.domain.CourierRepositoryPort
+import github.com.hukuta94.delivery.infrastructure.orm.commons.toDb
 import github.com.hukuta94.delivery.infrastructure.orm.spring.model.entity.CourierJpaEntity
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
@@ -11,9 +12,15 @@ class OrmCourierRepositoryAdapter(
     private val courierJpaRepository: CourierJpaRepository,
 ) : CourierRepositoryPort {
 
-    override fun add(aggregate: Courier) {
-        val jpaEntity = CourierJpaEntity.fromDomain(aggregate)
-        courierJpaRepository.save(jpaEntity)
+    override fun add(aggregate: Courier): Boolean {
+        val insertedRows = courierJpaRepository.insertIfAbsent(
+            id = aggregate.id,
+            name = aggregate.name.toDb(),
+            location = aggregate.location.toDb(),
+            statusId = aggregate.status.id,
+            transportId = aggregate.transport.id,
+        )
+        return insertedRows > 0
     }
 
     override fun update(aggregate: Courier) {

@@ -21,14 +21,13 @@ import org.ktorm.dsl.select
 import org.ktorm.dsl.update
 import org.ktorm.dsl.where
 import org.ktorm.support.postgresql.insertOrUpdate
-import org.slf4j.LoggerFactory
 import java.util.UUID
 
 class KtormOrderRepository(
     private val database: Database,
 ) : OrderRepositoryPort {
 
-    override fun add(aggregate: Order) {
+    override fun add(aggregate: Order): Boolean {
         val insertedRows = database.insertOrUpdate(OrderTable) {
             set(it.id, aggregate.id)
             set(it.courierId, aggregate.courierId)
@@ -36,10 +35,7 @@ class KtormOrderRepository(
             set(it.statusId, aggregate.status.id)
             onConflict(it.id) { doNothing() }
         }
-
-        if (insertedRows == 0) {
-            LOG.info("Order with id: ${aggregate.id} skipped because it already exists")
-        }
+        return insertedRows > 0
     }
 
     override fun update(aggregate: Order) {
@@ -109,8 +105,4 @@ class KtormOrderRepository(
             location = row.notNull(OrderTable.location).toLocation(),
             courierId = row[OrderTable.courierId]
         )
-
-    companion object {
-        private val LOG = LoggerFactory.getLogger(KtormOrderRepository::class.java)
-    }
 }

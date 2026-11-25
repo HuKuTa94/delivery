@@ -9,9 +9,7 @@ class InMemoryOrderRepository : OrderRepositoryPort {
 
     private val storage = mutableMapOf<UUID, Order>()
 
-    override fun add(aggregate: Order) {
-        storage.putIfAbsent(aggregate.id, aggregate)
-    }
+    override fun add(aggregate: Order): Boolean = storage.putIfAbsent(aggregate.id, aggregate) == null
 
     override fun update(aggregate: Order) {
         storage[aggregate.id] = aggregate

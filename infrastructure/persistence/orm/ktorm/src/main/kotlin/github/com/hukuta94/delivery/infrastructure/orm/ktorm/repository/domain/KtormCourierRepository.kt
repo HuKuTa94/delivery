@@ -17,11 +17,11 @@ import org.ktorm.dsl.batchUpdate
 import org.ktorm.dsl.eq
 import org.ktorm.dsl.from
 import org.ktorm.dsl.innerJoin
-import org.ktorm.dsl.insert
 import org.ktorm.dsl.map
 import org.ktorm.dsl.select
 import org.ktorm.dsl.update
 import org.ktorm.dsl.where
+import org.ktorm.support.postgresql.insertOrUpdate
 import java.util.UUID
 
 class KtormCourierRepository(
@@ -46,14 +46,16 @@ class KtormCourierRepository(
             .where { CourierStatusTable.code eq CourierStatus.BUSY.name }
             .map { toCourier(it) }
 
-    override fun add(aggregate: Courier) {
-        database.insert(CourierTable) {
+    override fun add(aggregate: Courier): Boolean {
+        val insertedRows = database.insertOrUpdate(CourierTable) {
             set(it.id, aggregate.id)
             set(it.name, aggregate.name.toDb())
             set(it.location, aggregate.location.toDb())
             set(it.statusId, aggregate.status.id)
             set(it.transportId, aggregate.transport.id)
+            onConflict(it.id) { doNothing() }
         }
+        return insertedRows > 0
     }
 
     override fun update(aggregate: Courier) {

@@ -13,7 +13,6 @@ import github.com.hukuta94.delivery.infrastructure.orm.ktorm.table.OrderTable
 import io.kotest.assertions.assertSoftly
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.maps.shouldBeEmpty
-import io.kotest.matchers.result.shouldBeSuccess
 import io.kotest.matchers.shouldBe
 import java.util.UUID
 import kotlin.time.Duration.Companion.seconds
@@ -64,7 +63,15 @@ internal class KtormOrderRepositoryIT : KtormIntegrationSpec() {
             notCompletedIds shouldContainExactlyInAnyOrder listOf(created.id, assigned.id)
         }
 
-        "an order added again is stored once" {
+        "a new order is reported as added" {
+            // When
+            val added = sut.add(createdOrder())
+
+            // Then
+            added shouldBe true
+        }
+
+        "an order added again is reported as not added and stored once" {
             // Given
             val order = createdOrder()
             sut.add(order)
@@ -74,7 +81,7 @@ internal class KtormOrderRepositoryIT : KtormIntegrationSpec() {
 
             // Then
             assertSoftly {
-                readd.shouldBeSuccess()
+                readd shouldBe Result.success(false)
                 count(OrderTable) shouldBe 1
             }
         }
@@ -95,14 +102,14 @@ internal class KtormOrderRepositoryIT : KtormIntegrationSpec() {
             // Then
             val loaded = sut.getById(stored.id)
             assertSoftly {
-                readd.shouldBeSuccess()
+                readd shouldBe Result.success(false)
                 loaded.status shouldBe OrderStatus.ASSIGNED
                 loaded.courierId shouldBe courier.id
                 loaded.location shouldBe location(4, 5)
             }
         }
 
-        "an order added by a few callers at once is stored once and fails none of them" {
+        "an order added by a few callers at once is stored once, added by one of them and fails none of them" {
             // Given
             val orderIds = List(ROUNDS) { UUID.randomUUID() }
 
@@ -114,6 +121,7 @@ internal class KtormOrderRepositoryIT : KtormIntegrationSpec() {
             // Then
             assertSoftly {
                 count(OrderTable) shouldBe ROUNDS
+                outcomes.count { it.getOrNull() == true } shouldBe ROUNDS
                 outcomes.failuresByType().shouldBeEmpty()
             }
         }
@@ -134,12 +142,13 @@ internal class KtormOrderRepositoryIT : KtormIntegrationSpec() {
             // Then
             assertSoftly {
                 count(OrderTable) shouldBe ROUNDS * THREADS
+                outcomes.count { it.getOrNull() == true } shouldBe ROUNDS * THREADS
                 outcomes.failuresByType().shouldBeEmpty()
             }
         }
     }
 
-    private fun addAtOnce(add: (adder: Int) -> Unit): List<Result<Unit>> = StartGate.run(
+    private fun addAtOnce(add: (adder: Int) -> Boolean): List<Result<Boolean>> = StartGate.run(
         threads = THREADS,
         timeout = TIMEOUT,
         action = add,

@@ -32,6 +32,29 @@ class InMemoryOrderRepositoryTest : StringSpec({
         actual shouldBeSameInstanceAs order
     }
 
+    "reports a new order as added" {
+        // When
+        val added = sut.add(createdOrder())
+
+        // Then
+        added shouldBe true
+    }
+
+    "keeps the stored order when the same order is added again" {
+        // Given
+        val stored = assignedOrder()
+        sut.add(stored)
+
+        // When
+        val added = sut.add(createdOrder(id = stored.id))
+
+        // Then
+        assertSoftly {
+            added shouldBe false
+            sut.getById(stored.id) shouldBeSameInstanceAs stored
+        }
+    }
+
     "can update the order" {
         // Given
         val orderId = UUID.randomUUID()
