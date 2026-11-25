@@ -9,7 +9,7 @@ import github.com.hukuta94.delivery.core.domain.FakeDomainEvent
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.CourierStatus
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.busyCourier
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.freeCourier
-import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderAssignedDomainEvent
+import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderAssignedEvent
 import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderStatus
 import github.com.hukuta94.delivery.core.domain.aggregate.order.assignedOrder
 import github.com.hukuta94.delivery.core.domain.aggregate.order.completedOrder
@@ -45,7 +45,7 @@ class AssignCourierToOrderUseCaseTest : StringSpec({
     )
 
     fun savedAssignments(): List<Pair<UUID, UUID>> = outboxEventRepository.savedEvents
-        .filterIsInstance<OrderAssignedDomainEvent>()
+        .filterIsInstance<OrderAssignedEvent>()
         .map { it.orderId to it.courierId }
 
     fun clearRepositories() {

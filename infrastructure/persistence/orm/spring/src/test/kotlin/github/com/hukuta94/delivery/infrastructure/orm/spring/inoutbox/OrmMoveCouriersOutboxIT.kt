@@ -1,11 +1,11 @@
 package github.com.hukuta94.delivery.infrastructure.orm.spring.inoutbox
 
-import github.com.hukuta94.delivery.core.application.event.ApplicationEventSerializer
+import github.com.hukuta94.delivery.core.application.event.EventSerializer
 import github.com.hukuta94.delivery.core.application.event.inoutbox.BoxEventMessageStatus
 import github.com.hukuta94.delivery.core.application.port.repository.UnitOfWorkFake
 import github.com.hukuta94.delivery.core.application.usecase.courier.MoveCouriersUseCase
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.busyCourier
-import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderCompletedDomainEvent
+import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderCompletedEvent
 import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderStatus
 import github.com.hukuta94.delivery.core.domain.aggregate.order.assignedOrder
 import github.com.hukuta94.delivery.core.domain.common.location
@@ -31,7 +31,7 @@ internal class OrmMoveCouriersOutboxIT : SpringJpaIntegrationSpec() {
         val courierAdapter = OrmCourierRepositoryAdapter(context.getBean(CourierJpaRepository::class.java))
         val outboxAdapter = SpringJpaOutboxEventRepositoryAdapter(
             context.getBean(SpringJpaOutboxEventRepository::class.java),
-            ApplicationEventSerializer(),
+            EventSerializer(),
         )
         val transaction = TransactionTemplate(context.getBean(PlatformTransactionManager::class.java))
 
@@ -56,7 +56,7 @@ internal class OrmMoveCouriersOutboxIT : SpringJpaIntegrationSpec() {
             val outboxMessages = transaction.execute {
                 outboxAdapter.findMessagesInStatuses(setOf(BoxEventMessageStatus.TO_BE_PROCESSED), batchSize = 50)
             }
-            outboxMessages?.mapNotNull { it.eventType } shouldBe listOf(OrderCompletedDomainEvent::class.java)
+            outboxMessages?.mapNotNull { it.eventType } shouldBe listOf(OrderCompletedEvent::class.java)
         }
     }
 }

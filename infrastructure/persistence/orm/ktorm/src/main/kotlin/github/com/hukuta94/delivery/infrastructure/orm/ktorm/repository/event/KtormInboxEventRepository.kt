@@ -1,6 +1,6 @@
 package github.com.hukuta94.delivery.infrastructure.orm.ktorm.repository.event
 
-import github.com.hukuta94.delivery.core.application.event.ApplicationEventSerializer
+import github.com.hukuta94.delivery.core.application.event.EventSerializer
 import github.com.hukuta94.delivery.core.application.port.repository.event.InboxEventRepositoryPort
 import github.com.hukuta94.delivery.core.domain.DomainEvent
 import github.com.hukuta94.delivery.infrastructure.orm.ktorm.table.InboxEventMessageTable
@@ -9,7 +9,7 @@ import org.ktorm.support.postgresql.insertOrUpdate
 
 class KtormInboxEventRepository(
     database: Database,
-    eventSerializer: ApplicationEventSerializer,
+    eventSerializer: EventSerializer,
 ) : InboxEventRepositoryPort, KtormBoxEventRepository(
     database,
     eventSerializer,

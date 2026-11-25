@@ -1,9 +1,9 @@
 package github.com.hukuta94.delivery.configuration.infrastructure.orm.springjpa
 
 import github.com.hukuta94.delivery.configuration.infrastructure.RelayProperties
-import github.com.hukuta94.delivery.core.application.event.ApplicationEventDeserializer
-import github.com.hukuta94.delivery.core.application.event.ApplicationEventPublisher
-import github.com.hukuta94.delivery.core.application.event.ApplicationEventSerializer
+import github.com.hukuta94.delivery.core.application.event.EventDeserializer
+import github.com.hukuta94.delivery.core.application.event.EventPublisher
+import github.com.hukuta94.delivery.core.application.event.EventSerializer
 import github.com.hukuta94.delivery.core.application.port.repository.UnitOfWorkPort
 import github.com.hukuta94.delivery.infrastructure.orm.commons.InboxEventMessageRelayJob
 import github.com.hukuta94.delivery.infrastructure.orm.commons.OutboxEventMessageRelayJob
@@ -63,7 +63,7 @@ open class SpringOrmConfiguration {
     @Bean
     open fun springJpaOutboxRepository(
         outboxEventJpaRepository: SpringJpaOutboxEventRepository,
-        domainEventSerializer: ApplicationEventSerializer,
+        domainEventSerializer: EventSerializer,
     ) = SpringJpaOutboxEventRepositoryAdapter(
         outboxEventJpaRepository = outboxEventJpaRepository,
         eventSerializer = domainEventSerializer,
@@ -72,8 +72,8 @@ open class SpringOrmConfiguration {
     @Bean
     open fun springJpaOutboxEventMessageRelayJob(
         eventRepository: SpringJpaOutboxEventRepositoryAdapter,
-        eventDeserializer: ApplicationEventDeserializer,
-        eventPublisher: ApplicationEventPublisher,
+        eventDeserializer: EventDeserializer,
+        eventPublisher: EventPublisher,
         relayProperties: RelayProperties,
     ) = OutboxEventMessageRelayJob(
         eventRepository = eventRepository,
@@ -85,7 +85,7 @@ open class SpringOrmConfiguration {
     @Bean
     open fun springJpaInboxRepository(
         inboxJpaRepository: SpringJpaInboxEventRepository,
-        integrationEventSerializer: ApplicationEventSerializer,
+        integrationEventSerializer: EventSerializer,
     ) = SpringJpaInboxEventRepositoryAdapter(
         inboxJpaRepository = inboxJpaRepository,
         eventSerializer = integrationEventSerializer,
@@ -94,8 +94,8 @@ open class SpringOrmConfiguration {
     @Bean
     open fun springJpaInboxEventMessageRelayJob(
         eventRepository: SpringJpaInboxEventRepositoryAdapter,
-        eventDeserializer: ApplicationEventDeserializer,
-        eventPublisher: ApplicationEventPublisher,
+        eventDeserializer: EventDeserializer,
+        eventPublisher: EventPublisher,
         relayProperties: RelayProperties,
     ) = InboxEventMessageRelayJob(
         eventRepository = eventRepository,

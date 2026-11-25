@@ -1,7 +1,7 @@
 package github.com.hukuta94.delivery.infrastructure.kafka
 
-import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderAssignedDomainEvent
-import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderCompletedDomainEvent
+import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderAssignedEvent
+import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderCompletedEvent
 import io.kotest.assertions.assertSoftly
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
@@ -32,7 +32,7 @@ internal class OrderKafkaProducerTest : StringSpec({
 
     "Order assignment is published with the order id" {
         val orderId = UUID.randomUUID()
-        val event = OrderAssignedDomainEvent(orderId = orderId, courierId = UUID.randomUUID())
+        val event = OrderAssignedEvent(orderId = orderId, courierId = UUID.randomUUID())
 
         sut.publishOrderAssignedDomainEvent(event)
 
@@ -48,7 +48,7 @@ internal class OrderKafkaProducerTest : StringSpec({
 
     "Order completion is published with the order id" {
         val orderId = UUID.randomUUID()
-        val event = OrderCompletedDomainEvent(orderId = orderId)
+        val event = OrderCompletedEvent(orderId = orderId)
 
         sut.publishOrderCompletedDomainEvent(event)
 
@@ -72,7 +72,7 @@ internal class OrderKafkaProducerTest : StringSpec({
 
         shouldThrow<IllegalStateException> {
             sut.publishOrderAssignedDomainEvent(
-                OrderAssignedDomainEvent(orderId = UUID.randomUUID(), courierId = UUID.randomUUID())
+                OrderAssignedEvent(orderId = UUID.randomUUID(), courierId = UUID.randomUUID())
             )
         }
     }
@@ -89,7 +89,7 @@ internal class OrderKafkaProducerTest : StringSpec({
 
         shouldThrow<IllegalStateException> {
             sut.publishOrderCompletedDomainEvent(
-                OrderCompletedDomainEvent(orderId = UUID.randomUUID())
+                OrderCompletedEvent(orderId = UUID.randomUUID())
             )
         }
     }

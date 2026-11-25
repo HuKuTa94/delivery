@@ -1,11 +1,11 @@
 package github.com.hukuta94.delivery.infrastructure.orm.ktorm.repository.domain
 
-import github.com.hukuta94.delivery.core.application.event.ApplicationEventSerializer
+import github.com.hukuta94.delivery.core.application.event.EventSerializer
 import github.com.hukuta94.delivery.core.application.event.inoutbox.BoxEventMessageStatus
 import github.com.hukuta94.delivery.core.application.port.repository.UnitOfWorkFake
 import github.com.hukuta94.delivery.core.application.usecase.courier.MoveCouriersUseCase
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.busyCourier
-import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderCompletedDomainEvent
+import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderCompletedEvent
 import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderStatus
 import github.com.hukuta94.delivery.core.domain.aggregate.order.assignedOrder
 import github.com.hukuta94.delivery.core.domain.common.location
@@ -23,7 +23,7 @@ internal class KtormMoveCouriersOutboxIT : KtormIntegrationSpec() {
         "MoveCouriers completes an order and writes its OrderCompletedDomainEvent to the outbox" {
             val orderRepository = KtormOrderRepository(database)
             val courierRepository = KtormCourierRepository(database)
-            val outboxRepository = KtormOutboxEventRepository(database, ApplicationEventSerializer())
+            val outboxRepository = KtormOutboxEventRepository(database, EventSerializer())
             val useCase = MoveCouriersUseCase(
                 orderRepository,
                 courierRepository,
@@ -50,7 +50,7 @@ internal class KtormMoveCouriersOutboxIT : KtormIntegrationSpec() {
                 statuses = setOf(BoxEventMessageStatus.TO_BE_PROCESSED),
                 batchSize = 50,
             )
-            outboxMessages.map { it.eventType } shouldBe listOf(OrderCompletedDomainEvent::class.java)
+            outboxMessages.map { it.eventType } shouldBe listOf(OrderCompletedEvent::class.java)
         }
     }
 }

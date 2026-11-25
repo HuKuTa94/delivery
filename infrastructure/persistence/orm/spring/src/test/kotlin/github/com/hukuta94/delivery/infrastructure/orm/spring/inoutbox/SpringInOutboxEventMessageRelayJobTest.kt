@@ -1,8 +1,8 @@
 package github.com.hukuta94.delivery.infrastructure.orm.spring.inoutbox
 
 import com.fasterxml.jackson.databind.JsonMappingException
-import github.com.hukuta94.delivery.core.application.event.ApplicationEventDeserializer
-import github.com.hukuta94.delivery.core.application.event.ApplicationEventPublisher
+import github.com.hukuta94.delivery.core.application.event.EventDeserializer
+import github.com.hukuta94.delivery.core.application.event.EventPublisher
 import github.com.hukuta94.delivery.core.application.event.inoutbox.BoxEventMessageStatus
 import github.com.hukuta94.delivery.core.application.port.repository.event.BoxEventMessageRelayRepositoryPort
 import github.com.hukuta94.delivery.core.domain.FakeDomainEvent
@@ -19,8 +19,8 @@ import org.mockito.kotlin.whenever
 internal class SpringInOutboxEventMessageRelayJobTest : StringSpec({
 
     lateinit var outboxEventJpaRepository: BoxEventMessageRelayRepositoryPort
-    lateinit var eventPublisher: ApplicationEventPublisher
-    lateinit var eventDeserializer: ApplicationEventDeserializer
+    lateinit var eventPublisher: EventPublisher
+    lateinit var eventDeserializer: EventDeserializer
 
     lateinit var sut: OutboxEventMessageRelayJob
 

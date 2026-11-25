@@ -1,7 +1,7 @@
 package github.com.hukuta94.delivery.infrastructure.kafka
 
-import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderAssignedDomainEvent
-import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderCompletedDomainEvent
+import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderAssignedEvent
+import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderCompletedEvent
 import github.com.hukuta94.delivery.infrastructure.kafka.integration.KafkaTestContainer
 import io.kotest.assertions.assertSoftly
 import io.kotest.core.spec.style.StringSpec
@@ -45,7 +45,7 @@ internal class OrderKafkaProducerIT : StringSpec({
     "publishes OrderAssigned to the broker with the orderId as key and Assigned status" {
         val orderId = UUID.randomUUID()
 
-        sut.publishOrderAssignedDomainEvent(OrderAssignedDomainEvent(orderId = orderId, courierId = UUID.randomUUID()))
+        sut.publishOrderAssignedDomainEvent(OrderAssignedEvent(orderId = orderId, courierId = UUID.randomUUID()))
 
         assertPublishedWithStatus(orderId, OrderStatus.Assigned)
     }
@@ -53,7 +53,7 @@ internal class OrderKafkaProducerIT : StringSpec({
     "publishes OrderCompleted to the broker with the orderId as key and Completed status" {
         val orderId = UUID.randomUUID()
 
-        sut.publishOrderCompletedDomainEvent(OrderCompletedDomainEvent(orderId = orderId))
+        sut.publishOrderCompletedDomainEvent(OrderCompletedEvent(orderId = orderId))
 
         assertPublishedWithStatus(orderId, OrderStatus.Completed)
     }

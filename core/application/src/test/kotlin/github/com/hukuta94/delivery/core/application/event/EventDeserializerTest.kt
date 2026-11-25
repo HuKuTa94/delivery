@@ -1,18 +1,18 @@
 package github.com.hukuta94.delivery.core.application.event
 
-import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderAssignedDomainEvent
-import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderCompletedDomainEvent
+import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderAssignedEvent
+import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderCompletedEvent
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import java.util.*
 
-class DomainEventDeserializerTest : StringSpec({
+class EventDeserializerTest : StringSpec({
 
-    val sut = ApplicationEventDeserializer()
+    val sut = EventDeserializer()
 
     "deserializes order assigned domain event from string" {
         // Given
-        val domainEvent = OrderAssignedDomainEvent(
+        val domainEvent = OrderAssignedEvent(
             orderId = UUID.randomUUID(),
             courierId = UUID.randomUUID(),
         )
@@ -36,7 +36,7 @@ class DomainEventDeserializerTest : StringSpec({
 
     "deserializes order completed domain event from string" {
         // Given
-        val domainEvent = OrderCompletedDomainEvent(
+        val domainEvent = OrderCompletedEvent(
             orderId = UUID.randomUUID(),
         )
         val serializedDomainEvent = """
@@ -54,6 +54,30 @@ class DomainEventDeserializerTest : StringSpec({
 
         // Then
         actualDeserializedDomainEvent shouldBe domainEvent
+    }
+
+    "deserializes basket confirmed integration event from string" {
+        // Given
+        val event = BasketConfirmedEvent(
+            basketId = UUID.randomUUID(),
+            street = "country,city,street,building,zip",
+        )
+        val serializedEvent = """
+            {
+                "eventId":"${event.eventId}",
+                "basketId":"${event.basketId}",
+                "street":"${event.street}"
+            }
+        """.withoutSpaces()
+
+        // When
+        val result = sut.deserialize(
+            serializedEvent = serializedEvent,
+            eventClassType = event::class.java,
+        )
+
+        // Then
+        result shouldBe event
     }
 }) {
     companion object {

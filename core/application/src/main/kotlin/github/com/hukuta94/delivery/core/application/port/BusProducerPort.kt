@@ -1,10 +1,10 @@
 package github.com.hukuta94.delivery.core.application.port
 
-import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderAssignedDomainEvent
-import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderCompletedDomainEvent
+import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderAssignedEvent
+import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderCompletedEvent
 
 interface BusProducerPort {
-    fun publishOrderAssignedDomainEvent(orderAssignedDomainEvent: OrderAssignedDomainEvent)
+    fun publishOrderAssignedDomainEvent(orderAssignedEvent: OrderAssignedEvent)
 
-    fun publishOrderCompletedDomainEvent(orderCompletedDomainEvent: OrderCompletedDomainEvent)
+    fun publishOrderCompletedDomainEvent(orderCompletedEvent: OrderCompletedEvent)
 }

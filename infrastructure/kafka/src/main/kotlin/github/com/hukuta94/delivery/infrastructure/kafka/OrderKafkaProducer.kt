@@ -1,7 +1,7 @@
 package github.com.hukuta94.delivery.infrastructure.kafka
 
-import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderAssignedDomainEvent
-import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderCompletedDomainEvent
+import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderAssignedEvent
+import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderCompletedEvent
 import github.com.hukuta94.delivery.core.application.port.BusProducerPort
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.slf4j.LoggerFactory
@@ -14,20 +14,20 @@ class OrderKafkaProducer(
 ) : BusProducerPort {
 
     override fun publishOrderAssignedDomainEvent(
-        orderAssignedDomainEvent: OrderAssignedDomainEvent
+        orderAssignedEvent: OrderAssignedEvent
     ) {
         publishToTopicOrderStatusChanged(
-            orderId = orderAssignedDomainEvent.orderId,
+            orderId = orderAssignedEvent.orderId,
             orderStatus =
                 github.com.hukuta94.delivery.core.domain.aggregate.order.OrderStatus.ASSIGNED.toKafkaOrderStatus()
         )
     }
 
     override fun publishOrderCompletedDomainEvent(
-        orderCompletedDomainEvent: OrderCompletedDomainEvent
+        orderCompletedEvent: OrderCompletedEvent
     ) {
         publishToTopicOrderStatusChanged(
-            orderId = orderCompletedDomainEvent.orderId,
+            orderId = orderCompletedEvent.orderId,
             orderStatus =
                 github.com.hukuta94.delivery.core.domain.aggregate.order.OrderStatus.COMPLETED.toKafkaOrderStatus()
         )

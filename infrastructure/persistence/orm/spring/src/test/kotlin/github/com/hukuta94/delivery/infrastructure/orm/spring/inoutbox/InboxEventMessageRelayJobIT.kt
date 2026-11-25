@@ -1,12 +1,12 @@
 package github.com.hukuta94.delivery.infrastructure.orm.spring.inoutbox
 
-import github.com.hukuta94.delivery.core.application.event.ApplicationEventDeserializer
-import github.com.hukuta94.delivery.core.application.event.ApplicationEventPublisher
-import github.com.hukuta94.delivery.core.application.event.ApplicationEventSerializer
-import github.com.hukuta94.delivery.core.application.event.handler.OrderCompletedDomainEventHandler
+import github.com.hukuta94.delivery.core.application.event.EventDeserializer
+import github.com.hukuta94.delivery.core.application.event.EventPublisher
+import github.com.hukuta94.delivery.core.application.event.EventSerializer
+import github.com.hukuta94.delivery.core.application.event.handler.OrderCompletedEventHandler
 import github.com.hukuta94.delivery.core.application.event.inoutbox.BoxEventMessageStatus
 import github.com.hukuta94.delivery.core.application.port.BusProducerPort
-import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderCompletedDomainEvent
+import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderCompletedEvent
 import github.com.hukuta94.delivery.infrastructure.orm.commons.InboxEventMessageRelayJob
 import github.com.hukuta94.delivery.infrastructure.orm.spring.integration.SpringJpaIntegrationSpec
 import github.com.hukuta94.delivery.infrastructure.orm.spring.repository.event.SpringJpaInboxEventRepository
@@ -26,7 +26,7 @@ internal class InboxEventMessageRelayJobIT : SpringJpaIntegrationSpec() {
     init {
         val inbox = SpringJpaInboxEventRepositoryAdapter(
             context.getBean(SpringJpaInboxEventRepository::class.java),
-            ApplicationEventSerializer(),
+            EventSerializer(),
         )
         // The relay drains and persists the batch (JPA merge) in a single transaction, as in production.
         val transaction = TransactionTemplate(context.getBean(PlatformTransactionManager::class.java))
@@ -35,19 +35,19 @@ internal class InboxEventMessageRelayJobIT : SpringJpaIntegrationSpec() {
         // mocked per test so the relay can be driven to success and failure without a real bus.
         fun relayJob(busProducer: BusProducerPort) = InboxEventMessageRelayJob(
             inbox,
-            ApplicationEventDeserializer(),
-            ApplicationEventPublisher(listOf(OrderCompletedDomainEventHandler(busProducer))),
+            EventDeserializer(),
+            EventPublisher(listOf(OrderCompletedEventHandler(busProducer))),
             batchSize = 50,
         )
 
         "drains, publishes and marks inbox messages SUCCESS against the real database" {
             val orderId = UUID.randomUUID()
-            inbox.saveIntegrationEvent(OrderCompletedDomainEvent(orderId = orderId))
+            inbox.saveIntegrationEvent(OrderCompletedEvent(orderId = orderId))
             val busProducer = mock<BusProducerPort>()
 
             transaction.executeWithoutResult { relayJob(busProducer).pullMessagesFromInbox() }
 
-            verify(busProducer).publishOrderCompletedDomainEvent(OrderCompletedDomainEvent(orderId = orderId))
+            verify(busProducer).publishOrderCompletedDomainEvent(OrderCompletedEvent(orderId = orderId))
             assertSoftly {
                 transaction.messagesInStatus(inbox, BoxEventMessageStatus.TO_BE_PROCESSED).shouldBeEmpty()
                 transaction.messagesInStatus(inbox, BoxEventMessageStatus.SUCCESS).shouldHaveSize(1)
@@ -55,7 +55,7 @@ internal class InboxEventMessageRelayJobIT : SpringJpaIntegrationSpec() {
         }
 
         "marks an inbox message DELIVERY_ERROR when publication fails (kept for retry)" {
-            inbox.saveIntegrationEvent(OrderCompletedDomainEvent(orderId = UUID.randomUUID()))
+            inbox.saveIntegrationEvent(OrderCompletedEvent(orderId = UUID.randomUUID()))
             val busProducer = mock<BusProducerPort>()
             whenever(busProducer.publishOrderCompletedDomainEvent(any()))
                 .thenThrow(IllegalStateException("publication failed"))

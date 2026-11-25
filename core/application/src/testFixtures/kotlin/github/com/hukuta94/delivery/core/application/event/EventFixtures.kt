@@ -9,7 +9,7 @@ package github.com.hukuta94.delivery.core.application.event
 import github.com.hukuta94.delivery.core.domain.FakeDomainEvent
 import java.util.UUID
 
-class FakeEventHandler : ApplicationEventHandler<FakeDomainEvent> {
+class FakeEventHandler : EventHandler<FakeDomainEvent> {
     var executedCount: Int = 0
         private set
 
@@ -23,7 +23,7 @@ class FakeEventHandler : ApplicationEventHandler<FakeDomainEvent> {
 fun basketConfirmedIntegrationDomainEvent(
     basketId: UUID = UUID.randomUUID(),
     street: String = "Default street",
-) = BasketConfirmedIntegrationDomainEvent(
+) = BasketConfirmedEvent(
     basketId = basketId,
     street = street,
 )

@@ -1,8 +1,8 @@
 package github.com.hukuta94.delivery.infrastructure.orm.ktorm.repository.event
 
-import github.com.hukuta94.delivery.core.application.event.ApplicationEventSerializer
+import github.com.hukuta94.delivery.core.application.event.EventSerializer
 import github.com.hukuta94.delivery.core.application.event.inoutbox.BoxEventMessageStatus
-import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderCompletedDomainEvent
+import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderCompletedEvent
 import github.com.hukuta94.delivery.infrastructure.orm.ktorm.integration.KtormIntegrationSpec
 import io.kotest.matchers.shouldBe
 import java.util.UUID
@@ -10,9 +10,9 @@ import java.util.UUID
 internal class KtormBoxEventRepositoryIT : KtormIntegrationSpec() {
     init {
         "findMessagesInStatuses respects batchSize and the status filter" {
-            val repository = KtormOutboxEventRepository(database, ApplicationEventSerializer())
+            val repository = KtormOutboxEventRepository(database, EventSerializer())
             repeat(5) {
-                repository.saveDomainEvents(listOf(OrderCompletedDomainEvent(orderId = UUID.randomUUID())))
+                repository.saveDomainEvents(listOf(OrderCompletedEvent(orderId = UUID.randomUUID())))
             }
 
             val found = repository.findMessagesInStatuses(
@@ -25,8 +25,8 @@ internal class KtormBoxEventRepositoryIT : KtormIntegrationSpec() {
         }
 
         "findMessagesInStatuses returns empty when no message matches the status" {
-            val repository = KtormOutboxEventRepository(database, ApplicationEventSerializer())
-            repository.saveDomainEvents(listOf(OrderCompletedDomainEvent(orderId = UUID.randomUUID())))
+            val repository = KtormOutboxEventRepository(database, EventSerializer())
+            repository.saveDomainEvents(listOf(OrderCompletedEvent(orderId = UUID.randomUUID())))
 
             val found = repository.findMessagesInStatuses(
                 statuses = setOf(BoxEventMessageStatus.SUCCESS),

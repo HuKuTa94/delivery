@@ -23,7 +23,7 @@ class Order internal constructor(
 
         status = OrderStatus.ASSIGNED
         courierId = courier.id
-        raiseDomainEvent(OrderAssignedDomainEvent(id, courier.id))
+        raiseDomainEvent(OrderAssignedEvent(id, courier.id))
     }
 
     fun complete() {
@@ -32,7 +32,7 @@ class Order internal constructor(
         }
 
         status = OrderStatus.COMPLETED
-        raiseDomainEvent(OrderCompletedDomainEvent(id))
+        raiseDomainEvent(OrderCompletedEvent(id))
     }
 
     companion object {

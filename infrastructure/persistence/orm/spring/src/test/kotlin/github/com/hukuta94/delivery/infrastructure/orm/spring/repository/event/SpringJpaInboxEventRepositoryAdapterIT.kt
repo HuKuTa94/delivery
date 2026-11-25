@@ -1,6 +1,6 @@
 package github.com.hukuta94.delivery.infrastructure.orm.spring.repository.event
 
-import github.com.hukuta94.delivery.core.application.event.ApplicationEventSerializer
+import github.com.hukuta94.delivery.core.application.event.EventSerializer
 import github.com.hukuta94.delivery.core.application.event.basketConfirmedIntegrationDomainEvent
 import github.com.hukuta94.delivery.infrastructure.orm.commons.integration.concurrency.StartGate
 import github.com.hukuta94.delivery.infrastructure.orm.commons.integration.concurrency.failuresByType
@@ -21,7 +21,7 @@ internal class SpringJpaInboxEventRepositoryAdapterIT : SpringJpaIntegrationSpec
         val inboxRepository = context.getBean(SpringJpaInboxEventRepository::class.java)
         val sut = SpringJpaInboxEventRepositoryAdapter(
             inboxJpaRepository = inboxRepository,
-            eventSerializer = ApplicationEventSerializer(),
+            eventSerializer = EventSerializer(),
         )
 
         "a new integration event is reported as saved" {

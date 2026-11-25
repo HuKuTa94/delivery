@@ -1,8 +1,8 @@
 package github.com.hukuta94.delivery.core.application.event.inoutbox
 
 import com.fasterxml.jackson.core.JacksonException
-import github.com.hukuta94.delivery.core.application.event.ApplicationEventDeserializer
-import github.com.hukuta94.delivery.core.application.event.ApplicationEventPublisher
+import github.com.hukuta94.delivery.core.application.event.EventDeserializer
+import github.com.hukuta94.delivery.core.application.event.EventPublisher
 import github.com.hukuta94.delivery.core.application.port.repository.event.BoxEventMessageRelayRepositoryPort
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
@@ -24,8 +24,8 @@ import java.time.LocalDateTime
  */
 abstract class BoxEventMessageRelay(
     private val eventRepository: BoxEventMessageRelayRepositoryPort,
-    private val eventDeserializer: ApplicationEventDeserializer,
-    private val eventPublisher: ApplicationEventPublisher,
+    private val eventDeserializer: EventDeserializer,
+    private val eventPublisher: EventPublisher,
     private val batchSize: Int,
 ) {
     /**

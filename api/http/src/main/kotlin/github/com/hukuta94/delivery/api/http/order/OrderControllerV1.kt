@@ -1,6 +1,6 @@
 package github.com.hukuta94.delivery.api.http.order
 
-import github.com.hukuta94.delivery.core.application.event.BasketConfirmedIntegrationDomainEvent
+import github.com.hukuta94.delivery.core.application.event.BasketConfirmedEvent
 import github.com.hukuta94.delivery.core.application.query.order.GetNotCompletedOrdersQuery
 import github.com.hukuta94.delivery.core.application.query.order.OrderResponse
 import github.com.hukuta94.delivery.core.application.usecase.event.SaveIntegrationEventUseCase
@@ -21,7 +21,7 @@ class OrderControllerV1(
 
     @PostMapping("orders/")
     fun createOrder(): ResponseEntity<Unit> {
-        val event = BasketConfirmedIntegrationDomainEvent(
+        val event = BasketConfirmedEvent(
             basketId = UUID.randomUUID(),
             street = "Random street",
         )

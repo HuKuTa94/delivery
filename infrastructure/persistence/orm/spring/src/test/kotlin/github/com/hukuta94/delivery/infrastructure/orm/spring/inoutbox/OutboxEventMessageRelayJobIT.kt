@@ -1,12 +1,12 @@
 package github.com.hukuta94.delivery.infrastructure.orm.spring.inoutbox
 
-import github.com.hukuta94.delivery.core.application.event.ApplicationEventDeserializer
-import github.com.hukuta94.delivery.core.application.event.ApplicationEventPublisher
-import github.com.hukuta94.delivery.core.application.event.ApplicationEventSerializer
-import github.com.hukuta94.delivery.core.application.event.handler.OrderCompletedDomainEventHandler
+import github.com.hukuta94.delivery.core.application.event.EventDeserializer
+import github.com.hukuta94.delivery.core.application.event.EventPublisher
+import github.com.hukuta94.delivery.core.application.event.EventSerializer
+import github.com.hukuta94.delivery.core.application.event.handler.OrderCompletedEventHandler
 import github.com.hukuta94.delivery.core.application.event.inoutbox.BoxEventMessageStatus
 import github.com.hukuta94.delivery.core.application.port.BusProducerPort
-import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderCompletedDomainEvent
+import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderCompletedEvent
 import github.com.hukuta94.delivery.infrastructure.orm.commons.OutboxEventMessageRelayJob
 import github.com.hukuta94.delivery.infrastructure.orm.spring.integration.SpringJpaIntegrationSpec
 import github.com.hukuta94.delivery.infrastructure.orm.spring.repository.event.SpringJpaOutboxEventRepository
@@ -28,26 +28,26 @@ internal class OutboxEventMessageRelayJobIT : SpringJpaIntegrationSpec() {
         val transaction = TransactionTemplate(context.getBean(PlatformTransactionManager::class.java))
         val outbox = SpringJpaOutboxEventRepositoryAdapter(
             context.getBean(SpringJpaOutboxEventRepository::class.java),
-            ApplicationEventSerializer(),
+            EventSerializer(),
         )
 
         // Real publishing path: the production OrderCompletedDomainEventHandler forwards to BusProducerPort,
         // mocked per test (mocks are stateful) so the relay can be driven to success and failure without a real bus.
         fun relayJob(busProducer: BusProducerPort) = OutboxEventMessageRelayJob(
             outbox,
-            ApplicationEventDeserializer(),
-            ApplicationEventPublisher(listOf(OrderCompletedDomainEventHandler(busProducer))),
+            EventDeserializer(),
+            EventPublisher(listOf(OrderCompletedEventHandler(busProducer))),
             batchSize = 50,
         )
 
         "drains, publishes and marks messages SUCCESS against the real database" {
             val orderId = UUID.randomUUID()
-            outbox.saveDomainEvents(listOf(OrderCompletedDomainEvent(orderId = orderId)))
+            outbox.saveDomainEvents(listOf(OrderCompletedEvent(orderId = orderId)))
             val busProducer: BusProducerPort = mock()
 
             transaction.executeWithoutResult { relayJob(busProducer).pullMessagesFromOutbox() }
 
-            verify(busProducer).publishOrderCompletedDomainEvent(OrderCompletedDomainEvent(orderId = orderId))
+            verify(busProducer).publishOrderCompletedDomainEvent(OrderCompletedEvent(orderId = orderId))
             assertSoftly {
                 transaction.messagesInStatus(outbox, BoxEventMessageStatus.TO_BE_PROCESSED).shouldBeEmpty()
                 transaction.messagesInStatus(outbox, BoxEventMessageStatus.SUCCESS).shouldHaveSize(1)
@@ -55,7 +55,7 @@ internal class OutboxEventMessageRelayJobIT : SpringJpaIntegrationSpec() {
         }
 
         "marks a message DELIVERY_ERROR when publication fails (kept for retry)" {
-            outbox.saveDomainEvents(listOf(OrderCompletedDomainEvent(orderId = UUID.randomUUID())))
+            outbox.saveDomainEvents(listOf(OrderCompletedEvent(orderId = UUID.randomUUID())))
             val busProducer = mock<BusProducerPort>()
             whenever(busProducer.publishOrderCompletedDomainEvent(any()))
                 .thenThrow(IllegalStateException("publication failed"))
@@ -71,8 +71,8 @@ internal class OutboxEventMessageRelayJobIT : SpringJpaIntegrationSpec() {
         "does nothing and commits cleanly when the outbox is empty" {
             val job = OutboxEventMessageRelayJob(
                 outbox,
-                ApplicationEventDeserializer(),
-                ApplicationEventPublisher(emptyList()),
+                EventDeserializer(),
+                EventPublisher(emptyList()),
                 batchSize = 50,
             )
 

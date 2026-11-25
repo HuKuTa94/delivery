@@ -1,6 +1,6 @@
 package github.com.hukuta94.delivery.infrastructure.orm.spring.model.entity.event
 
-import github.com.hukuta94.delivery.core.application.event.ApplicationEventSerializer
+import github.com.hukuta94.delivery.core.application.event.EventSerializer
 import github.com.hukuta94.delivery.core.domain.DomainEvent
 import github.com.hukuta94.delivery.infrastructure.orm.commons.Messages.Outbox.TABLE_NAME
 import jakarta.persistence.Entity
@@ -15,7 +15,7 @@ class OutboxEventMessageJpaEntity : BoxEventMessageJpaEntity() {
 
         fun fromEvent(
             event: DomainEvent,
-            eventSerializer: ApplicationEventSerializer,
+            eventSerializer: EventSerializer,
             createdAt: LocalDateTime,
         ) = OutboxEventMessageJpaEntity().apply {
                 eventId = event.eventId

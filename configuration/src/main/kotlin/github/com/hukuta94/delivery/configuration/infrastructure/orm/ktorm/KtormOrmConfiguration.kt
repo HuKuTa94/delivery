@@ -1,9 +1,9 @@
 package github.com.hukuta94.delivery.configuration.infrastructure.orm.ktorm
 
 import github.com.hukuta94.delivery.configuration.infrastructure.RelayProperties
-import github.com.hukuta94.delivery.core.application.event.ApplicationEventDeserializer
-import github.com.hukuta94.delivery.core.application.event.ApplicationEventPublisher
-import github.com.hukuta94.delivery.core.application.event.ApplicationEventSerializer
+import github.com.hukuta94.delivery.core.application.event.EventDeserializer
+import github.com.hukuta94.delivery.core.application.event.EventPublisher
+import github.com.hukuta94.delivery.core.application.event.EventSerializer
 import github.com.hukuta94.delivery.core.application.port.repository.UnitOfWorkPort
 import github.com.hukuta94.delivery.core.application.port.repository.domain.CourierRepositoryPort
 import github.com.hukuta94.delivery.core.application.port.repository.domain.OrderRepositoryPort
@@ -59,7 +59,7 @@ open class KtormOrmConfiguration {
     @Bean
     open fun ktormInboxEventMessageRelayRepository(
         database: Database,
-        eventSerializer: ApplicationEventSerializer,
+        eventSerializer: EventSerializer,
     ) = KtormInboxEventRepository(
         database = database,
         eventSerializer = eventSerializer,
@@ -68,7 +68,7 @@ open class KtormOrmConfiguration {
     @Bean
     open fun ktormOutboxEventMessageRelayRepository(
         database: Database,
-        eventSerializer: ApplicationEventSerializer,
+        eventSerializer: EventSerializer,
     ) = KtormOutboxEventRepository(
         database = database,
         eventSerializer = eventSerializer,
@@ -77,8 +77,8 @@ open class KtormOrmConfiguration {
     @Bean
     open fun ktormOutboxEventMessageRelayJob(
         eventRepository: KtormOutboxEventRepository,
-        eventDeserializer: ApplicationEventDeserializer,
-        eventPublisher: ApplicationEventPublisher,
+        eventDeserializer: EventDeserializer,
+        eventPublisher: EventPublisher,
         relayProperties: RelayProperties,
     ) = OutboxEventMessageRelayJob(
         eventRepository = eventRepository,
@@ -90,8 +90,8 @@ open class KtormOrmConfiguration {
     @Bean
     open fun ktormInboxEventMessageRelayJob(
         eventRepository: KtormInboxEventRepository,
-        eventDeserializer: ApplicationEventDeserializer,
-        eventPublisher: ApplicationEventPublisher,
+        eventDeserializer: EventDeserializer,
+        eventPublisher: EventPublisher,
         relayProperties: RelayProperties,
     ) = InboxEventMessageRelayJob(
         eventRepository = eventRepository,

@@ -93,11 +93,11 @@ class OrderTest : StringSpec({
         val order = assignedOrder()
 
         // When
-        val actualDomainEvent = order.popDomainEvents().last() as OrderAssignedDomainEvent
+        val actualDomainEvent = order.popDomainEvents().last() as OrderAssignedEvent
 
         // Then
         assertSoftly {
-            actualDomainEvent::class shouldBe OrderAssignedDomainEvent::class
+            actualDomainEvent::class shouldBe OrderAssignedEvent::class
             actualDomainEvent.orderId shouldBe order.id
             actualDomainEvent.courierId shouldBe order.courierId
         }
@@ -108,11 +108,11 @@ class OrderTest : StringSpec({
         val order = completedOrder()
 
         // When
-        val actualDomainEvent = order.popDomainEvents().last() as OrderCompletedDomainEvent
+        val actualDomainEvent = order.popDomainEvents().last() as OrderCompletedEvent
 
         // Then
         assertSoftly {
-            actualDomainEvent::class shouldBe OrderCompletedDomainEvent::class
+            actualDomainEvent::class shouldBe OrderCompletedEvent::class
             actualDomainEvent.orderId shouldBe order.id
         }
     }

@@ -1,6 +1,6 @@
 package github.com.hukuta94.delivery.infrastructure.orm.spring.repository.event
 
-import github.com.hukuta94.delivery.core.application.event.ApplicationEventSerializer
+import github.com.hukuta94.delivery.core.application.event.EventSerializer
 import github.com.hukuta94.delivery.core.application.event.inoutbox.BoxEventMessage
 import github.com.hukuta94.delivery.core.application.event.inoutbox.BoxEventMessageStatus
 import github.com.hukuta94.delivery.core.application.port.repository.event.BoxEventMessageRelayRepositoryPort
@@ -13,7 +13,7 @@ import java.time.LocalDateTime
 
 class SpringJpaOutboxEventRepositoryAdapter(
     private val outboxEventJpaRepository: SpringJpaOutboxEventRepository,
-    private val eventSerializer: ApplicationEventSerializer,
+    private val eventSerializer: EventSerializer,
 ) : OutboxEventRepositoryPort, BoxEventMessageRelayRepositoryPort {
 
     override fun saveDomainEvents(domainEvents: Collection<DomainEvent>) {

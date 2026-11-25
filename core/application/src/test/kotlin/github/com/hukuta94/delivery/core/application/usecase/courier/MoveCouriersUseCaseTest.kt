@@ -11,7 +11,7 @@ import github.com.hukuta94.delivery.core.domain.aggregate.courier.Transport
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.busyCourier
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.freeCourier
 import github.com.hukuta94.delivery.core.domain.aggregate.order.Order
-import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderCompletedDomainEvent
+import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderCompletedEvent
 import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderStatus
 import github.com.hukuta94.delivery.core.domain.aggregate.order.assignedOrder
 import github.com.hukuta94.delivery.core.domain.aggregate.order.completedOrder
@@ -49,7 +49,7 @@ class MoveCouriersUseCaseTest : StringSpec({
     )
 
     fun completedOrderIds(): List<UUID> = outboxEventRepository.savedEvents
-        .filterIsInstance<OrderCompletedDomainEvent>()
+        .filterIsInstance<OrderCompletedEvent>()
         .map { it.orderId }
 
     fun clearRepositories() {

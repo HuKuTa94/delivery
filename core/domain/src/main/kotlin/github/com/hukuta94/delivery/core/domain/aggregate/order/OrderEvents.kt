@@ -3,11 +3,11 @@ package github.com.hukuta94.delivery.core.domain.aggregate.order
 import github.com.hukuta94.delivery.core.domain.DomainEvent
 import java.util.*
 
-data class OrderAssignedDomainEvent(
+data class OrderAssignedEvent(
     val orderId: UUID,
     val courierId: UUID,
 ) : DomainEvent()
 
-data class OrderCompletedDomainEvent(
+data class OrderCompletedEvent(
     val orderId: UUID,
 ) : DomainEvent()

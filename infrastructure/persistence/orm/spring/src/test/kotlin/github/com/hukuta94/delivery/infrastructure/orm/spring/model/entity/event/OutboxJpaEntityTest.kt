@@ -1,7 +1,7 @@
 package github.com.hukuta94.delivery.infrastructure.orm.spring.model.entity.event
 
-import github.com.hukuta94.delivery.core.application.event.ApplicationEventSerializer
-import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderAssignedDomainEvent
+import github.com.hukuta94.delivery.core.application.event.EventSerializer
+import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderAssignedEvent
 import io.kotest.assertions.assertSoftly
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
@@ -15,13 +15,13 @@ import java.util.*
 class OutboxJpaEntityTest {
 
     // Mocks
-    private val eventSerializer: ApplicationEventSerializer = mock()
+    private val eventSerializer: EventSerializer = mock()
 
     @Test
     fun `creates outbox entity from domain event`() {
         // Given
         val serializedDomainEvent = "serialized domain event"
-        val domainEvent = OrderAssignedDomainEvent(
+        val domainEvent = OrderAssignedEvent(
             orderId = UUID.randomUUID(),
             courierId = UUID.randomUUID(),
         )
