@@ -26,10 +26,19 @@ class MoveCouriersUseCase(
                 .takeIf { it.isNotEmpty() }
                 ?: return emptyMap()
 
+            // The courier of an assigned order may be missing from the busy ones, e.g. when it was dispatched
+            // between the two reads. Such an order is skipped, so it doesn't stop the other couriers.
             return orderRepository.getAllAssigned()
-                .associateBy { requireNotNull(couriers[it.courierId]) }
-                .takeIf { it.isNotEmpty() }
-                ?: return emptyMap()
+                .mapNotNull { order ->
+                    val courier = couriers[order.courierId]
+                    if (courier == null) {
+                        LOG.warn(
+                            "Skip order with id: ${order.id}: its courier with id: ${order.courierId} is not busy",
+                        )
+                    }
+                    courier?.let { it to order }
+                }
+                .toMap()
         }
 
         fun moveCouriersToTheirOrders(couriersWithOrders: Map<Courier, Order>) {
