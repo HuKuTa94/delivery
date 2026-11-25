@@ -7,7 +7,6 @@ import github.com.hukuta94.delivery.infrastructure.orm.commons.integration.concu
 import github.com.hukuta94.delivery.infrastructure.orm.spring.integration.SpringJpaIntegrationSpec
 import io.kotest.assertions.assertSoftly
 import io.kotest.matchers.maps.shouldBeEmpty
-import io.kotest.matchers.result.shouldBeSuccess
 import io.kotest.matchers.shouldBe
 import java.util.UUID
 import kotlin.time.Duration.Companion.seconds
@@ -25,7 +24,15 @@ internal class SpringJpaInboxEventRepositoryAdapterIT : SpringJpaIntegrationSpec
             eventSerializer = ApplicationEventSerializer(),
         )
 
-        "an integration event delivered again is stored once" {
+        "a new integration event is reported as saved" {
+            // When
+            val saved = sut.saveIntegrationEvent(basketConfirmedIntegrationDomainEvent())
+
+            // Then
+            saved shouldBe true
+        }
+
+        "an integration event delivered again is reported as not saved and stored once" {
             // Given
             val event = basketConfirmedIntegrationDomainEvent()
             sut.saveIntegrationEvent(event)
@@ -35,12 +42,12 @@ internal class SpringJpaInboxEventRepositoryAdapterIT : SpringJpaIntegrationSpec
 
             // Then
             assertSoftly {
-                redelivery.shouldBeSuccess()
+                redelivery shouldBe Result.success(false)
                 inboxRepository.count() shouldBe 1
             }
         }
 
-        "an integration event saved by a few callers at once is stored once and fails none of them" {
+        "an integration event saved by a few callers at once is stored by one of them and fails none" {
             // Given
             val events = List(ROUNDS) {
                 basketConfirmedIntegrationDomainEvent(basketId = UUID.randomUUID())
@@ -52,6 +59,7 @@ internal class SpringJpaInboxEventRepositoryAdapterIT : SpringJpaIntegrationSpec
             // Then
             assertSoftly {
                 inboxRepository.count() shouldBe ROUNDS.toLong()
+                outcomes.count { it.getOrNull() == true } shouldBe ROUNDS
                 outcomes.failuresByType().shouldBeEmpty()
             }
         }
@@ -72,12 +80,13 @@ internal class SpringJpaInboxEventRepositoryAdapterIT : SpringJpaIntegrationSpec
             // Then
             assertSoftly {
                 inboxRepository.count() shouldBe (ROUNDS * THREADS).toLong()
+                outcomes.count { it.getOrNull() == true } shouldBe ROUNDS * THREADS
                 outcomes.failuresByType().shouldBeEmpty()
             }
         }
     }
 
-    private fun saveAtOnce(save: (saver: Int) -> Unit): List<Result<Unit>> = StartGate.run(
+    private fun saveAtOnce(save: (saver: Int) -> Boolean): List<Result<Boolean>> = StartGate.run(
         threads = THREADS,
         timeout = TIMEOUT,
         action = save,

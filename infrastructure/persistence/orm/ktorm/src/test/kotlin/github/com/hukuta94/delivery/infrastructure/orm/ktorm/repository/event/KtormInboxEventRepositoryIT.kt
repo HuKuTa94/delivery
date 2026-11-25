@@ -8,7 +8,6 @@ import github.com.hukuta94.delivery.infrastructure.orm.ktorm.integration.KtormIn
 import github.com.hukuta94.delivery.infrastructure.orm.ktorm.table.InboxEventMessageTable
 import io.kotest.assertions.assertSoftly
 import io.kotest.matchers.maps.shouldBeEmpty
-import io.kotest.matchers.result.shouldBeSuccess
 import io.kotest.matchers.shouldBe
 import java.util.UUID
 import kotlin.time.Duration.Companion.seconds
@@ -25,7 +24,15 @@ internal class KtormInboxEventRepositoryIT : KtormIntegrationSpec() {
             eventSerializer = ApplicationEventSerializer(),
         )
 
-        "an integration event delivered again is stored once" {
+        "a new integration event is reported as saved" {
+            // When
+            val saved = sut.saveIntegrationEvent(basketConfirmedIntegrationDomainEvent())
+
+            // Then
+            saved shouldBe true
+        }
+
+        "an integration event delivered again is reported as not saved and stored once" {
             // Given
             val event = basketConfirmedIntegrationDomainEvent()
             sut.saveIntegrationEvent(event)
@@ -35,12 +42,12 @@ internal class KtormInboxEventRepositoryIT : KtormIntegrationSpec() {
 
             // Then
             assertSoftly {
-                redelivery.shouldBeSuccess()
+                redelivery shouldBe Result.success(false)
                 count(InboxEventMessageTable) shouldBe 1
             }
         }
 
-        "an integration event saved by a few callers at once is stored once and fails none of them" {
+        "an integration event saved by a few callers at once is stored by one of them and fails none" {
             // Given
             val basketId = UUID.randomUUID()
             val events = List(ROUNDS) {
@@ -55,6 +62,7 @@ internal class KtormInboxEventRepositoryIT : KtormIntegrationSpec() {
             // Then
             assertSoftly {
                 count(InboxEventMessageTable) shouldBe ROUNDS
+                outcomes.count { it.getOrNull() == true } shouldBe ROUNDS
                 outcomes.failuresByType().shouldBeEmpty()
             }
         }
@@ -75,12 +83,13 @@ internal class KtormInboxEventRepositoryIT : KtormIntegrationSpec() {
             // Then
             assertSoftly {
                 count(InboxEventMessageTable) shouldBe ROUNDS * THREADS
+                outcomes.count { it.getOrNull() == true } shouldBe ROUNDS * THREADS
                 outcomes.failuresByType().shouldBeEmpty()
             }
         }
     }
 
-    private fun saveAtOnce(save: (saver: Int) -> Unit) = StartGate.run(
+    private fun saveAtOnce(save: (saver: Int) -> Boolean): List<Result<Boolean>> = StartGate.run(
         threads = THREADS,
         timeout = TIMEOUT,
         action = save,

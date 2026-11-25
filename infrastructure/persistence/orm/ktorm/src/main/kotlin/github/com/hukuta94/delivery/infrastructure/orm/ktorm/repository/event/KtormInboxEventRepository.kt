@@ -6,7 +6,6 @@ import github.com.hukuta94.delivery.core.domain.DomainEvent
 import github.com.hukuta94.delivery.infrastructure.orm.ktorm.table.InboxEventMessageTable
 import org.ktorm.database.Database
 import org.ktorm.support.postgresql.insertOrUpdate
-import org.slf4j.LoggerFactory
 
 class KtormInboxEventRepository(
     database: Database,
@@ -17,18 +16,11 @@ class KtormInboxEventRepository(
     InboxEventMessageTable
 ) {
 
-    override fun saveIntegrationEvent(integrationEvent: DomainEvent) {
+    override fun saveIntegrationEvent(integrationEvent: DomainEvent): Boolean {
         val insertedRows = database.insertOrUpdate(table) {
             setInsertColumns(integrationEvent)
             onConflict(table.eventId) { doNothing() }
         }
-
-        if (insertedRows == 0) {
-            LOG.info("Integration event with id: ${integrationEvent.eventId} skipped because it already exists")
-        }
-    }
-
-    companion object {
-        private val LOG = LoggerFactory.getLogger(KtormInboxEventRepository::class.java)
+        return insertedRows > 0
     }
 }

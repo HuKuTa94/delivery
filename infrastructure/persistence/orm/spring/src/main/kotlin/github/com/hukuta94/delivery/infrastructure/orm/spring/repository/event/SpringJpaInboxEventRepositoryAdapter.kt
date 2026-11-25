@@ -7,7 +7,6 @@ import github.com.hukuta94.delivery.core.application.port.repository.event.BoxEv
 import github.com.hukuta94.delivery.core.application.port.repository.event.InboxEventRepositoryPort
 import github.com.hukuta94.delivery.core.domain.DomainEvent
 import github.com.hukuta94.delivery.infrastructure.orm.spring.model.entity.event.InboxEventMessageJpaEntity
-import org.slf4j.LoggerFactory
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import java.time.LocalDateTime
@@ -17,7 +16,7 @@ class SpringJpaInboxEventRepositoryAdapter(
     private val eventSerializer: ApplicationEventSerializer
 ) : InboxEventRepositoryPort, BoxEventMessageRelayRepositoryPort {
 
-    override fun saveIntegrationEvent(integrationEvent: DomainEvent) {
+    override fun saveIntegrationEvent(integrationEvent: DomainEvent): Boolean {
         val insertedRows = inboxJpaRepository.insertIfAbsent(
             eventId = integrationEvent.eventId,
             eventType = integrationEvent.javaClass.name,
@@ -25,10 +24,7 @@ class SpringJpaInboxEventRepositoryAdapter(
             createdAt = LocalDateTime.now(),
             statusId = BoxEventMessageStatus.TO_BE_PROCESSED.id,
         )
-
-        if (insertedRows == 0) {
-            LOG.info("Integration event with id: ${integrationEvent.eventId} skipped because it already exists")
-        }
+        return insertedRows > 0
     }
 
     override fun saveAll(messages: List<BoxEventMessage>) {
@@ -52,9 +48,5 @@ class SpringJpaInboxEventRepositoryAdapter(
             Sort.by(Sort.Direction.ASC, InboxEventMessageJpaEntity::createdAt.name),
         )
         return inboxJpaRepository.findAllByStatusIn(statuses, pageable)
-    }
-
-    companion object {
-        private val LOG = LoggerFactory.getLogger(SpringJpaInboxEventRepositoryAdapter::class.java)
     }
 }
