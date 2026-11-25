@@ -2,8 +2,15 @@ package github.com.hukuta94.delivery.core.application.port.repository.domain
 
 import github.com.hukuta94.delivery.core.domain.aggregate.Aggregate
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.CopyOnWriteArrayList
 
 abstract class AggregateRepositoryFake<AGGREGATE : Aggregate<ID>, ID> : AggregateRepositoryPort<AGGREGATE, ID> {
+
+    /**
+     * Ids passed to [update], in call order. The storage keeps references to the aggregates,
+     * so it can't show whether a changed aggregate was saved; this list can.
+     */
+    val updatedIds: MutableList<ID> = CopyOnWriteArrayList()
 
     protected val storage = ConcurrentHashMap<ID, AGGREGATE>()
 
@@ -13,6 +20,7 @@ abstract class AggregateRepositoryFake<AGGREGATE : Aggregate<ID>, ID> : Aggregat
 
     override fun update(aggregate: AGGREGATE) {
         storage[aggregate.id] = aggregate
+        updatedIds.add(aggregate.id)
     }
 
     override fun update(aggregates: Collection<AGGREGATE>) {
@@ -32,7 +40,10 @@ abstract class AggregateRepositoryFake<AGGREGATE : Aggregate<ID>, ID> : Aggregat
     }
 
     /**
-     * Remove all stored aggregates in fake repository
+     * Remove all stored aggregates and recorded updates in fake repository
      */
-    fun clear() = storage.clear()
+    fun clear() {
+        storage.clear()
+        updatedIds.clear()
+    }
 }
