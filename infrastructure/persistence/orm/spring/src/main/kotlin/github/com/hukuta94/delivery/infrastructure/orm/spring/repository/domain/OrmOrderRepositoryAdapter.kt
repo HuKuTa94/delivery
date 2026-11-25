@@ -3,8 +3,10 @@ package github.com.hukuta94.delivery.infrastructure.orm.spring.repository.domain
 import github.com.hukuta94.delivery.core.domain.aggregate.order.Order
 import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderStatus
 import github.com.hukuta94.delivery.core.application.port.repository.domain.OrderRepositoryPort
+import github.com.hukuta94.delivery.infrastructure.orm.commons.toDb
 import github.com.hukuta94.delivery.infrastructure.orm.spring.model.entity.OrderJpaEntity
-import java.util.*
+import org.slf4j.LoggerFactory
+import java.util.UUID
 import kotlin.jvm.optionals.getOrNull
 
 class OrmOrderRepositoryAdapter(
@@ -12,8 +14,16 @@ class OrmOrderRepositoryAdapter(
 ) : OrderRepositoryPort {
 
     override fun add(aggregate: Order) {
-        val jpaEntity = OrderJpaEntity.fromDomain(aggregate)
-        orderJpaRepository.save(jpaEntity)
+        val insertedRows = orderJpaRepository.insertIfAbsent(
+            id = aggregate.id,
+            statusId = aggregate.status.id,
+            courierId = aggregate.courierId,
+            location = aggregate.location.toDb(),
+        )
+
+        if (insertedRows == 0) {
+            LOG.info("Order with id: ${aggregate.id} skipped because it already exists")
+        }
     }
 
     override fun update(aggregate: Order) {
@@ -53,5 +63,9 @@ class OrmOrderRepositoryAdapter(
 
     private fun getAllByStatus(status: OrderStatus): Collection<Order> {
         return orderJpaRepository.findAllByStatusIs(status).map { it.toDomain() }
+    }
+
+    companion object {
+        private val LOG = LoggerFactory.getLogger(OrmOrderRepositoryAdapter::class.java)
     }
 }

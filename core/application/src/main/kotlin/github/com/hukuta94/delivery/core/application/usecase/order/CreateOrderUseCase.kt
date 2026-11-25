@@ -15,14 +15,6 @@ class CreateOrderUseCase(
     operator fun invoke(command: CreateOrderCommand) {
         val orderId = command.basketId
 
-        LOG.info("Try to create new order with basket id: $orderId")
-
-        val orderAlreadyExists = orderRepository.existsById(command.basketId)
-        if (orderAlreadyExists) {
-            LOG.info("Order with id: $orderId already exists")
-            return
-        }
-
         val orderLocation = getLocationPort.fromStreet(command.street).getOrElse { error(it.message) }
         val newOrder = Order.create(
             id = orderId,
