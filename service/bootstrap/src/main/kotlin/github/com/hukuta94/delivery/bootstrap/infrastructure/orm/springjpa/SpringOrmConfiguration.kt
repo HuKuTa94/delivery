@@ -1,0 +1,106 @@
+package github.com.hukuta94.delivery.bootstrap.infrastructure.orm.springjpa
+
+import github.com.hukuta94.delivery.bootstrap.infrastructure.RelayProperties
+import github.com.hukuta94.delivery.core.application.event.EventDeserializer
+import github.com.hukuta94.delivery.core.application.event.EventPublisher
+import github.com.hukuta94.delivery.core.application.event.EventSerializer
+import github.com.hukuta94.delivery.core.application.port.repository.UnitOfWorkPort
+import github.com.hukuta94.delivery.infrastructure.orm.commons.InboxEventMessageRelayJob
+import github.com.hukuta94.delivery.infrastructure.orm.commons.OutboxEventMessageRelayJob
+import github.com.hukuta94.delivery.infrastructure.orm.spring.repository.SpringJpaUnitOfWorkAdapter
+import github.com.hukuta94.delivery.infrastructure.orm.spring.repository.domain.CourierJpaRepository
+import github.com.hukuta94.delivery.infrastructure.orm.spring.repository.domain.OrderJpaRepository
+import github.com.hukuta94.delivery.infrastructure.orm.spring.repository.domain.OrmCourierRepositoryAdapter
+import github.com.hukuta94.delivery.infrastructure.orm.spring.repository.domain.OrmOrderRepositoryAdapter
+import github.com.hukuta94.delivery.infrastructure.orm.spring.repository.event.SpringJpaInboxEventRepository
+import github.com.hukuta94.delivery.infrastructure.orm.spring.repository.event.SpringJpaOutboxEventRepository
+import github.com.hukuta94.delivery.infrastructure.orm.spring.repository.event.SpringJpaInboxEventRepositoryAdapter
+import github.com.hukuta94.delivery.infrastructure.orm.spring.repository.event.SpringJpaOutboxEventRepositoryAdapter
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
+import org.springframework.boot.autoconfigure.domain.EntityScan
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories
+
+@Configuration
+@ConditionalOnProperty(
+    prefix = "delivery",
+    name = ["orm"],
+    havingValue = "spring-jpa",
+    matchIfMissing = true,
+)
+@EntityScan(
+    basePackages = [
+        "github.com.hukuta94.delivery.infrastructure.orm.spring.model.entity"
+    ]
+)
+@EnableJpaRepositories(
+    basePackages = [
+        "github.com.hukuta94.delivery.infrastructure.orm.spring.repository"
+    ]
+)
+open class SpringOrmConfiguration {
+
+    @Bean
+    open fun courierRepository(
+        courierJpaRepository: CourierJpaRepository,
+    ) = OrmCourierRepositoryAdapter(
+        courierJpaRepository = courierJpaRepository,
+    )
+
+    @Bean
+    open fun orderRepository(
+        orderJpaRepository: OrderJpaRepository,
+    ) = OrmOrderRepositoryAdapter(
+        orderJpaRepository = orderJpaRepository,
+    )
+
+    @Bean
+    open fun springJpaUnitOfWork(): UnitOfWorkPort {
+        return SpringJpaUnitOfWorkAdapter()
+    }
+
+    @Bean
+    open fun springJpaOutboxRepository(
+        outboxEventJpaRepository: SpringJpaOutboxEventRepository,
+        domainEventSerializer: EventSerializer,
+    ) = SpringJpaOutboxEventRepositoryAdapter(
+        outboxEventJpaRepository = outboxEventJpaRepository,
+        eventSerializer = domainEventSerializer,
+    )
+
+    @Bean
+    open fun springJpaOutboxEventMessageRelayJob(
+        eventRepository: SpringJpaOutboxEventRepositoryAdapter,
+        eventDeserializer: EventDeserializer,
+        eventPublisher: EventPublisher,
+        relayProperties: RelayProperties,
+    ) = OutboxEventMessageRelayJob(
+        eventRepository = eventRepository,
+        eventDeserializer = eventDeserializer,
+        eventPublisher = eventPublisher,
+        batchSize = relayProperties.batchSize,
+    )
+
+    @Bean
+    open fun springJpaInboxRepository(
+        inboxJpaRepository: SpringJpaInboxEventRepository,
+        integrationEventSerializer: EventSerializer,
+    ) = SpringJpaInboxEventRepositoryAdapter(
+        inboxJpaRepository = inboxJpaRepository,
+        eventSerializer = integrationEventSerializer,
+    )
+
+    @Bean
+    open fun springJpaInboxEventMessageRelayJob(
+        eventRepository: SpringJpaInboxEventRepositoryAdapter,
+        eventDeserializer: EventDeserializer,
+        eventPublisher: EventPublisher,
+        relayProperties: RelayProperties,
+    ) = InboxEventMessageRelayJob(
+        eventRepository = eventRepository,
+        eventDeserializer = eventDeserializer,
+        eventPublisher = eventPublisher,
+        batchSize = relayProperties.batchSize,
+    )
+}

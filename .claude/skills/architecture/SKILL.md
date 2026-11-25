@@ -27,7 +27,7 @@ service/             Everything that ships in delivery.jar
     persistence/orm/ktorm/   Ktorm implementation of the same ports
     persistence/in-memory/   In-memory repositories
     persistence/migrations/  Liquibase changelog (db/changelog/db.changelog-master.xml)
-  configuration/     Spring Boot app (DeliveryApplication), wires everything with explicit @Bean configs
+  bootstrap/         Composition root: Spring Boot app (DeliveryApplication), wires everything with explicit @Bean configs
 architecture-tests/  ArchUnit tests enforcing layer dependencies and naming
 load-tests/          Load/concurrency/resilience tests (see the `testing` skill, load-tests reference)
 build-logic/         Convention plugins: `common-setup`, `protobuf-dependencies`
@@ -56,7 +56,7 @@ Breaking these fails the build. Check `ArchitecturePackages.kt` / `*PackageTest.
 - Frameworks are allowed in application/adapters; extra framework packages used in tested layers must be added to `FRAMEWORK_PACKAGES`.
 
 Core classes are **not** Spring beans by annotation: they are plain classes instantiated in
-`service/configuration/.../*Configuration.kt` with `@Bean` methods. When adding a use case, port impl, handler or
+`service/bootstrap/.../*Configuration.kt` with `@Bean` methods. When adding a use case, port impl, handler or
 rule, also wire it in the matching configuration class.
 
 ## Domain model
@@ -85,7 +85,7 @@ Proto contracts: `service/api/kafka/src/main/proto`, `service/infrastructure/grp
 
 ## Configuration
 
-`service/configuration/src/main/resources/application.yml`:
+`service/bootstrap/src/main/resources/application.yml`:
 - `delivery.orm`: `spring-jpa` | `ktorm` | `inmemory` selects the persistence implementation via `@ConditionalOnProperty`. Any new port implementation must be provided for **each** ORM configuration that needs it (`SpringOrmConfiguration`, `KtormOrmConfiguration`, `InMemoryRepositoryConfiguration`).
 - Postgres `localhost:5432`, Kafka `localhost:9092`, Geo gRPC `localhost:8084`, HTTP `:8080`.
 - Hardcoded values belong in config properties (see `RelayProperties`, `CorsProperties`).
@@ -93,4 +93,4 @@ Proto contracts: `service/api/kafka/src/main/proto`, `service/infrastructure/grp
 ## Adding a feature
 
 Typical touch points: domain → use case interface + `impl` → port → adapter impl(s) for each ORM →
-`configuration` beans → Liquibase changeset (if schema changes) → unit tests + `*IT` → run `make test`.
+`bootstrap` beans → Liquibase changeset (if schema changes) → unit tests + `*IT` → run `make test`.

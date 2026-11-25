@@ -21,7 +21,7 @@ Run integration tests of a single module, e.g.:
 ```bash
 ./gradlew :service:infrastructure:persistence:orm:ktorm:test
 ./gradlew :service:infrastructure:persistence:orm:spring:test
-./gradlew :service:configuration:test
+./gradlew :service:bootstrap:test
 ```
 
 Kafka integration tests (`:service:infrastructure:kafka`) start an Apache Kafka (KRaft) container and verify the

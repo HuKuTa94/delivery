@@ -24,8 +24,8 @@ include("service:infrastructure:persistence:orm:spring")
 include("service:infrastructure:persistence:in-memory")
 include("service:infrastructure:persistence:migrations")
 
-// Configuration of whole application
-include("service:configuration")
+// Bootstrap: composition root of whole application (Spring Boot app, bean wiring, boot jar)
+include("service:bootstrap")
 
 // Architecture tests of dependencies between modules of whole application
 include("architecture-tests")

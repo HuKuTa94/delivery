@@ -34,7 +34,7 @@ make load-run SCENARIO=breakpoint|spike|soak|chaos   # generator against the sta
 ./gradlew :architecture-tests:test
 ```
 
-On Windows use `gradlew.bat` (the Makefile auto-detects). Boot jar: `service/configuration/build/libs/delivery.jar`.
+On Windows use `gradlew.bat` (the Makefile auto-detects). Boot jar: `service/bootstrap/build/libs/delivery.jar`.
 
 ## Rules
 
