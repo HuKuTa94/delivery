@@ -1,7 +1,7 @@
 package github.com.hukuta94.delivery.api.http.courier
 
 import github.com.hukuta94.delivery.core.application.query.courier.GetBusyCouriersQuery
-import github.com.hukuta94.delivery.core.application.query.courier.response.CourierResponse
+import github.com.hukuta94.delivery.core.application.query.courier.CourierResponse
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping

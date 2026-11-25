@@ -2,8 +2,8 @@ package github.com.hukuta94.delivery.infrastructure.orm.spring.query.order
 
 import github.com.hukuta94.delivery.core.application.query.common.LocationResponse
 import github.com.hukuta94.delivery.core.application.query.order.GetNotCompletedOrdersQuery
-import github.com.hukuta94.delivery.core.application.query.order.response.GetNotCompletedOrdersResponse
-import github.com.hukuta94.delivery.core.application.query.order.response.OrderResponse
+import github.com.hukuta94.delivery.core.application.query.order.GetNotCompletedOrdersResponse
+import github.com.hukuta94.delivery.core.application.query.order.OrderResponse
 import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderStatus
 import github.com.hukuta94.delivery.infrastructure.orm.commons.Orders.Column.ID
 import github.com.hukuta94.delivery.infrastructure.orm.commons.Orders.Column.LOCATION

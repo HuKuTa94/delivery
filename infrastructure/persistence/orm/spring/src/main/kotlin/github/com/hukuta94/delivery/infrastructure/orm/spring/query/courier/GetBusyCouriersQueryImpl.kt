@@ -1,8 +1,8 @@
 package github.com.hukuta94.delivery.infrastructure.orm.spring.query.courier
 
 import github.com.hukuta94.delivery.core.application.query.courier.GetBusyCouriersQuery
-import github.com.hukuta94.delivery.core.application.query.courier.response.CourierResponse
-import github.com.hukuta94.delivery.core.application.query.courier.response.GetCouriersResponse
+import github.com.hukuta94.delivery.core.application.query.courier.CourierResponse
+import github.com.hukuta94.delivery.core.application.query.courier.GetCouriersResponse
 import github.com.hukuta94.delivery.core.application.query.common.LocationResponse
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.CourierStatus
 import github.com.hukuta94.delivery.infrastructure.orm.commons.Couriers.Column.ID

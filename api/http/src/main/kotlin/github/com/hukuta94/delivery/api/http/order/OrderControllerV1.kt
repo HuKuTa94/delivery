@@ -2,7 +2,7 @@ package github.com.hukuta94.delivery.api.http.order
 
 import github.com.hukuta94.delivery.core.application.event.BasketConfirmedIntegrationDomainEvent
 import github.com.hukuta94.delivery.core.application.query.order.GetNotCompletedOrdersQuery
-import github.com.hukuta94.delivery.core.application.query.order.response.OrderResponse
+import github.com.hukuta94.delivery.core.application.query.order.OrderResponse
 import github.com.hukuta94.delivery.core.application.usecase.event.SaveIntegrationEventUseCase
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
