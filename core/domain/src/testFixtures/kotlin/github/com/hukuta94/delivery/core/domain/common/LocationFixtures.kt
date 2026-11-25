@@ -14,6 +14,14 @@ fun minLocation() = location(MIN_COORDINATE_VALUE, MIN_COORDINATE_VALUE)
 
 fun maxLocation() = location(MAX_COORDINATE_VALUE, MAX_COORDINATE_VALUE)
 
+fun coordinatesOutOfRangeError(
+    x: Int = MAX_COORDINATE_VALUE + 1,
+    y: Int = MAX_COORDINATE_VALUE + 1,
+) = Location.Error.CoordinatesOutOfRange(
+    x = x,
+    y = y,
+)
+
 fun randomLocation(random: Random? = null): Location {
     return when (random) {
         null -> Location.random()
