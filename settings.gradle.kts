@@ -27,8 +27,10 @@ include("service:infrastructure:persistence:migrations")
 // Bootstrap: composition root of whole application (Spring Boot app, bean wiring, boot jar)
 include("service:bootstrap")
 
+// Tests: suites that check the service as a whole
+
 // Architecture tests of dependencies between modules of whole application
-include("architecture-tests")
+include("tests:architecture")
 
 pluginManagement {
     repositories {

@@ -28,18 +28,18 @@ service/             Everything that ships in delivery.jar
     persistence/in-memory/   In-memory repositories
     persistence/migrations/  Liquibase changelog (db/changelog/db.changelog-master.xml)
   bootstrap/         Composition root: Spring Boot app (DeliveryApplication), wires everything with explicit @Bean configs
-architecture-tests/  ArchUnit tests enforcing layer dependencies and naming
-load-tests/          Load/concurrency/resilience tests (see the `testing` skill, load-tests reference)
+tests/               Suites that check the service as a whole
+  architecture/      ArchUnit tests enforcing layer dependencies and naming
 build-logic/         Convention plugins: `common-setup`, `protobuf-dependencies`
 ```
 
-`service/` is a grouping folder, not a layer: Gradle paths include it (`:service:core:domain`), Kotlin packages
-don't (`github.com.hukuta94.delivery.core.domain`).
+`service/` and `tests/` are grouping folders, not layers: Gradle paths include them (`:service:core:domain`,
+`:tests:architecture`), Kotlin packages don't (`github.com.hukuta94.delivery.core.domain`).
 
 New modules must be registered in `settings.gradle.kts` and normally apply `id("common-setup")`
 (Kotlin JVM, Detekt, `java-test-fixtures`, common Arrow/Kotest deps).
 
-## Layer rules (enforced by `architecture-tests`)
+## Layer rules (enforced by `tests/architecture`)
 
 Breaking these fails the build. Check `ArchitecturePackages.kt` / `*PackageTest.kt` before adding dependencies.
 
