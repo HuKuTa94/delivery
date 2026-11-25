@@ -11,26 +11,30 @@ Base package: `github.com.hukuta94.delivery`.
 ## Module layout
 
 ```
-core/
-  domain/          Pure domain: aggregates, value objects, domain events, business rules. NO frameworks.
-  application/     Use cases, ports (output interfaces), queries (CQRS read side), event handlers, inbox/outbox relay
-api/               Primary (driving / input) adapters
-  http/            REST controllers (/api/v1/...)
-  kafka/           Kafka consumers (basket.confirmed topic, Protobuf JSON)
-  scheduler/       @Scheduled jobs that trigger use cases
-infrastructure/    Secondary (driven / output) adapters
-  grpc/            GeoService gRPC client -> GetLocationPort
-  kafka/           Kafka producer -> BusProducerPort
-  persistence/orm/commons/ Shared DB schema constants, inbox/outbox relay jobs, Postgres Testcontainer fixture
-  persistence/orm/spring/  Spring Data JPA implementation of repository/query/unit-of-work ports
-  persistence/orm/ktorm/   Ktorm implementation of the same ports
-  persistence/in-memory/   In-memory repositories
-  persistence/migrations/  Liquibase changelog (db/changelog/db.changelog-master.xml)
-configuration/     Spring Boot app (DeliveryApplication), wires everything with explicit @Bean configs
+service/             Everything that ships in delivery.jar
+  core/
+    domain/          Pure domain: aggregates, value objects, domain events, business rules. NO frameworks.
+    application/     Use cases, ports (output interfaces), queries (CQRS read side), event handlers, inbox/outbox relay
+  api/               Primary (driving / input) adapters
+    http/            REST controllers (/api/v1/...)
+    kafka/           Kafka consumers (basket.confirmed topic, Protobuf JSON)
+    scheduler/       @Scheduled jobs that trigger use cases
+  infrastructure/    Secondary (driven / output) adapters
+    grpc/            GeoService gRPC client -> GetLocationPort
+    kafka/           Kafka producer -> BusProducerPort
+    persistence/orm/commons/ Shared DB schema constants, inbox/outbox relay jobs, Postgres Testcontainer fixture
+    persistence/orm/spring/  Spring Data JPA implementation of repository/query/unit-of-work ports
+    persistence/orm/ktorm/   Ktorm implementation of the same ports
+    persistence/in-memory/   In-memory repositories
+    persistence/migrations/  Liquibase changelog (db/changelog/db.changelog-master.xml)
+  configuration/     Spring Boot app (DeliveryApplication), wires everything with explicit @Bean configs
 architecture-tests/  ArchUnit tests enforcing layer dependencies and naming
-load-tests/        Load/concurrency/resilience tests (see the `testing` skill, load-tests reference)
-build-logic/       Convention plugins: `common-setup`, `protobuf-dependencies`
+load-tests/          Load/concurrency/resilience tests (see the `testing` skill, load-tests reference)
+build-logic/         Convention plugins: `common-setup`, `protobuf-dependencies`
 ```
+
+`service/` is a grouping folder, not a layer: Gradle paths include it (`:service:core:domain`), Kotlin packages
+don't (`github.com.hukuta94.delivery.core.domain`).
 
 New modules must be registered in `settings.gradle.kts` and normally apply `id("common-setup")`
 (Kotlin JVM, Detekt, `java-test-fixtures`, common Arrow/Kotest deps).
@@ -52,7 +56,7 @@ Breaking these fails the build. Check `ArchitecturePackages.kt` / `*PackageTest.
 - Frameworks are allowed in application/adapters; extra framework packages used in tested layers must be added to `FRAMEWORK_PACKAGES`.
 
 Core classes are **not** Spring beans by annotation: they are plain classes instantiated in
-`configuration/.../*Configuration.kt` with `@Bean` methods. When adding a use case, port impl, handler or
+`service/configuration/.../*Configuration.kt` with `@Bean` methods. When adding a use case, port impl, handler or
 rule, also wire it in the matching configuration class.
 
 ## Domain model
@@ -77,11 +81,11 @@ Conventions:
 Relay processes `TO_BE_PROCESSED` and `DELIVERY_ERROR` messages in batches of `delivery.relay.batch-size`.
 Events are (de)serialized with Jackson via `ApplicationEventSerializer` / `ApplicationEventDeserializer`; new events need serializer/deserializer coverage and tests.
 
-Proto contracts: `api/kafka/src/main/proto`, `infrastructure/grpc/src/main/proto`, `infrastructure/kafka/src/main/proto` (modules use the `protobuf-dependencies` plugin).
+Proto contracts: `service/api/kafka/src/main/proto`, `service/infrastructure/grpc/src/main/proto`, `service/infrastructure/kafka/src/main/proto` (modules use the `protobuf-dependencies` plugin).
 
 ## Configuration
 
-`configuration/src/main/resources/application.yml`:
+`service/configuration/src/main/resources/application.yml`:
 - `delivery.orm`: `spring-jpa` | `ktorm` | `inmemory` selects the persistence implementation via `@ConditionalOnProperty`. Any new port implementation must be provided for **each** ORM configuration that needs it (`SpringOrmConfiguration`, `KtormOrmConfiguration`, `InMemoryRepositoryConfiguration`).
 - Postgres `localhost:5432`, Kafka `localhost:9092`, Geo gRPC `localhost:8084`, HTTP `:8080`.
 - Hardcoded values belong in config properties (see `RelayProperties`, `CorsProperties`).

@@ -4,26 +4,28 @@ rootProject.name = "delivery"
 
 includeBuild("build-logic")
 
+// Service: everything that ships in delivery.jar
+
 // Core
-include("core:domain")
-include("core:application")
+include("service:core:domain")
+include("service:core:application")
 
 // In/Primary/Drive adapters
-include("api:http")
-include("api:kafka")
-include("api:scheduler")
+include("service:api:http")
+include("service:api:kafka")
+include("service:api:scheduler")
 
 // Out/Secondary/Driven adapters
-include("infrastructure:grpc")
-include("infrastructure:kafka")
-include("infrastructure:persistence:orm:commons")
-include("infrastructure:persistence:orm:ktorm")
-include("infrastructure:persistence:orm:spring")
-include("infrastructure:persistence:in-memory")
-include("infrastructure:persistence:migrations")
+include("service:infrastructure:grpc")
+include("service:infrastructure:kafka")
+include("service:infrastructure:persistence:orm:commons")
+include("service:infrastructure:persistence:orm:ktorm")
+include("service:infrastructure:persistence:orm:spring")
+include("service:infrastructure:persistence:in-memory")
+include("service:infrastructure:persistence:migrations")
 
 // Configuration of whole application
-include("configuration")
+include("service:configuration")
 
 // Architecture tests of dependencies between modules of whole application
 include("architecture-tests")

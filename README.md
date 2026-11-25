@@ -3,10 +3,10 @@
 ## Integration tests (Testcontainers)
 
 Integration tests (classes suffixed `*IT`) run against a real PostgreSQL started via Testcontainers.
-The schema is applied from the Liquibase changelog of `:infrastructure:persistence:migrations`.
+The schema is applied from the Liquibase changelog of `:service:infrastructure:persistence:migrations`.
 
 **Docker is required** to run them. Without a running Docker daemon these tests fail (they are not
-silently skipped). The shared foundation lives in `:infrastructure:persistence:orm:commons` test fixtures
+silently skipped). The shared foundation lives in `:service:infrastructure:persistence:orm:commons` test fixtures
 (`PostgresTestContainer`): a singleton container per test JVM, reused across specs; mutable tables are
 truncated before each test.
 
@@ -19,12 +19,12 @@ Run all tests (unit + integration):
 Run integration tests of a single module, e.g.:
 
 ```bash
-./gradlew :infrastructure:persistence:orm:ktorm:test
-./gradlew :infrastructure:persistence:orm:spring:test
-./gradlew :configuration:test
+./gradlew :service:infrastructure:persistence:orm:ktorm:test
+./gradlew :service:infrastructure:persistence:orm:spring:test
+./gradlew :service:configuration:test
 ```
 
-Kafka integration tests (`:infrastructure:kafka`) start an Apache Kafka (KRaft) container and verify the
+Kafka integration tests (`:service:infrastructure:kafka`) start an Apache Kafka (KRaft) container and verify the
 producer against a real broker (`OrderKafkaProducerIT`).
 
 Notes:

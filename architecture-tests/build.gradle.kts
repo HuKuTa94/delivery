@@ -4,7 +4,7 @@ plugins {
 
 dependencies {
     // all project dependencies
-    implementation(project(":configuration"))
+    implementation(project(":service:configuration"))
 
     // arch unit
     implementation(libs.archunit.junit5)

@@ -30,11 +30,11 @@ make load-test [LOAD_PROFILE=smoke|full]
 make load-test-known-bugs     # KnownBug scenarios only; expected to fail, never fails the build
 make load-stack-up            # level 5: app + Postgres + Kafka + Toxiproxy + Prometheus + Grafana (:13000)
 make load-run SCENARIO=breakpoint|spike|soak|chaos   # generator against the stack; make load-stack-down after
-./gradlew :core:domain:test   # single module
+./gradlew :service:core:domain:test   # single module
 ./gradlew :architecture-tests:test
 ```
 
-On Windows use `gradlew.bat` (the Makefile auto-detects). Boot jar: `configuration/build/libs/delivery.jar`.
+On Windows use `gradlew.bat` (the Makefile auto-detects). Boot jar: `service/configuration/build/libs/delivery.jar`.
 
 ## Rules
 

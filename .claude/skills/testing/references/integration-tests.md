@@ -2,7 +2,7 @@
 
 - Suffix **`*IT`**; they need **Docker** (Testcontainers: `postgres:15.3`, `apache/kafka:3.8.0`;
   Ryuk disabled, containers stopped via shutdown hook). They fail, not skip, without Docker.
-- Postgres fixture: `PostgresTestContainer` in `infrastructure/persistence/orm/commons` testFixtures
+- Postgres fixture: `PostgresTestContainer` in `service/infrastructure/persistence/orm/commons` testFixtures
   (singleton, schema from Liquibase, `cleanData` before each test).
 - Base specs: `KtormIntegrationSpec`, `SpringJpaIntegrationSpec`.
 - Style rules from [unit-tests.md](unit-tests.md) apply.
@@ -21,4 +21,4 @@ A concurrency guarantee of one adapter (deduplication, unique constraints, locki
   the database instead of waiting for a connection.
 - No tags: these are ordinary tests of `make test`.
 
-Run: `make test` (all), `./gradlew :infrastructure:persistence:orm:ktorm:test` (one ORM module).
+Run: `make test` (all), `./gradlew :service:infrastructure:persistence:orm:ktorm:test` (one ORM module).
