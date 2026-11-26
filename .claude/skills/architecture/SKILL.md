@@ -90,7 +90,12 @@ Conventions:
 
 Relay processes `TO_BE_PROCESSED` and `DELIVERY_ERROR` messages in batches of `delivery.relay.batch-size`, each batch
 in its own transaction (`transaction-timeout`). A run every `poll-interval` takes the next batch at once while the
-last one was full and fully processed, at most `max-batches-per-run` (all `@Scheduled` jobs share one thread).
+last one was full and fully processed, at most `max-batches-per-run`.
+
+Every `@Scheduled` job (order assignment, courier movement, inbox relay, outbox relay) runs on a single-thread
+scheduler of its own: `@Scheduled(scheduler = <Job>.TASK_SCHEDULER)`, beans in `bootstrap/.../SchedulerConfiguration`.
+A job never overlaps itself, but jobs run at the same time as each other: a new job must not change rows another
+job changes (today they are split by status: free couriers + created orders vs busy couriers + assigned orders).
 Events are (de)serialized with Jackson via `ApplicationEventSerializer` / `ApplicationEventDeserializer`; new events need serializer/deserializer coverage and tests.
 
 Proto contracts: `service/api/kafka/src/main/proto`, `service/infrastructure/grpc/src/main/proto`, `service/infrastructure/kafka/src/main/proto` (modules use the `protobuf-dependencies` plugin).

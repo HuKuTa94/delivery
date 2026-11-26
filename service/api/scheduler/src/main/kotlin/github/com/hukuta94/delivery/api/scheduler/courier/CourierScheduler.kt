@@ -7,8 +7,18 @@ class CourierScheduler(
     private val moveCouriersUseCase: MoveCouriersUseCase,
 ) {
 
-    @Scheduled(fixedDelay = 1000)
+    @Scheduled(
+        fixedDelay = 1000,
+        scheduler = TASK_SCHEDULER,
+    )
     fun moveCouriers() {
         moveCouriersUseCase()
+    }
+
+    companion object {
+        /**
+         * Name of the single-thread scheduler bean of this job, so other jobs don't delay it
+         */
+        const val TASK_SCHEDULER = "courierMovementTaskScheduler"
     }
 }
