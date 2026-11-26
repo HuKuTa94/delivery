@@ -59,6 +59,10 @@ Core classes are **not** Spring beans by annotation: they are plain classes inst
 `service/bootstrap/.../*Configuration.kt` with `@Bean` methods. When adding a use case, port impl, handler or
 rule, also wire it in the matching configuration class.
 
+## Flow
+
+Incoming requests (api adapters) → usecases (commands) → ports (infrastructure adapters) → business logic (aggregates & business rules)
+
 ## Domain model
 
 - **Order** (aggregate, id = basket id): `CREATED → ASSIGNED → COMPLETED`; raises `OrderAssignedDomainEvent`, `OrderCompletedDomainEvent`.
