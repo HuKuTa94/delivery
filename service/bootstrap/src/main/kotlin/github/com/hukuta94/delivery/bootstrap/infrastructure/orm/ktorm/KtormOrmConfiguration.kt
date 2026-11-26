@@ -23,6 +23,7 @@ import org.ktorm.support.postgresql.PostgreSqlDialect
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.transaction.PlatformTransactionManager
 import javax.sql.DataSource
 
 @Configuration
@@ -80,11 +81,14 @@ open class KtormOrmConfiguration {
         eventDeserializer: EventDeserializer,
         eventPublisher: EventPublisher,
         relayProperties: RelayProperties,
+        transactionManager: PlatformTransactionManager,
     ) = OutboxEventMessageRelayJob(
         eventRepository = eventRepository,
         eventDeserializer = eventDeserializer,
         eventPublisher = eventPublisher,
         batchSize = relayProperties.batchSize,
+        maxBatchesPerRun = relayProperties.maxBatchesPerRun,
+        transaction = relayProperties.batchTransaction(transactionManager),
     )
 
     @Bean
@@ -93,11 +97,14 @@ open class KtormOrmConfiguration {
         eventDeserializer: EventDeserializer,
         eventPublisher: EventPublisher,
         relayProperties: RelayProperties,
+        transactionManager: PlatformTransactionManager,
     ) = InboxEventMessageRelayJob(
         eventRepository = eventRepository,
         eventDeserializer = eventDeserializer,
         eventPublisher = eventPublisher,
         batchSize = relayProperties.batchSize,
+        maxBatchesPerRun = relayProperties.maxBatchesPerRun,
+        transaction = relayProperties.batchTransaction(transactionManager),
     )
 
     @Bean

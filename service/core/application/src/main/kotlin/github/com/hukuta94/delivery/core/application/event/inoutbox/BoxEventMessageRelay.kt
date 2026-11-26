@@ -14,13 +14,13 @@ import java.time.LocalDateTime
  * from the storage, deserializing their payloads, publishing events, and updating
  * their delivery status accordingly.
  *
- * Typical usage involves extending this class and invoking [execute] from a scheduled job
- * (e.g., a cron task) to process accumulated messages periodically.
+ * Typical usage involves extending this class and invoking [processBatch] from a scheduled job,
+ * each batch in its own transaction, as long as it returns `true`.
  *
  * @param eventRepository repository for accessing and updating event messages
  * @param eventDeserializer utility for converting serialized payloads into event objects
  * @param eventPublisher component responsible for dispatching deserialized events
- * @param batchSize maximum number of messages fetched and processed per relay run
+ * @param batchSize maximum number of messages fetched and processed per batch
  */
 abstract class BoxEventMessageRelay(
     private val eventRepository: BoxEventMessageRelayRepositoryPort,
@@ -29,21 +29,22 @@ abstract class BoxEventMessageRelay(
     private val batchSize: Int,
 ) {
     /**
-     * Executes the Inbox/Outbox processing workflow.
+     * Processes one batch of the Inbox/Outbox workflow in the caller's transaction.
      *
-     * Retrieves all messages pending processing or with previous delivery errors,
+     * Retrieves up to [batchSize] messages pending processing or with previous delivery errors,
      * attempts to deserialize and publish each event, and saves the updated statuses.
      *
-     * Intended to be called by subclasses, typically from a scheduled (cron) context.
+     * @return `true` when more messages may be waiting: the batch was full and every message of it succeeded.
+     * After a failure the caller should wait for its next run instead of retrying the failed messages at once
      */
-    protected fun execute() {
+    protected fun processBatch(): Boolean {
         val messages = eventRepository.findMessagesInStatuses(
             BOX_EVENT_MESSAGE_STATUSES_TO_BE_PROCESSED,
             batchSize,
         )
 
         if (messages.isEmpty()) {
-            return
+            return false
         }
 
         messages.forEach { message ->
@@ -51,6 +52,8 @@ abstract class BoxEventMessageRelay(
         }
 
         eventRepository.saveAll(messages)
+
+        return messages.size == batchSize && messages.all { it.status == BoxEventMessageStatus.SUCCESS }
     }
 
     /**

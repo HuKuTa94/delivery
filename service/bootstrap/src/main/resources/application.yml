@@ -4,8 +4,15 @@ delivery:
   # grpc | in-memory (in-memory answers any street with a random valid location, no Geo service needed)
   geo-location: in-memory
   relay:
-    # Number of inbox/outbox messages fetched and processed per relay run.
+    # Delay between two runs of the inbox and of the outbox relay.
+    poll-interval: 1s
+    # Number of inbox/outbox messages fetched and processed per batch, one transaction per batch.
     batch-size: 50
+    # A run takes the next batch at once while the last one was full and fully processed, at most this many batches:
+    # all scheduled jobs share one thread.
+    max-batches-per-run: 20
+    # Timeout of the transaction of one batch (order creation calls the Geo service in it).
+    transaction-timeout: 5s
 
   cors:
     allowed-origins:

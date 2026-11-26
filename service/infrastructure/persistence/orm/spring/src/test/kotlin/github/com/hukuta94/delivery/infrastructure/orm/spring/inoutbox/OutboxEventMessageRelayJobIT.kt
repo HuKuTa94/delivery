@@ -24,7 +24,8 @@ import java.util.UUID
 
 internal class OutboxEventMessageRelayJobIT : SpringJpaIntegrationSpec() {
     init {
-        // FOR UPDATE SKIP LOCKED + the status update of the same batch must run in one transaction.
+        // FOR UPDATE SKIP LOCKED + the status update of the same batch must run in one transaction:
+        // the job opens one per batch with it, as in production.
         val transaction = TransactionTemplate(context.getBean(PlatformTransactionManager::class.java))
         val outbox = SpringJpaOutboxEventRepositoryAdapter(
             context.getBean(SpringJpaOutboxEventRepository::class.java),
@@ -34,10 +35,12 @@ internal class OutboxEventMessageRelayJobIT : SpringJpaIntegrationSpec() {
         // Real publishing path: the production OrderCompletedDomainEventHandler forwards to BusProducerPort,
         // mocked per test (mocks are stateful) so the relay can be driven to success and failure without a real bus.
         fun relayJob(busProducer: BusProducerPort) = OutboxEventMessageRelayJob(
-            outbox,
-            EventDeserializer(),
-            EventPublisher(listOf(OrderCompletedEventHandler(busProducer))),
+            eventRepository = outbox,
+            eventDeserializer = EventDeserializer(),
+            eventPublisher = EventPublisher(listOf(OrderCompletedEventHandler(busProducer))),
             batchSize = 50,
+            maxBatchesPerRun = 20,
+            transaction = transaction,
         )
 
         "drains, publishes and marks messages SUCCESS against the real database" {
@@ -45,7 +48,7 @@ internal class OutboxEventMessageRelayJobIT : SpringJpaIntegrationSpec() {
             outbox.saveDomainEvents(listOf(OrderCompletedEvent(orderId = orderId)))
             val busProducer: BusProducerPort = mock()
 
-            transaction.executeWithoutResult { relayJob(busProducer).pullMessagesFromOutbox() }
+            relayJob(busProducer).pullMessagesFromOutbox()
 
             verify(busProducer).publishOrderCompletedDomainEvent(OrderCompletedEvent(orderId = orderId))
             assertSoftly {
@@ -60,7 +63,7 @@ internal class OutboxEventMessageRelayJobIT : SpringJpaIntegrationSpec() {
             whenever(busProducer.publishOrderCompletedDomainEvent(any()))
                 .thenThrow(IllegalStateException("publication failed"))
 
-            transaction.executeWithoutResult { relayJob(busProducer).pullMessagesFromOutbox() }
+            relayJob(busProducer).pullMessagesFromOutbox()
 
             assertSoftly {
                 transaction.messagesInStatus(outbox, BoxEventMessageStatus.SUCCESS).shouldBeEmpty()
@@ -70,13 +73,15 @@ internal class OutboxEventMessageRelayJobIT : SpringJpaIntegrationSpec() {
 
         "does nothing and commits cleanly when the outbox is empty" {
             val job = OutboxEventMessageRelayJob(
-                outbox,
-                EventDeserializer(),
-                EventPublisher(emptyList()),
+                eventRepository = outbox,
+                eventDeserializer = EventDeserializer(),
+                eventPublisher = EventPublisher(emptyList()),
                 batchSize = 50,
+                maxBatchesPerRun = 20,
+                transaction = transaction,
             )
 
-            transaction.executeWithoutResult { job.pullMessagesFromOutbox() }
+            job.pullMessagesFromOutbox()
 
             val result = transaction.execute {
                 outbox.findMessagesInStatuses(BoxEventMessageStatus.entries.toSet(), 50)

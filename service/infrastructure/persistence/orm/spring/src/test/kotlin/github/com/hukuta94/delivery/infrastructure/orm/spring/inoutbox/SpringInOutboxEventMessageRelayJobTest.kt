@@ -15,6 +15,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import org.springframework.transaction.support.TransactionOperations
 
 internal class SpringInOutboxEventMessageRelayJobTest : StringSpec({
 
@@ -30,10 +31,12 @@ internal class SpringInOutboxEventMessageRelayJobTest : StringSpec({
         eventDeserializer = mock()
 
         sut = OutboxEventMessageRelayJob(
-            outboxEventJpaRepository,
-            eventDeserializer,
-            eventPublisher,
+            eventRepository = outboxEventJpaRepository,
+            eventDeserializer = eventDeserializer,
+            eventPublisher = eventPublisher,
             batchSize = 50,
+            maxBatchesPerRun = 20,
+            transaction = TransactionOperations.withoutTransaction(),
         )
 
         whenever(outboxEventJpaRepository.findMessagesInStatuses(any(), any()))

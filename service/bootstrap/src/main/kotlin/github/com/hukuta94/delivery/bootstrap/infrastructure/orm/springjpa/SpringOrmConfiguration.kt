@@ -21,6 +21,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
+import org.springframework.transaction.PlatformTransactionManager
 
 @Configuration
 @ConditionalOnProperty(
@@ -75,11 +76,14 @@ open class SpringOrmConfiguration {
         eventDeserializer: EventDeserializer,
         eventPublisher: EventPublisher,
         relayProperties: RelayProperties,
+        transactionManager: PlatformTransactionManager,
     ) = OutboxEventMessageRelayJob(
         eventRepository = eventRepository,
         eventDeserializer = eventDeserializer,
         eventPublisher = eventPublisher,
         batchSize = relayProperties.batchSize,
+        maxBatchesPerRun = relayProperties.maxBatchesPerRun,
+        transaction = relayProperties.batchTransaction(transactionManager),
     )
 
     @Bean
@@ -97,10 +101,13 @@ open class SpringOrmConfiguration {
         eventDeserializer: EventDeserializer,
         eventPublisher: EventPublisher,
         relayProperties: RelayProperties,
+        transactionManager: PlatformTransactionManager,
     ) = InboxEventMessageRelayJob(
         eventRepository = eventRepository,
         eventDeserializer = eventDeserializer,
         eventPublisher = eventPublisher,
         batchSize = relayProperties.batchSize,
+        maxBatchesPerRun = relayProperties.maxBatchesPerRun,
+        transaction = relayProperties.batchTransaction(transactionManager),
     )
 }

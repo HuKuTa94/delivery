@@ -88,7 +88,9 @@ Conventions:
 3. `OrderScheduler` → `AssignCourierToOrderUseCase`; `CourierScheduler` → `MoveCouriersUseCase`. Domain events go to the **outbox**.
 4. `OutboxEventMessageRelayJob` → handlers → `BusProducerPort` → Kafka producer (`OrderStatusChangedContract.proto`).
 
-Relay processes `TO_BE_PROCESSED` and `DELIVERY_ERROR` messages in batches of `delivery.relay.batch-size`.
+Relay processes `TO_BE_PROCESSED` and `DELIVERY_ERROR` messages in batches of `delivery.relay.batch-size`, each batch
+in its own transaction (`transaction-timeout`). A run every `poll-interval` takes the next batch at once while the
+last one was full and fully processed, at most `max-batches-per-run` (all `@Scheduled` jobs share one thread).
 Events are (de)serialized with Jackson via `ApplicationEventSerializer` / `ApplicationEventDeserializer`; new events need serializer/deserializer coverage and tests.
 
 Proto contracts: `service/api/kafka/src/main/proto`, `service/infrastructure/grpc/src/main/proto`, `service/infrastructure/kafka/src/main/proto` (modules use the `protobuf-dependencies` plugin).

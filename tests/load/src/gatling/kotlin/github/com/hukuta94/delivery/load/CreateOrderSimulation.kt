@@ -135,7 +135,7 @@ class CreateOrderSimulation : Simulation() {
         val POLL_INTERVAL: Duration = Duration.ofSeconds(1)
         val LEFTOVERS_TIMEOUT: Duration = Duration.ofMinutes(2)
 
-        // The relay polls the inbox every 5 s, so a lag up to ~5 s is by design
+        // The relay polls the inbox every `delivery.relay.poll-interval`, so a lag up to that interval is by design
         val DRAIN_TIMEOUT: Duration = Duration.ofSeconds(30)
         val INBOX_LAG_P99: Duration = Duration.ofSeconds(10)
         val INBOX_SLO = "all processed within ${DRAIN_TIMEOUT.seconds} s after the load, " +
