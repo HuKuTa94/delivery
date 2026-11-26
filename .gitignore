@@ -38,6 +38,10 @@ target/
 gradle/wrapper/gradle-wrapper.jar
 build/
 
+### Kotlin ###
+# Kotlin Gradle plugin's project-level data (compiler daemon sessions, errors)
+.kotlin/
+
 ### Maven ###
 !.mvn/wrapper/maven-wrapper.jar
 
