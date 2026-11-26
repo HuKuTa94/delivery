@@ -30,6 +30,9 @@ service/             Everything that ships in delivery.jar
   bootstrap/         Composition root: Spring Boot app (DeliveryApplication), wires everything with explicit @Bean configs
 tests/               Suites that check the service as a whole
   architecture/      ArchUnit tests enforcing layer dependencies and naming
+  smoke/             Smoke tests of the running application (`smokeTest`, not part of `test`)
+  e2e/               End-to-end tests of business flows through the running application's Kafka and Postgres
+                     (`e2eTest`, not part of `test`); compiles the Kafka .proto contracts itself, no service modules
 build-logic/         Convention plugins: `common-setup`, `protobuf-dependencies`
 ```
 

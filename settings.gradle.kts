@@ -36,6 +36,9 @@ include("tests:architecture")
 // Smoke tests of the running application
 include("tests:smoke")
 
+// End-to-end tests of business flows through the running application
+include("tests:e2e")
+
 pluginManagement {
     repositories {
         gradlePluginPortal()

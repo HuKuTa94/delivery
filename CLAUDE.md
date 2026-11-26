@@ -22,6 +22,7 @@ Never edit `**/build/` or `**/out/` (generated protobuf/gRPC and compiled classe
 ```bash
 make test          # ./gradlew test --rerun detekt (always reruns tests; needs Docker for *IT)
 make test-smoke    # tests:smoke against the running app on :8080 (make run first; other address: -PbaseUrl=...)
+make test-e2e      # tests:e2e against the running app via its Kafka :9092 and Postgres :5432 (make run first; rebuild after code changes)
 make build         # ./gradlew build bootJar -x test -x detekt
 make compile       # compileKotlin compileTestKotlin
 make detekt        # static analysis only
