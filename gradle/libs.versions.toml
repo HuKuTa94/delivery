@@ -18,7 +18,7 @@ liquibase = "4.8.0"
 postgresql = "42.3.1"
 
 protobuf = "4.32.0"
-protobuf-plugin = "0.9.5"
+protobuf-plugin = "0.10.1"
 
 grpc = "1.75.0"
 grpc-kotlin = "1.4.3"
@@ -26,7 +26,7 @@ grpc-kotlin = "1.4.3"
 jackson = "2.13.4"
 ktorm = "4.1.1"
 
-detekt = "1.23.8"
+detekt = "2.0.0-alpha.6"
 
 [libraries]
 
@@ -107,10 +107,10 @@ ktorm-core = { module = "org.ktorm:ktorm-core", version.ref = "ktorm" }
 ktorm-support-postgresql = { module = "org.ktorm:ktorm-support-postgresql", version.ref = "ktorm" }
 
 # Detekt
-detekt-formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }
+detekt-rules-ktlint-wrapper = { module = "dev.detekt:detekt-rules-ktlint-wrapper", version.ref = "detekt" }
 
 # Gradle plugins
-detekt-gradle-plugin = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "detekt" }
+detekt-gradle-plugin = { module = "dev.detekt:detekt-gradle-plugin", version.ref = "detekt" }
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 spring-boot-gradle-plugin = { module = "org.springframework.boot:spring-boot-gradle-plugin", version.ref = "spring-boot" }
 protobuf-gradle-plugin = { module = "com.google.protobuf:protobuf-gradle-plugin", version.ref = "protobuf-plugin" }
@@ -118,7 +118,7 @@ protobuf-gradle-plugin = { module = "com.google.protobuf:protobuf-gradle-plugin"
 [plugins]
 
 kotest = { id = "io.kotest", version.ref = "kotest" }
-detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+detekt = { id = "dev.detekt", version.ref = "detekt" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
 

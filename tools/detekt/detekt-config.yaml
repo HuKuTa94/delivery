@@ -9,12 +9,12 @@ style:
     active: true
   ClassOrdering:
     active: true
-  PreferToOverPairSyntax:
-    active: true
-  UnnecessaryAbstractClass:
+  AbstractClassCanBeConcreteClass:
+    active: false
+  AbstractClassCanBeInterface:
     active: false
 
-formatting:
+ktlint:
   FinalNewline:
     active: false
   Indentation:
@@ -27,14 +27,30 @@ formatting:
     active: false
   FunctionReturnTypeSpacing:
     active: false
+  BlankLineBetweenWhenConditions:
+    active: false
+  ClassSignature:
+    active: false
+  FunctionExpressionBody:
+    active: false
+  FunctionSignature:
+    active: false
+  SpacingAroundSquareBrackets:
+    active: false
+  StatementWrapping:
+    active: false
+  TrailingCommaOnCallSite:
+    active: false
+  TrailingCommaOnDeclarationSite:
+    active: false
 
 complexity:
   CognitiveComplexMethod:
     active: true
-    threshold: 5
+    allowedComplexity: 4
   LongParameterList:
-    functionThreshold: 10
-    constructorThreshold: 10
+    allowedFunctionParameters: 9
+    allowedConstructorParameters: 9
 
 performance:
   SpreadOperator:
@@ -44,12 +60,6 @@ naming:
   ConstructorParameterNaming:
     active: true
     privateParameterPattern: '[_a-z][A-Za-z0-9]*'
-
-build:
-  excludes: '**/generated/**'
-  excludeCorrectable: false
-  # Исправляет ошибки без предупреждения, чтобы реже гонять detekt, но нужно следить за изменениями
-  # excludeCorrectable: true
 
 comments:
   active: true

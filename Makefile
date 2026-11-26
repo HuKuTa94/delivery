@@ -1,18 +1,20 @@
 # --- Detect OS and choose Gradle wrapper script ---
 ifeq ($(OS),Windows_NT)
-    GRADLEW := gradlew.bat
+    GRADLEW := .\gradlew.bat
     SHELL := cmd
+    NULL_DEVICE := NUL
     DOCKER_IMAGE ?= delivery-app
     DEV_ENVS := set USER_ID=197609 && set GROUP_ID=197609 &&
 else
     GRADLEW := ./gradlew
     SHELL := /bin/bash
+    NULL_DEVICE := /dev/null
     DEV_ENVS := USER_ID=$(shell id -u) GROUP_ID=$(shell id -g)
 endif
 
 # --- Detect container runtime ---
 # Use 'docker compose' (v2) if available, fallback to 'docker-compose' (v1)
-ifeq ($(shell docker compose version 2> /dev/null),)
+ifeq ($(shell docker compose version 2> $(NULL_DEVICE)),)
 	COMPOSE_CMD := docker-compose
 else
 	COMPOSE_CMD := docker compose
@@ -20,11 +22,12 @@ endif
 
 .PHONY: build test
 
+# --rerun: run tests even when Gradle considers them up-to-date (otherwise an unchanged build skips them)
 test:
-	$(GRADLEW) test detekt
+	$(GRADLEW) test --rerun detekt
 
 run: build
-	$(DEV_ENVS) docker compose up --build -d
+	$(DEV_ENVS) $(COMPOSE_CMD) up --build -d
 
 stop:
 	$(COMPOSE_CMD) stop

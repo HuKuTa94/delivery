@@ -1,3 +1,4 @@
+import org.gradle.process.ExecOutput
 import java.io.File
 
 rootProject.name = "delivery"
@@ -49,29 +50,34 @@ dependencyResolutionManagement {
 val gitDir = File(rootDir, ".git")
 val hooksDir = File(rootDir, "tools/git/hooks")
 
+// providers.exec instead of ProcessBuilder: starting a process directly at configuration time is deprecated
+fun git(vararg args: String): ExecOutput = providers.exec {
+    commandLine("git", *args)
+    workingDir = rootDir
+    // `git config --get` exits with 1 when the key is not set
+    isIgnoreExitValue = true
+}
+
 when {
-    !gitDir.exists() -> println("Skipping Git hooks setup — '.git' directory not found in $rootDir.")
-    !hooksDir.exists() -> println("Skipping Git hooks setup — 'tools/git/hooks' directory not found in $rootDir.")
+    !gitDir.exists() -> println("Skipping Git hooks setup - '.git' directory not found in $rootDir.")
+    !hooksDir.exists() -> println("Skipping Git hooks setup - 'tools/git/hooks' directory not found in $rootDir.")
     else -> {
         val desiredPath = hooksDir.relativeTo(rootDir).path
         val currentPath = runCatching {
-            ProcessBuilder("git", "config", "--local", "--get", "core.hooksPath")
-                .directory(rootDir)
-                .redirectErrorStream(true)
-                .start()
-                .inputStream.bufferedReader()
-                .use { it.readText() }
+            git("config", "--local", "--get", "core.hooksPath")
+                .standardOutput
+                .asText
+                .get()
                 .trim()
         }.getOrDefault("")
 
         if (currentPath == desiredPath) {
-            println("Git hooks already configured — skipping.")
+            println("Git hooks already configured - skipping.")
         } else {
             runCatching {
-                ProcessBuilder("git", "config", "--local", "core.hooksPath", desiredPath)
-                    .directory(rootDir)
-                    .start()
-                    .waitFor()
+                git("config", "--local", "core.hooksPath", desiredPath)
+                    .result
+                    .get()
             }
             println("Git hooks path configured: $desiredPath")
         }

@@ -5,7 +5,7 @@
 
 plugins {
     id("org.jetbrains.kotlin.jvm")
-    id("io.gitlab.arturbosch.detekt")
+    id("dev.detekt")
     `java-test-fixtures`
 }
 

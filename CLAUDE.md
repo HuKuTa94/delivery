@@ -20,7 +20,7 @@ Never edit `**/build/` or `**/out/` (generated protobuf/gRPC and compiled classe
 ## Commands
 
 ```bash
-make test          # ./gradlew test detekt (needs Docker for *IT)
+make test          # ./gradlew test --rerun detekt (always reruns tests; needs Docker for *IT)
 make build         # ./gradlew build bootJar -x test -x detekt
 make compile       # compileKotlin compileTestKotlin
 make detekt        # static analysis only
