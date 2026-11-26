@@ -20,7 +20,7 @@ else
 	COMPOSE_CMD := docker compose
 endif
 
-.PHONY: build test smoke-test
+.PHONY: build test smoke-test clean clean-docker-data
 
 # --rerun: run tests even when Gradle considers them up-to-date (otherwise an unchanged build skips them)
 test:
@@ -36,11 +36,13 @@ run: build
 stop:
 	$(COMPOSE_CMD) stop
 
-# rm -v also drops the containers' anonymous volumes (cp-kafka declares its own), which `down` leaves behind;
-# named volumes with the Postgres/Kafka data are kept. To wipe the data too: docker compose down -v
+# Removes the Gradle build output (**/build); Docker containers and data are left alone
 clean:
-	$(COMPOSE_CMD) rm -fsv
-	$(COMPOSE_CMD) down
+	$(GRADLEW) clean
+
+# Removes the compose containers, network and ALL volumes, including the Postgres and Kafka data
+clean-docker-data:
+	$(COMPOSE_CMD) down -v
 
 build:
 	$(GRADLEW) build bootJar -x test -x detekt

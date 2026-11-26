@@ -26,7 +26,9 @@ make build         # ./gradlew build bootJar -x test -x detekt
 make compile       # compileKotlin compileTestKotlin
 make detekt        # static analysis only
 make run           # build, then docker compose up (app on :8080)
-make stop / clean  # stop / remove containers
+make stop          # stop containers (data in named volumes is kept)
+make clean         # ./gradlew clean (build output only, Docker is untouched)
+make clean-docker-data   # docker compose down -v: removes containers AND the Postgres/Kafka data volumes
 make load-test [LOAD_PROFILE=smoke|full]
 make load-test-known-bugs     # KnownBug scenarios only; expected to fail, never fails the build
 make load-stack-up            # level 5: app + Postgres + Kafka + Toxiproxy + Prometheus + Grafana (:13000)
