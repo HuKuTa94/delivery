@@ -20,11 +20,15 @@ else
 	COMPOSE_CMD := docker compose
 endif
 
-.PHONY: build test
+.PHONY: build test smoke-test
 
 # --rerun: run tests even when Gradle considers them up-to-date (otherwise an unchanged build skips them)
 test:
 	$(GRADLEW) test --rerun detekt
+
+# Smoke tests against the running application at http://localhost:8080 (start it with `make run`)
+smoke-test:
+	$(GRADLEW) :tests:smoke:smokeTest
 
 run: build
 	$(DEV_ENVS) $(COMPOSE_CMD) up --build -d

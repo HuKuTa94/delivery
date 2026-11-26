@@ -33,6 +33,9 @@ include("service:bootstrap")
 // Architecture tests of dependencies between modules of whole application
 include("tests:architecture")
 
+// Smoke tests of the running application
+include("tests:smoke")
+
 pluginManagement {
     repositories {
         gradlePluginPortal()
