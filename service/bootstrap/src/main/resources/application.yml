@@ -1,6 +1,8 @@
 delivery:
   # spring-jpa | ktorm | inmemory
   orm: spring-jpa
+  # grpc | in-memory (in-memory answers any street with a random valid location, no Geo service needed)
+  geo-location: in-memory
   relay:
     # Number of inbox/outbox messages fetched and processed per relay run.
     batch-size: 50

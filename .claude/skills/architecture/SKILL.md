@@ -91,6 +91,9 @@ Proto contracts: `service/api/kafka/src/main/proto`, `service/infrastructure/grp
 
 `service/bootstrap/src/main/resources/application.yml`:
 - `delivery.orm`: `spring-jpa` | `ktorm` | `inmemory` selects the persistence implementation via `@ConditionalOnProperty`. Any new port implementation must be provided for **each** ORM configuration that needs it (`SpringOrmConfiguration`, `KtormOrmConfiguration`, `InMemoryRepositoryConfiguration`).
+- `delivery.geo-location`: `grpc` | `in-memory` selects the `GetLocationPort` implementation the same way:
+  `GrpcConfiguration` (`GeoServiceGrpcClient`) or `InMemoryGeoLocationConfiguration` (`InMemoryGetLocation`, a random valid location).
+  It is `in-memory` until a real Geo service is available.
 - Postgres `localhost:5432`, Kafka `localhost:9092`, Geo gRPC `localhost:8084`, HTTP `:8080`.
 - Hardcoded values belong in config properties (see `RelayProperties`, `CorsProperties`).
 

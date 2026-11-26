@@ -2,6 +2,7 @@ package github.com.hukuta94.delivery.bootstrap.integration
 
 import github.com.hukuta94.delivery.bootstrap.core.CoreConfiguration
 import github.com.hukuta94.delivery.bootstrap.infrastructure.InfrastructureConfiguration
+import github.com.hukuta94.delivery.core.application.port.GetLocationPort
 import github.com.hukuta94.delivery.core.application.port.repository.UnitOfWorkPort
 import github.com.hukuta94.delivery.core.application.port.repository.domain.CourierRepositoryPort
 import github.com.hukuta94.delivery.core.application.port.repository.domain.OrderRepositoryPort
@@ -65,6 +66,9 @@ internal class ApplicationContextIT : StringSpec({
             // Courier
             getBeanNamesForType(GetBusyCouriersQuery::class.java).size shouldBe 1
             getBeanNamesForType(CourierRepositoryPort::class.java).size shouldBe 1
+
+            // Geo
+            getBeanNamesForType(GetLocationPort::class.java).size shouldBe 1
         }
     }
 
