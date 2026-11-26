@@ -36,7 +36,10 @@ run: build
 stop:
 	$(COMPOSE_CMD) stop
 
+# rm -v also drops the containers' anonymous volumes (cp-kafka declares its own), which `down` leaves behind;
+# named volumes with the Postgres/Kafka data are kept. To wipe the data too: docker compose down -v
 clean:
+	$(COMPOSE_CMD) rm -fsv
 	$(COMPOSE_CMD) down
 
 build:

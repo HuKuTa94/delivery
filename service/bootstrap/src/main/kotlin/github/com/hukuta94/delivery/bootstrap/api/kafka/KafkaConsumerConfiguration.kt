@@ -4,6 +4,7 @@ import github.com.hukuta94.delivery.api.kafka.BasketKafkaConsumer
 import github.com.hukuta94.delivery.core.application.usecase.event.SaveIntegrationEventUseCase
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.common.serialization.StringDeserializer
+import org.springframework.boot.autoconfigure.kafka.KafkaProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.kafka.annotation.EnableKafka
@@ -16,9 +17,9 @@ import org.springframework.kafka.core.DefaultKafkaConsumerFactory
 open class KafkaConsumerConfiguration {
 
     @Bean
-    open fun basketKafkaConsumerFactory(): ConsumerFactory<String, String> {
-        val properties = mapOf(
-            ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG to "localhost:9092",
+    open fun basketKafkaConsumerFactory(kafkaProperties: KafkaProperties): ConsumerFactory<String, String> {
+        // bootstrap servers and other spring.kafka.* settings come from application.yml (or env overrides)
+        val properties = kafkaProperties.buildConsumerProperties() + mapOf(
             ConsumerConfig.GROUP_ID_CONFIG to "basket-consumer-group",
             ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG to StringDeserializer::class.java,
             ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG to StringDeserializer::class.java,
