@@ -12,6 +12,10 @@ Kotest + Testcontainers + ArchUnit, Gatling (load tests), Detekt.
 - [`kotlin-code-style`](.claude/skills/kotlin-code-style/SKILL.md): Kotlin formatting and class layout, Detekt. Read before editing any `.kt`/`.kts` file.
 - [`testing`](.claude/skills/testing/SKILL.md): index of test references (fixtures, unit, integration). Read before writing tests.
 
+## Git
+
+- write short commit description in one sentence
+
 ## Searching
 
 Use `rg`, not `grep`, and exclude generated output:
