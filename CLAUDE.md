@@ -1,8 +1,9 @@
 # CLAUDE.md
 
 **Delivery**: a courier-delivery microservice (pet project) built with DDD and Hexagonal architecture.
-Kotlin 2.2 / JVM 21, Gradle Kotlin DSL (versions in `gradle/libs.versions.toml`), Spring Boot 3.5 (adapters only),
-Arrow `Either` for business errors, PostgreSQL + Liquibase, Kafka (Protobuf), gRPC, Kotest + Testcontainers + ArchUnit, Detekt.
+Kotlin 2.4 / JVM 21, Gradle Kotlin DSL (versions in `gradle/libs.versions.toml`), Spring Boot 3.5 (adapters only),
+Arrow `Either` for business errors, PostgreSQL + Liquibase (Spring Data JPA or Ktorm), Kafka (Protobuf), gRPC,
+Kotest + Testcontainers + ArchUnit, Gatling (load tests), Detekt.
 
 ## Skills
 
@@ -21,8 +22,10 @@ Never edit `**/build/` or `**/out/` (generated protobuf/gRPC and compiled classe
 
 ```bash
 make test          # ./gradlew test --rerun detekt (always reruns tests; needs Docker for *IT)
-make test-smoke    # tests:smoke against the running app on :8080 (make run first; other address: -PbaseUrl=...)
-make test-e2e      # tests:e2e against the running app via its Kafka :9092 and Postgres :5432 (make run first; rebuild after code changes)
+make test-smoke    # tests:smoke against the running app on :8080 (other address: -PbaseUrl=...)
+make test-e2e      # tests:e2e against the running app via its Kafka :9092 and Postgres :5432
+make test-load     # tests:load: all Gatling simulations against the running app on :8080, reading the inbox lag from
+                   # its Postgres :5432; fails on a broken SLO; HTML reports in tests/load/build/reports/gatling
 make build         # ./gradlew build bootJar -x test -x detekt
 make compile       # compileKotlin compileTestKotlin
 make detekt        # static analysis only
@@ -30,15 +33,15 @@ make run           # build, then docker compose up (app on :8080)
 make stop          # stop containers (data in named volumes is kept)
 make clean         # ./gradlew clean (build output only, Docker is untouched)
 make clean-docker-data   # docker compose down -v: removes containers AND the Postgres/Kafka data volumes
-make load-test [LOAD_PROFILE=smoke|full]
-make load-test-known-bugs     # KnownBug scenarios only; expected to fail, never fails the build
-make load-stack-up            # level 5: app + Postgres + Kafka + Toxiproxy + Prometheus + Grafana (:13000)
-make load-run SCENARIO=breakpoint|spike|soak|chaos   # generator against the stack; make load-stack-down after
 ./gradlew :service:core:domain:test   # single module
 ./gradlew :tests:architecture:test
+./gradlew :tests:load:gatlingRun --simulation <FQCN> -PordersPerSecond=50 -PdurationSeconds=300   # one simulation, other load
 ```
 
 On Windows use `gradlew.bat` (the Makefile auto-detects). Boot jar: `service/bootstrap/build/libs/delivery.jar`.
+
+`test-smoke`, `test-e2e` and `test-load` check the Docker image, not the sources: start it with `make run` and run
+`make run` again after code changes. Load runs leave their orders in the Postgres volume (`make clean-docker-data`).
 
 ## Rules
 

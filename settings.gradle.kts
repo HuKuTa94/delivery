@@ -39,6 +39,9 @@ include("tests:smoke")
 // End-to-end tests of business flows through the running application
 include("tests:e2e")
 
+// Load tests (Gatling) of the running application
+include("tests:load")
+
 pluginManagement {
     repositories {
         gradlePluginPortal()

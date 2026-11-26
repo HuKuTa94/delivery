@@ -33,6 +33,9 @@ tests/               Suites that check the service as a whole
   smoke/             Smoke tests of the running application (`smokeTest`, not part of `test`)
   e2e/               End-to-end tests of business flows through the running application's Kafka and Postgres
                      (`e2eTest`, not part of `test`); compiles the Kafka .proto contracts itself, no service modules
+  load/              Gatling load tests of the running application's HTTP API: simulations in src/gatling/kotlin
+                     (`gatlingRun`, not part of `test`), SLOs as Gatling assertions, the inbox lag read from its
+                     Postgres; no service modules
 build-logic/         Convention plugins: `common-setup`, `protobuf-dependencies`
 ```
 

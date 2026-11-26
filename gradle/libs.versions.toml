@@ -28,6 +28,8 @@ ktorm = "4.1.1"
 
 detekt = "2.0.0-alpha.6"
 
+gatling = "3.16.1"
+
 [libraries]
 
 # Kotlin
@@ -121,6 +123,7 @@ kotest = { id = "io.kotest", version.ref = "kotest" }
 detekt = { id = "dev.detekt", version.ref = "detekt" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
+gatling = { id = "io.gatling.gradle", version.ref = "gatling" }
 
 [bundles]
 

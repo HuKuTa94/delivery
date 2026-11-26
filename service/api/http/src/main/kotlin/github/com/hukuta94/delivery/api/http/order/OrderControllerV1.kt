@@ -26,7 +26,7 @@ class OrderControllerV1(
             street = "Random street",
         )
         saveIntegrationEventUseCase(event)
-        return ResponseEntity.status(HttpStatus.CREATED).build()
+        return ResponseEntity.status(HttpStatus.ACCEPTED).build()
     }
 
     @GetMapping("orders/active/")

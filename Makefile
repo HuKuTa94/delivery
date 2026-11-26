@@ -20,7 +20,7 @@ else
 	COMPOSE_CMD := docker compose
 endif
 
-.PHONY: build test test-smoke test-e2e clean clean-docker-data
+.PHONY: build test test-smoke test-e2e test-load clean clean-docker-data
 
 # --rerun: run tests even when Gradle considers them up-to-date (otherwise an unchanged build skips them)
 test:
@@ -34,6 +34,12 @@ test-smoke:
 # (start it with `make run`)
 test-e2e:
 	$(GRADLEW) :tests:e2e:e2eTest
+
+# Gatling load tests against the running application at http://localhost:8080 and its Postgres at localhost:5432
+# (start it with `make run`). Fails when a simulation breaks its SLO; HTML reports: tests/load/build/reports/gatling.
+# Every run adds orders to the Postgres volume (`make clean-docker-data` resets it)
+test-load:
+	$(GRADLEW) :tests:load:gatlingRun --all
 
 run: build
 	$(DEV_ENVS) $(COMPOSE_CMD) up --build -d
