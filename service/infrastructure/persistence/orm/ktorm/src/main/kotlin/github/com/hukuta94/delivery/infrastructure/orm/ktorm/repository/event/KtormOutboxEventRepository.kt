@@ -17,6 +17,10 @@ class KtormOutboxEventRepository(
 ) {
 
     override fun saveDomainEvents(domainEvents: Collection<DomainEvent>) {
+        // Ktorm rejects a batch without items; no events is nothing to save, as for the other adapters
+        if (domainEvents.isEmpty()) {
+            return
+        }
         database.batchInsert(table) {
             domainEvents.forEach { event ->
                 item {

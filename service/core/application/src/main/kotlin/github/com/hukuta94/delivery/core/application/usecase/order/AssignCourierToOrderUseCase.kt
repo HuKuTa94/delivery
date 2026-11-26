@@ -6,6 +6,9 @@ import github.com.hukuta94.delivery.core.application.port.repository.domain.Cour
 import github.com.hukuta94.delivery.core.application.port.repository.domain.OrderRepositoryPort
 import github.com.hukuta94.delivery.core.application.port.repository.UnitOfWorkPort
 import github.com.hukuta94.delivery.core.application.port.repository.event.OutboxEventRepositoryPort
+import github.com.hukuta94.delivery.core.domain.aggregate.courier.Courier
+import github.com.hukuta94.delivery.core.domain.aggregate.order.Order
+import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderStatus
 import org.slf4j.LoggerFactory
 
 class AssignCourierToOrderUseCase(
@@ -20,21 +23,41 @@ class AssignCourierToOrderUseCase(
             val orders = orderRepository.getAllCreated()
             val couriers = courierRepository.getAllFree()
 
-            if (orders.isEmpty() || couriers.isEmpty()) {
+            val assignedOrders = dispatch(
+                orders = orders,
+                couriers = couriers,
+            )
+            // Nothing changed, nothing to save
+            if (assignedOrders.isEmpty()) {
                 return@executeInTransaction
             }
-
-            orders.forEach { order ->
-                dispatchOrderToCourierBusinessRule.execute(order, couriers)
-            }
+            // Only the assigned orders and their couriers changed. Saving the others would write them back as they
+            // were read, over a change another job may have made since
+            val assignedCourierIds = assignedOrders.map { it.courierId }.toSet()
+            val assignedCouriers = couriers.filter { it.id in assignedCourierIds }
             val domainEvents = (orders + couriers).flatMap { it.popDomainEvents() }
 
             outboxEventRepositoryPort.saveDomainEvents(domainEvents)
-            orderRepository.update(orders)
-            courierRepository.update(couriers)
+            orderRepository.update(assignedOrders)
+            courierRepository.update(assignedCouriers)
 
-            LOG.info("Orders were assigned to free couriers")
+            LOG.info("${assignedOrders.size} orders were assigned to free couriers")
         }
+    }
+
+    /**
+     * Gives the created [orders] to the free [couriers] by the dispatch rule.
+     *
+     * @return the orders that got a courier
+     */
+    private fun dispatch(
+        orders: Collection<Order>,
+        couriers: Collection<Courier>,
+    ): List<Order> {
+        orders.forEach { order ->
+            dispatchOrderToCourierBusinessRule.execute(order, couriers)
+        }
+        return orders.filter { it.status == OrderStatus.ASSIGNED }
     }
 
     companion object {

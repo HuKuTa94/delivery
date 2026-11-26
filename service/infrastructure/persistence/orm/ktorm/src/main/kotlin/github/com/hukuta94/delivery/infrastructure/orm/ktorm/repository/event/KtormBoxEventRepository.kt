@@ -32,6 +32,10 @@ abstract class KtormBoxEventRepository(
 ) : BoxEventMessageRelayRepositoryPort {
 
     override fun saveAll(messages: List<BoxEventMessage>) {
+        // Ktorm rejects a batch without items; no messages is nothing to save, as for the other adapters
+        if (messages.isEmpty()) {
+            return
+        }
         database.batchUpdate(table) {
             messages.forEach { message ->
                 item {

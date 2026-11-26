@@ -48,6 +48,10 @@ class KtormOrderRepository(
     }
 
     override fun update(aggregates: Collection<Order>) {
+        // Ktorm rejects a batch without items; no orders is nothing to update, as for the other adapters
+        if (aggregates.isEmpty()) {
+            return
+        }
         database.batchUpdate(OrderTable) {
             aggregates.forEach { aggregate ->
                 item {

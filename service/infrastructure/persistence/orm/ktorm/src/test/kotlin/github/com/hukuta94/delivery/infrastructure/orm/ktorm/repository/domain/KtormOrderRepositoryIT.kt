@@ -13,6 +13,7 @@ import github.com.hukuta94.delivery.infrastructure.orm.ktorm.table.OrderTable
 import io.kotest.assertions.assertSoftly
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.maps.shouldBeEmpty
+import io.kotest.matchers.result.shouldBeSuccess
 import io.kotest.matchers.shouldBe
 import java.util.UUID
 import kotlin.time.Duration.Companion.seconds
@@ -39,6 +40,21 @@ internal class KtormOrderRepositoryIT : KtormIntegrationSpec() {
             loaded.location shouldBe order.location
             loaded.status shouldBe OrderStatus.CREATED
             loaded.courierId shouldBe null
+        }
+
+        "updating no orders changes nothing" {
+            // Given
+            val order = createdOrder()
+            sut.add(order)
+
+            // When
+            val outcome = runCatching { sut.update(emptyList()) }
+
+            // Then
+            assertSoftly {
+                outcome.shouldBeSuccess()
+                sut.getById(order.id).status shouldBe OrderStatus.CREATED
+            }
         }
 
         "status-based queries filter correctly" {

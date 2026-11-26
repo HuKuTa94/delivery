@@ -6,9 +6,11 @@ import github.com.hukuta94.delivery.core.application.port.repository.domain.Cour
 import github.com.hukuta94.delivery.core.application.port.repository.domain.OrderRepositoryFake
 import github.com.hukuta94.delivery.core.application.port.repository.event.OutboxEventRepositoryFake
 import github.com.hukuta94.delivery.core.domain.FakeDomainEvent
+import github.com.hukuta94.delivery.core.domain.aggregate.courier.Courier
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.CourierStatus
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.busyCourier
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.freeCourier
+import github.com.hukuta94.delivery.core.domain.aggregate.order.Order
 import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderAssignedEvent
 import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderStatus
 import github.com.hukuta94.delivery.core.domain.aggregate.order.assignedOrder
@@ -16,6 +18,7 @@ import github.com.hukuta94.delivery.core.domain.aggregate.order.completedOrder
 import github.com.hukuta94.delivery.core.domain.aggregate.order.createdOrder
 import github.com.hukuta94.delivery.core.domain.common.location
 import github.com.hukuta94.delivery.core.domain.common.maxLocation
+import github.com.hukuta94.delivery.core.domain.rule.DispatchOrderToCourierBusinessRule
 import github.com.hukuta94.delivery.core.domain.rule.impl.DispatchOrderToCourierBusinessRuleImpl
 import io.kotest.assertions.assertSoftly
 import io.kotest.core.spec.style.StringSpec
@@ -157,6 +160,35 @@ class AssignCourierToOrderUseCaseTest : StringSpec({
         }
     }
 
+    "orders left without a free courier are not saved" {
+        // Given
+        val orders = List(3) { createdOrder() }
+        val courier = freeCourier()
+        orderRepository.addAll(orders)
+        courierRepository.add(courier)
+
+        // When
+        sut()
+
+        // Then
+        val assignedOrder = orders.single { it.status == OrderStatus.ASSIGNED }
+        orderRepository.updatedIds shouldContainExactly listOf(assignedOrder.id)
+    }
+
+    "couriers left without an order are not saved" {
+        // Given
+        val order = createdOrder()
+        val couriers = List(3) { freeCourier() }
+        orderRepository.add(order)
+        courierRepository.addAll(couriers)
+
+        // When
+        sut()
+
+        // Then
+        courierRepository.updatedIds shouldContainExactly listOf(order.courierId)
+    }
+
     "already assigned orders and busy couriers are left as they are" {
         // Given
         val orderLocation = location(5, 5)
@@ -242,6 +274,35 @@ class AssignCourierToOrderUseCaseTest : StringSpec({
 
         // Then
         outboxEventRepository.savedEvents shouldContain courierEvent
+    }
+
+    "nothing is saved when no courier suits any order" {
+        // Given
+        val noSuitableCourier = object : DispatchOrderToCourierBusinessRule {
+            override fun execute(
+                order: Order,
+                couriers: Collection<Courier>,
+            ) = Unit
+        }
+        val sutWithoutDispatch = AssignCourierToOrderUseCase(
+            orderRepository = orderRepository,
+            courierRepository = courierRepository,
+            dispatchOrderToCourierBusinessRule = noSuitableCourier,
+            unitOfWork = UnitOfWorkFake(),
+            outboxEventRepositoryPort = outboxEventRepository,
+        )
+        orderRepository.add(createdOrder())
+        courierRepository.add(freeCourier())
+
+        // When
+        sutWithoutDispatch()
+
+        // Then
+        assertSoftly {
+            orderRepository.updatedIds.shouldBeEmpty()
+            courierRepository.updatedIds.shouldBeEmpty()
+            outboxEventRepository.savedEvents.shouldBeEmpty()
+        }
     }
 
     "nothing is dispatched outside the transaction" {

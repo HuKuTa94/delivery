@@ -10,6 +10,7 @@ import github.com.hukuta94.delivery.infrastructure.orm.ktorm.integration.KtormIn
 import io.kotest.assertions.assertSoftly
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
+import io.kotest.matchers.result.shouldBeSuccess
 import io.kotest.matchers.shouldBe
 import io.kotest.property.Exhaustive
 import io.kotest.property.checkAll
@@ -35,6 +36,21 @@ internal class KtormCourierRepositoryIT : KtormIntegrationSpec() {
                 loaded.status shouldBe CourierStatus.FREE
                 loaded.location shouldBe courier.location
                 loaded.transport shouldBe Transport.BICYCLE
+            }
+        }
+
+        "updating no couriers changes nothing" {
+            // Given
+            val courier = freeCourier()
+            sut.add(courier)
+
+            // When
+            val outcome = runCatching { sut.update(emptyList()) }
+
+            // Then
+            assertSoftly {
+                outcome.shouldBeSuccess()
+                sut.getById(courier.id).status shouldBe CourierStatus.FREE
             }
         }
 

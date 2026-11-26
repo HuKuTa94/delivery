@@ -69,6 +69,10 @@ class KtormCourierRepository(
     }
 
     override fun update(aggregates: Collection<Courier>) {
+        // Ktorm rejects a batch without items; no couriers is nothing to update, as for the other adapters
+        if (aggregates.isEmpty()) {
+            return
+        }
         database.batchUpdate(CourierTable) {
             aggregates.forEach { aggregate ->
                 item {
