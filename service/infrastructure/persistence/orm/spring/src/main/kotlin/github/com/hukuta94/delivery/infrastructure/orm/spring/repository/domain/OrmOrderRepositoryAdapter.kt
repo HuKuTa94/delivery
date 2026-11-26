@@ -53,9 +53,9 @@ class OrmOrderRepositoryAdapter(
         return getAllByStatus(OrderStatus.ASSIGNED)
     }
 
-    override fun getAllNotCompleted(): Collection<Order> {
-        return orderJpaRepository.findAllByStatusNot(OrderStatus.COMPLETED).map { it.toDomain() }
-    }
+    override fun getAllNotCompleted(): Collection<Order> = orderJpaRepository
+        .findAllByStatusIn(setOf(OrderStatus.CREATED, OrderStatus.ASSIGNED))
+        .map { it.toDomain() }
 
     private fun getAllByStatus(status: OrderStatus): Collection<Order> {
         return orderJpaRepository.findAllByStatusIs(status).map { it.toDomain() }

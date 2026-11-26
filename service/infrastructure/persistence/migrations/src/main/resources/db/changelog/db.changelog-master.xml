@@ -105,10 +105,6 @@
             </column>
         </createTable>
 
-        <createIndex indexName="idx_courier_id" tableName="couriers">
-            <column name="id"/>
-        </createIndex>
-
         <addForeignKeyConstraint
                 baseTableName="couriers"
                 baseColumnNames="status_id"
@@ -219,10 +215,6 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-
-        <createIndex indexName="idx_order_id" tableName="orders">
-            <column name="id"/>
-        </createIndex>
 
         <addForeignKeyConstraint
                 baseTableName="orders"
@@ -363,6 +355,52 @@
                 constraintName="fk_outbox_messages_status_id"
                 referencedTableName="message_statuses"
                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="add_order_courier_constraints" author="Nikita Koshelev">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists indexName="uq_orders_assigned_courier_id"/>
+            </not>
+        </preConditions>
+
+        <sql>
+            ALTER TABLE orders ADD CONSTRAINT chk_orders_courier_by_status
+                CHECK ((status_id = 1) = (courier_id IS NULL));
+            CREATE UNIQUE INDEX uq_orders_assigned_courier_id ON orders (courier_id) WHERE status_id = 2;
+        </sql>
+
+        <rollback>
+            DROP INDEX uq_orders_assigned_courier_id;
+            ALTER TABLE orders DROP CONSTRAINT chk_orders_courier_by_status;
+        </rollback>
+    </changeSet>
+
+    <!-- The schedulers select orders and couriers by status, the relays select messages by status oldest first -->
+    <changeSet id="add_status_indexes" author="Nikita Koshelev">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists indexName="idx_orders_status_id"/>
+            </not>
+        </preConditions>
+
+        <createIndex indexName="idx_orders_status_id" tableName="orders">
+            <column name="status_id"/>
+        </createIndex>
+
+        <createIndex indexName="idx_couriers_status_id" tableName="couriers">
+            <column name="status_id"/>
+        </createIndex>
+
+        <createIndex indexName="idx_inbox_messages_status_id_created_at" tableName="inbox_messages">
+            <column name="status_id"/>
+            <column name="created_at"/>
+        </createIndex>
+
+        <createIndex indexName="idx_outbox_messages_status_id_created_at" tableName="outbox_messages">
+            <column name="status_id"/>
+            <column name="created_at"/>
+        </createIndex>
     </changeSet>
 
 </databaseChangeLog>

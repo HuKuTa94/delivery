@@ -20,7 +20,7 @@ interface OrderJpaRepository : JpaRepository<OrderJpaEntity, UUID> {
 
     fun findAllByStatusIs(status: OrderStatus): List<OrderJpaEntity>
 
-    fun findAllByStatusNot(status: OrderStatus): List<OrderJpaEntity>
+    fun findAllByStatusIn(statuses: Set<OrderStatus>): List<OrderJpaEntity>
 
     /**
      * Inserts a new order unless one with the same id is already stored. A single statement, so callers adding the

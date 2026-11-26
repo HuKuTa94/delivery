@@ -6,17 +6,15 @@ import github.com.hukuta94.delivery.core.domain.aggregate.order.OrderStatus
 import github.com.hukuta94.delivery.infrastructure.orm.commons.toLocation
 import github.com.hukuta94.delivery.infrastructure.orm.commons.toDb
 import github.com.hukuta94.delivery.infrastructure.orm.ktorm.notNull
-import github.com.hukuta94.delivery.infrastructure.orm.ktorm.table.OrderStatusTable
 import github.com.hukuta94.delivery.infrastructure.orm.ktorm.table.OrderTable
 import org.ktorm.database.Database
 import org.ktorm.dsl.QueryRowSet
 import org.ktorm.dsl.batchUpdate
 import org.ktorm.dsl.eq
 import org.ktorm.dsl.from
-import org.ktorm.dsl.innerJoin
+import org.ktorm.dsl.inList
 import org.ktorm.dsl.map
 import org.ktorm.dsl.mapNotNull
-import org.ktorm.dsl.notEq
 import org.ktorm.dsl.select
 import org.ktorm.dsl.update
 import org.ktorm.dsl.where
@@ -67,7 +65,6 @@ class KtormOrderRepository(
     override fun getById(id: UUID): Order =
         database
             .from(OrderTable)
-            .innerJoin(OrderStatusTable, on = OrderTable.statusId eq OrderStatusTable.id)
             .select()
             .where { OrderTable.id eq id }
             .map { toOrder(it) }
@@ -89,23 +86,21 @@ class KtormOrderRepository(
     override fun getAllNotCompleted(): Collection<Order> =
         database
             .from(OrderTable)
-            .innerJoin(OrderStatusTable, on = OrderTable.statusId eq OrderStatusTable.id)
             .select()
-            .where { OrderStatusTable.code notEq OrderStatus.COMPLETED.name }
+            .where { OrderTable.statusId inList listOf(OrderStatus.CREATED.id, OrderStatus.ASSIGNED.id) }
             .mapNotNull { toOrder(it) }
 
     private fun findByStatus(status: OrderStatus): Collection<Order> =
         database
             .from(OrderTable)
-            .innerJoin(OrderStatusTable, on = OrderTable.statusId eq OrderStatusTable.id)
             .select()
-            .where { OrderStatusTable.code eq status.name }
+            .where { OrderTable.statusId eq status.id }
             .mapNotNull { toOrder(it) }
 
     private fun toOrder(row: QueryRowSet): Order =
         Order.create(
             id = row.notNull(OrderTable.id),
-            status = OrderStatus.from(row.notNull(OrderStatusTable.id)),
+            status = OrderStatus.from(row.notNull(OrderTable.statusId)),
             location = row.notNull(OrderTable.location).toLocation(),
             courierId = row[OrderTable.courierId]
         )

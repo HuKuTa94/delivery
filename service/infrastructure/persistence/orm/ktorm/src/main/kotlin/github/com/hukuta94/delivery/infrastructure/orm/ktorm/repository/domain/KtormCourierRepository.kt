@@ -8,7 +8,6 @@ import github.com.hukuta94.delivery.infrastructure.orm.commons.toCourierName
 import github.com.hukuta94.delivery.infrastructure.orm.commons.toLocation
 import github.com.hukuta94.delivery.infrastructure.orm.commons.toDb
 import github.com.hukuta94.delivery.infrastructure.orm.ktorm.notNull
-import github.com.hukuta94.delivery.infrastructure.orm.ktorm.table.CourierStatusTable
 import github.com.hukuta94.delivery.infrastructure.orm.ktorm.table.CourierTransportTable
 import github.com.hukuta94.delivery.infrastructure.orm.ktorm.table.CourierTable
 import org.ktorm.database.Database
@@ -31,19 +30,17 @@ class KtormCourierRepository(
     override fun getAllFree(): Collection<Courier> =
         database
             .from(CourierTable)
-            .innerJoin(CourierStatusTable, on = CourierTable.statusId eq CourierStatusTable.id)
             .innerJoin(CourierTransportTable, on = CourierTable.transportId eq CourierTransportTable.id)
             .select()
-            .where { CourierStatusTable.code eq CourierStatus.FREE.name }
+            .where { CourierTable.statusId eq CourierStatus.FREE.id }
             .map { toCourier(it) }
 
     override fun getAllBusy(): Collection<Courier> =
         database
             .from(CourierTable)
-            .innerJoin(CourierStatusTable, on = CourierTable.statusId eq CourierStatusTable.id)
             .innerJoin(CourierTransportTable, on = CourierTable.transportId eq CourierTransportTable.id)
             .select()
-            .where { CourierStatusTable.code eq CourierStatus.BUSY.name }
+            .where { CourierTable.statusId eq CourierStatus.BUSY.id }
             .map { toCourier(it) }
 
     override fun add(aggregate: Courier): Boolean {
@@ -89,7 +86,6 @@ class KtormCourierRepository(
     override fun getById(id: UUID): Courier =
         database
             .from(CourierTable)
-            .innerJoin(CourierStatusTable, on = CourierTable.statusId eq CourierStatusTable.id)
             .innerJoin(CourierTransportTable, on = CourierTable.transportId eq CourierTransportTable.id)
             .select()
             .where { CourierTable.id eq id }
@@ -106,7 +102,7 @@ class KtormCourierRepository(
     private fun toCourier(row: QueryRowSet) = Courier.create(
         id = row.notNull(CourierTable.id),
         name = row.notNull(CourierTable.name).toCourierName(),
-        status = CourierStatus.from(row.notNull(CourierStatusTable.id)),
+        status = CourierStatus.from(row.notNull(CourierTable.statusId)),
         location = row.notNull(CourierTable.location).toLocation(),
         transport = Transport.from(row.notNull(CourierTransportTable.id)),
     )

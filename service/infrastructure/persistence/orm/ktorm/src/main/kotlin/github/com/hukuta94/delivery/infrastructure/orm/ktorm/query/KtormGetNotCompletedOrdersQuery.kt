@@ -9,8 +9,8 @@ import github.com.hukuta94.delivery.infrastructure.orm.ktorm.notNull
 import github.com.hukuta94.delivery.infrastructure.orm.ktorm.table.OrderTable
 import org.ktorm.database.Database
 import org.ktorm.dsl.from
+import org.ktorm.dsl.inList
 import org.ktorm.dsl.map
-import org.ktorm.dsl.notEq
 import org.ktorm.dsl.select
 import org.ktorm.dsl.where
 
@@ -24,7 +24,7 @@ class KtormGetNotCompletedOrdersQuery(
                 OrderTable.id,
                 OrderTable.location,
             )
-            .where { OrderTable.statusId notEq OrderStatus.COMPLETED.id }
+            .where { OrderTable.statusId inList listOf(OrderStatus.CREATED.id, OrderStatus.ASSIGNED.id) }
             .map { row ->
                 OrderResponse(
                     id = row.notNull(OrderTable.id),
