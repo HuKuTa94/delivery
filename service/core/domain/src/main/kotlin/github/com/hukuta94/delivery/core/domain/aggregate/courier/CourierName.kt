@@ -18,11 +18,11 @@ data class CourierName private constructor(
             ensure(value.isNotBlank() && value.isNotEmpty()) {
                 Error.NameCanNotBeEmpty
             }
-            ensure(value.length >= MIN_NAME_LENGTH) {
-                Error.NameTooShort(value)
-            }
 
             val trimmedName = value.trim()
+            ensure(trimmedName.length >= MIN_NAME_LENGTH) {
+                Error.NameTooShort(trimmedName)
+            }
             ensure(trimmedName.length <= MAX_NAME_LENGTH) {
                 Error.NameTooLong(trimmedName)
             }

@@ -64,6 +64,24 @@ class CourierNameTest : StringSpec({
         }
     }
 
+    "courier name must not be shorter than minimum length once it is trimmed" {
+        // Given
+        val string = " ${allowedLetter.repeat(MIN_COURIER_NAME_LENGTH - 1)} "
+        val trimmedString = string.trim()
+
+        // When
+        val result = CourierName.of(string)
+
+        // Then
+        result.shouldBeLeft().also {
+            it::class shouldBe CourierName.Error.NameTooShort::class
+            it.message shouldBe
+                    "Courier name is too short. " +
+                    "Minimal length must be $MIN_COURIER_NAME_LENGTH. " +
+                    "Actual length of \"$trimmedString\" is ${trimmedString.length}"
+        }
+    }
+
     "courier name must not be longer than maximum length" {
         // Given
         val string = allowedLetter.repeat(MAX_COURIER_NAME_LENGTH + 1)

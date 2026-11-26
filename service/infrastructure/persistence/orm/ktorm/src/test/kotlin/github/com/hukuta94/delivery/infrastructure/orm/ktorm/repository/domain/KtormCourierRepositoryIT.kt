@@ -4,12 +4,16 @@ import github.com.hukuta94.delivery.core.domain.aggregate.courier.CourierStatus
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.Transport
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.busyCourier
 import github.com.hukuta94.delivery.core.domain.aggregate.courier.freeCourier
+import github.com.hukuta94.delivery.core.domain.aggregate.courier.longestCourierName
 import github.com.hukuta94.delivery.core.domain.common.location
 import github.com.hukuta94.delivery.infrastructure.orm.ktorm.integration.KtormIntegrationSpec
 import io.kotest.assertions.assertSoftly
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.shouldBe
+import io.kotest.property.Exhaustive
+import io.kotest.property.checkAll
+import io.kotest.property.exhaustive.enum
 
 internal class KtormCourierRepositoryIT : KtormIntegrationSpec() {
     init {
@@ -93,6 +97,30 @@ internal class KtormCourierRepositoryIT : KtormIntegrationSpec() {
                 loaded.location shouldBe location(4, 5)
                 loaded.transport shouldBe Transport.CAR
             }
+        }
+
+        "a courier on any kind of transport is stored with it" {
+            checkAll(Exhaustive.enum<Transport>()) { transport ->
+                // Given
+                val courier = freeCourier(transport = transport)
+
+                // When
+                sut.add(courier)
+
+                // Then
+                sut.getById(courier.id).transport shouldBe transport
+            }
+        }
+
+        "the longest allowed courier name is stored in full" {
+            // Given
+            val courier = freeCourier(name = longestCourierName())
+
+            // When
+            sut.add(courier)
+
+            // Then
+            sut.getById(courier.id).name shouldBe courier.name
         }
     }
 }

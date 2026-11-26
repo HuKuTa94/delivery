@@ -1,6 +1,7 @@
 package github.com.hukuta94.delivery.bootstrap.core.application.usecase
 
 import github.com.hukuta94.delivery.core.application.usecase.courier.MoveCouriersUseCase
+import github.com.hukuta94.delivery.core.application.usecase.courier.RegisterCourierUseCase
 import github.com.hukuta94.delivery.core.domain.rule.CompleteOrderBusinessRule
 import github.com.hukuta94.delivery.core.application.port.repository.domain.CourierRepositoryPort
 import github.com.hukuta94.delivery.core.application.port.repository.domain.OrderRepositoryPort
@@ -25,5 +26,10 @@ open class CourierUseCaseConfiguration {
         completeOrderBusinessRule = completeOrderBusinessRule,
         unitOfWork = unitOfWork,
         outboxEventRepositoryPort = outboxEventRepositoryPort,
+    )
+
+    @Bean
+    open fun registerCourierUseCase(courierRepository: CourierRepositoryPort) = RegisterCourierUseCase(
+        courierRepository = courierRepository,
     )
 }
