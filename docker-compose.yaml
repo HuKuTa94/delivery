@@ -158,6 +158,20 @@ services:
       - --collector.stat_statements.query_length=300
       - --collector.stat_statements.exclude_users=exporter
 
+  # Kafka statistics for Prometheus: messages written per topic and the lag of every consumer group, i.e. how many
+  # messages of a topic the group has not read yet (basket.confirmed for basket-consumer-group of the app)
+  kafka-exporter:
+    image: danielqsj/kafka-exporter:v1.11.0
+    depends_on:
+      kafka-init:
+        condition: service_completed_successfully
+    command:
+      - --kafka.server=kafka:29092
+      # cp-kafka 7.6 is Apache Kafka 3.6
+      - --kafka.version=3.6.0
+      # Leaves out the internal topics (__consumer_offsets)
+      - --topic.filter=^[^_].*
+
   # Dashboards of the stand, http://localhost:3000: Delivery > Delivery under load. They open without a login
   # (Grafana lets an anonymous user only view); to edit or explore, sign in as admin / admin (a local stand only)
   grafana:
