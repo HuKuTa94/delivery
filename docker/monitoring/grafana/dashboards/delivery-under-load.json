@@ -327,7 +327,7 @@
       "datasource": {"type": "prometheus", "uid": "prometheus"},
       "gridPos": {"x": 0, "y": 54, "w": 12, "h": 12},
       "fieldConfig": {"defaults": {"unit": "s"}, "overrides": []},
-      "options": {"legend": {"displayMode": "table", "placement": "bottom", "showLegend": true, "calcs": ["mean", "max"], "sortBy": "Max", "sortDesc": true}, "tooltip": {"mode": "multi", "sort": "desc"}},
+      "options": {"legend": {"displayMode": "table", "placement": "bottom", "showLegend": true, "calcs": ["mean", "max"], "sortBy": "Max", "sortDesc": true}, "tooltip": {"mode": "single", "sort": "none", "maxWidth": 400}},
       "targets": [
         {
           "refId": "A", "datasource": {"type": "prometheus", "uid": "prometheus"},
@@ -341,7 +341,7 @@
       "datasource": {"type": "prometheus", "uid": "prometheus"},
       "gridPos": {"x": 12, "y": 54, "w": 12, "h": 12},
       "fieldConfig": {"defaults": {"unit": "ops"}, "overrides": []},
-      "options": {"legend": {"displayMode": "table", "placement": "bottom", "showLegend": true, "calcs": ["mean", "max"], "sortBy": "Max", "sortDesc": true}, "tooltip": {"mode": "multi", "sort": "desc"}},
+      "options": {"legend": {"displayMode": "table", "placement": "bottom", "showLegend": true, "calcs": ["mean", "max"], "sortBy": "Max", "sortDesc": true}, "tooltip": {"mode": "single", "sort": "none", "maxWidth": 400}},
       "targets": [
         {
           "refId": "A", "datasource": {"type": "prometheus", "uid": "prometheus"},
