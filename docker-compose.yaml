@@ -109,3 +109,27 @@ services:
       interval: 2s
       timeout: 2s
       retries: 60
+
+  # Monitoring of the stand (http://localhost:9090), configs in docker/monitoring.
+  # Scrapes /actuator/prometheus of the app every 5 s; the metrics live as long as the stand's volumes
+  prometheus:
+    image: prom/prometheus:v3.16.0
+    volumes:
+      - ./docker/monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - "9090:9090"
+
+  # Dashboards of the stand, http://localhost:3000: Delivery > Delivery under load. They open without a login
+  # (Grafana lets an anonymous user only view); to edit or explore, sign in as admin / admin (a local stand only)
+  grafana:
+    image: grafana/grafana:13.3.2
+    depends_on:
+      - prometheus
+    environment:
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+    volumes:
+      - ./docker/monitoring/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources:ro
+      - ./docker/monitoring/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./docker/monitoring/grafana/dashboards:/etc/grafana/dashboards:ro
+    ports:
+      - "3000:3000"

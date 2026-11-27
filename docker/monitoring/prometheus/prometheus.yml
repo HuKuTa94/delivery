@@ -1,0 +1,10 @@
+# Prometheus of docker-compose.yaml: scrapes the app of its own stand
+global:
+  # Fine enough to see a load test ramp up (Gatling ramps for 10 s)
+  scrape_interval: 5s
+
+scrape_configs:
+  - job_name: delivery
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: ["app:8080"]

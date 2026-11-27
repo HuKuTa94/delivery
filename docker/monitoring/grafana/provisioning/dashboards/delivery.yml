@@ -1,0 +1,12 @@
+apiVersion: 1
+
+providers:
+  # Loads the dashboards of docker/monitoring/grafana/dashboards (mounted read-only) when Grafana starts: after a
+  # change of a file, `docker compose restart grafana` (the test stand: `docker compose -p delivery-test ...`).
+  # A change saved in the UI is not written back to the file: to keep it, export the dashboard JSON into that folder
+  - name: delivery
+    folder: Delivery
+    type: file
+    allowUiUpdates: true
+    options:
+      path: /etc/grafana/dashboards

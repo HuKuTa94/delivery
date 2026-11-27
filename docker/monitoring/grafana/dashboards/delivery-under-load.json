@@ -1,0 +1,266 @@
+{
+  "uid": "delivery-under-load",
+  "title": "Delivery under load",
+  "description": "The app of the running stand: HTTP, scheduled jobs, Kafka, database pool, JVM",
+  "tags": ["delivery"],
+  "timezone": "browser",
+  "editable": true,
+  "graphTooltip": 1,
+  "refresh": "5s",
+  "schemaVersion": 39,
+  "version": 1,
+  "time": {"from": "now-15m", "to": "now"},
+  "templating": {"list": []},
+  "annotations": {"list": []},
+  "panels": [
+    {
+      "id": 100, "type": "row", "title": "HTTP (without /actuator)", "collapsed": false, "panels": [],
+      "gridPos": {"x": 0, "y": 0, "w": 24, "h": 1}
+    },
+    {
+      "id": 1, "type": "timeseries", "title": "Requests per second",
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "gridPos": {"x": 0, "y": 1, "w": 8, "h": 8},
+      "fieldConfig": {"defaults": {"unit": "reqps"}, "overrides": []},
+      "options": {"legend": {"displayMode": "list", "placement": "bottom", "showLegend": true}, "tooltip": {"mode": "multi", "sort": "desc"}},
+      "targets": [
+        {
+          "refId": "A", "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "expr": "sum by (method, uri, status) (rate(http_server_requests_seconds_count{application=\"delivery\", uri!~\"/actuator.*\"}[$__rate_interval]))",
+          "legendFormat": "{{method}} {{uri}} {{status}}"
+        }
+      ]
+    },
+    {
+      "id": 2, "type": "timeseries", "title": "Latency p50 / p99",
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "gridPos": {"x": 8, "y": 1, "w": 8, "h": 8},
+      "fieldConfig": {"defaults": {"unit": "s"}, "overrides": []},
+      "options": {"legend": {"displayMode": "list", "placement": "bottom", "showLegend": true}, "tooltip": {"mode": "multi", "sort": "desc"}},
+      "targets": [
+        {
+          "refId": "A", "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "expr": "histogram_quantile(0.99, sum by (le, method, uri) (rate(http_server_requests_seconds_bucket{application=\"delivery\", uri!~\"/actuator.*\"}[$__rate_interval])))",
+          "legendFormat": "p99 {{method}} {{uri}}"
+        },
+        {
+          "refId": "B", "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "expr": "histogram_quantile(0.5, sum by (le, method, uri) (rate(http_server_requests_seconds_bucket{application=\"delivery\", uri!~\"/actuator.*\"}[$__rate_interval])))",
+          "legendFormat": "p50 {{method}} {{uri}}"
+        }
+      ]
+    },
+    {
+      "id": 3, "type": "timeseries", "title": "Failed requests per second (4xx, 5xx)",
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "gridPos": {"x": 16, "y": 1, "w": 8, "h": 8},
+      "fieldConfig": {"defaults": {"unit": "reqps", "noValue": "no failed requests"}, "overrides": []},
+      "options": {"legend": {"displayMode": "list", "placement": "bottom", "showLegend": true}, "tooltip": {"mode": "multi", "sort": "desc"}},
+      "targets": [
+        {
+          "refId": "A", "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "expr": "sum by (method, uri, status) (rate(http_server_requests_seconds_count{application=\"delivery\", uri!~\"/actuator.*\", status=~\"[45]..\"}[$__rate_interval]))",
+          "legendFormat": "{{method}} {{uri}} {{status}}"
+        }
+      ]
+    },
+    {
+      "id": 101, "type": "row", "title": "Scheduled jobs", "collapsed": false, "panels": [],
+      "gridPos": {"x": 0, "y": 9, "w": 24, "h": 1}
+    },
+    {
+      "id": 4, "type": "timeseries", "title": "Runs per second",
+      "description": "Every job runs on a single-thread scheduler of its own; a failed run shows up with another outcome",
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "gridPos": {"x": 0, "y": 10, "w": 12, "h": 8},
+      "fieldConfig": {"defaults": {"unit": "ops"}, "overrides": []},
+      "options": {"legend": {"displayMode": "list", "placement": "bottom", "showLegend": true}, "tooltip": {"mode": "multi", "sort": "desc"}},
+      "targets": [
+        {
+          "refId": "A", "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "expr": "sum by (code_function, outcome) (rate(tasks_scheduled_execution_seconds_count{application=\"delivery\"}[$__rate_interval]))",
+          "legendFormat": "{{code_function}} {{outcome}}"
+        }
+      ]
+    },
+    {
+      "id": 5, "type": "timeseries", "title": "Run duration (mean, max)",
+      "description": "A run longer than the job's interval delays its next run",
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "gridPos": {"x": 12, "y": 10, "w": 12, "h": 8},
+      "fieldConfig": {"defaults": {"unit": "s"}, "overrides": []},
+      "options": {"legend": {"displayMode": "list", "placement": "bottom", "showLegend": true}, "tooltip": {"mode": "multi", "sort": "desc"}},
+      "targets": [
+        {
+          "refId": "A", "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "expr": "sum by (code_function) (rate(tasks_scheduled_execution_seconds_sum{application=\"delivery\"}[$__rate_interval])) / sum by (code_function) (rate(tasks_scheduled_execution_seconds_count{application=\"delivery\"}[$__rate_interval]))",
+          "legendFormat": "mean {{code_function}}"
+        },
+        {
+          "refId": "B", "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "expr": "max by (code_function) (tasks_scheduled_execution_seconds_max{application=\"delivery\"})",
+          "legendFormat": "max {{code_function}}"
+        }
+      ]
+    },
+    {
+      "id": 102, "type": "row", "title": "Kafka", "collapsed": false, "panels": [],
+      "gridPos": {"x": 0, "y": 18, "w": 24, "h": 1}
+    },
+    {
+      "id": 6, "type": "timeseries", "title": "Messages per second",
+      "description": "consumed: basket.confirmed by the listener; sent: order.status.changed by the outbox relay",
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "gridPos": {"x": 0, "y": 19, "w": 12, "h": 8},
+      "fieldConfig": {"defaults": {"unit": "ops"}, "overrides": []},
+      "options": {"legend": {"displayMode": "list", "placement": "bottom", "showLegend": true}, "tooltip": {"mode": "multi", "sort": "desc"}},
+      "targets": [
+        {
+          "refId": "A", "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "expr": "sum by (result) (rate(spring_kafka_listener_seconds_count{application=\"delivery\"}[$__rate_interval]))",
+          "legendFormat": "consumed {{result}}"
+        },
+        {
+          "refId": "B", "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "expr": "sum by (result) (rate(spring_kafka_template_seconds_count{application=\"delivery\"}[$__rate_interval]))",
+          "legendFormat": "sent {{result}}"
+        }
+      ]
+    },
+    {
+      "id": 7, "type": "timeseries", "title": "Handling and send time (max)",
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "gridPos": {"x": 12, "y": 19, "w": 12, "h": 8},
+      "fieldConfig": {"defaults": {"unit": "s"}, "overrides": []},
+      "options": {"legend": {"displayMode": "list", "placement": "bottom", "showLegend": true}, "tooltip": {"mode": "multi", "sort": "desc"}},
+      "targets": [
+        {
+          "refId": "A", "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "expr": "max(spring_kafka_listener_seconds_max{application=\"delivery\"})",
+          "legendFormat": "listener"
+        },
+        {
+          "refId": "B", "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "expr": "max(spring_kafka_template_seconds_max{application=\"delivery\"})",
+          "legendFormat": "send"
+        }
+      ]
+    },
+    {
+      "id": 103, "type": "row", "title": "Database connection pool", "collapsed": false, "panels": [],
+      "gridPos": {"x": 0, "y": 27, "w": 24, "h": 1}
+    },
+    {
+      "id": 8, "type": "timeseries", "title": "Connections",
+      "description": "pending > 0: threads wait for a free connection",
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "gridPos": {"x": 0, "y": 28, "w": 12, "h": 8},
+      "fieldConfig": {"defaults": {"unit": "short"}, "overrides": []},
+      "options": {"legend": {"displayMode": "list", "placement": "bottom", "showLegend": true}, "tooltip": {"mode": "multi", "sort": "desc"}},
+      "targets": [
+        {
+          "refId": "A", "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "expr": "sum(hikaricp_connections_active{application=\"delivery\"})",
+          "legendFormat": "active"
+        },
+        {
+          "refId": "B", "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "expr": "sum(hikaricp_connections_idle{application=\"delivery\"})",
+          "legendFormat": "idle"
+        },
+        {
+          "refId": "C", "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "expr": "sum(hikaricp_connections_pending{application=\"delivery\"})",
+          "legendFormat": "pending"
+        },
+        {
+          "refId": "D", "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "expr": "sum(hikaricp_connections_max{application=\"delivery\"})",
+          "legendFormat": "max"
+        }
+      ]
+    },
+    {
+      "id": 9, "type": "timeseries", "title": "Connection acquire and usage time (max)",
+      "description": "usage: how long a connection is held, about the length of a transaction",
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "gridPos": {"x": 12, "y": 28, "w": 12, "h": 8},
+      "fieldConfig": {"defaults": {"unit": "s"}, "overrides": []},
+      "options": {"legend": {"displayMode": "list", "placement": "bottom", "showLegend": true}, "tooltip": {"mode": "multi", "sort": "desc"}},
+      "targets": [
+        {
+          "refId": "A", "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "expr": "max(hikaricp_connections_acquire_seconds_max{application=\"delivery\"})",
+          "legendFormat": "acquire"
+        },
+        {
+          "refId": "B", "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "expr": "max(hikaricp_connections_usage_seconds_max{application=\"delivery\"})",
+          "legendFormat": "usage"
+        }
+      ]
+    },
+    {
+      "id": 104, "type": "row", "title": "JVM", "collapsed": false, "panels": [],
+      "gridPos": {"x": 0, "y": 36, "w": 24, "h": 1}
+    },
+    {
+      "id": 10, "type": "timeseries", "title": "Heap",
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "gridPos": {"x": 0, "y": 37, "w": 8, "h": 8},
+      "fieldConfig": {"defaults": {"unit": "bytes"}, "overrides": []},
+      "options": {"legend": {"displayMode": "list", "placement": "bottom", "showLegend": true}, "tooltip": {"mode": "multi", "sort": "desc"}},
+      "targets": [
+        {
+          "refId": "A", "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "expr": "sum(jvm_memory_used_bytes{application=\"delivery\", area=\"heap\"})",
+          "legendFormat": "used"
+        },
+        {
+          "refId": "B", "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "expr": "sum(jvm_memory_committed_bytes{application=\"delivery\", area=\"heap\"})",
+          "legendFormat": "committed"
+        },
+        {
+          "refId": "C", "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "expr": "sum(jvm_memory_max_bytes{application=\"delivery\", area=\"heap\"})",
+          "legendFormat": "max"
+        }
+      ]
+    },
+    {
+      "id": 11, "type": "timeseries", "title": "CPU",
+      "description": "process: the app; system: the whole machine as the container sees it (load generator included on one host)",
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "gridPos": {"x": 8, "y": 37, "w": 8, "h": 8},
+      "fieldConfig": {"defaults": {"unit": "percentunit", "min": 0, "max": 1}, "overrides": []},
+      "options": {"legend": {"displayMode": "list", "placement": "bottom", "showLegend": true}, "tooltip": {"mode": "multi", "sort": "desc"}},
+      "targets": [
+        {
+          "refId": "A", "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "expr": "process_cpu_usage{application=\"delivery\"}",
+          "legendFormat": "process"
+        },
+        {
+          "refId": "B", "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "expr": "system_cpu_usage{application=\"delivery\"}",
+          "legendFormat": "system"
+        }
+      ]
+    },
+    {
+      "id": 12, "type": "timeseries", "title": "GC pause time per second",
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "gridPos": {"x": 16, "y": 37, "w": 8, "h": 8},
+      "fieldConfig": {"defaults": {"unit": "s"}, "overrides": []},
+      "options": {"legend": {"displayMode": "list", "placement": "bottom", "showLegend": true}, "tooltip": {"mode": "multi", "sort": "desc"}},
+      "targets": [
+        {
+          "refId": "A", "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "expr": "sum by (action, cause) (rate(jvm_gc_pause_seconds_sum{application=\"delivery\"}[$__rate_interval]))",
+          "legendFormat": "{{action}} ({{cause}})"
+        }
+      ]
+    }
+  ]
+}

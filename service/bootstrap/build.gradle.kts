@@ -38,6 +38,7 @@ dependencies {
     implementation(libs.spring.boot.starter.data.jpa)
     implementation(libs.spring.boot.starter.actuator)
     implementation(libs.spring.kafka)
+    implementation(libs.micrometer.registry.prometheus)
 
     // grpc
     implementation(platform(libs.grpc.bom))
