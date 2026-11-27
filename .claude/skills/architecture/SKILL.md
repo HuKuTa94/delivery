@@ -110,6 +110,9 @@ Proto contracts: `service/api/kafka/src/main/proto`, `service/infrastructure/grp
 - Postgres `localhost:5432`, Kafka `localhost:9092`, Geo gRPC `localhost:8084`, HTTP `:8080`.
 - Actuator (bootstrap) exposes only `/actuator/health` over HTTP: the compose healthcheck of `app`, which
   `docker compose up --wait` waits for.
+- `docker-compose.yaml` serves two stands with the same `delivery-app` image and host ports, one at a time: dev
+  (`make run`, project `delivery`, data kept) and test (project `delivery-test`, removed and started from scratch by
+  `make test-smoke` / `test-e2e` / `test-load`). A service added to the file runs in both.
 - Hardcoded values belong in config properties (see `RelayProperties`, `CorsProperties`).
 
 ## Adding a feature
