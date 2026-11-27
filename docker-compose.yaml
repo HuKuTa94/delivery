@@ -1,3 +1,7 @@
+# The dev stand. Compose prefixes containers, the network and volumes with the project name, so the same file runs
+# as another, isolated stand under another name (`-p ...`) with volumes of its own
+name: delivery
+
 volumes:
   postgres_data:
   kafka_data:
@@ -80,6 +84,9 @@ services:
       - "8081:8080"
 
   app:
+    # One image for every stand: without `image` Compose names the built image after the project
+    # (delivery-app, <other project>-app) and every stand builds a copy of its own
+    image: delivery-app:latest
     build:
       context: .
       dockerfile: docker/dev/app/Dockerfile.tasks

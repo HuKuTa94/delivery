@@ -3,7 +3,6 @@ ifeq ($(OS),Windows_NT)
     GRADLEW := .\gradlew.bat
     SHELL := cmd
     NULL_DEVICE := NUL
-    DOCKER_IMAGE ?= delivery-app
     DEV_ENVS := set USER_ID=197609 && set GROUP_ID=197609 &&
 else
     GRADLEW := ./gradlew
