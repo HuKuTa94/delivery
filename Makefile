@@ -28,14 +28,19 @@ TEST_STAND := $(COMPOSE_CMD) -p delivery-test
 # Detekt first: Gradle runs the tasks in command-line order, so a finding fails the build before anything is compiled
 BUILD_JAR := $(GRADLEW) detekt build bootJar -x test
 
-# First lines of a suite: refuses to run beside the dev stand, builds the image of the current sources, removes what
-# an earlier run left in the test stand and starts it again, waiting until every service is healthy
+# Removes what an earlier run left in the test stand and starts it again, waiting until every service is healthy
+define RESET_TEST_STAND
+$(TEST_STAND) down -v
+$(TEST_STAND) up -d --wait
+endef
+
+# First lines of a suite: refuses to run beside the dev stand, builds the image of the current sources and resets
+# the test stand
 define START_TEST_STAND
 $(if $(shell $(COMPOSE_CMD) ps -q 2> $(NULL_DEVICE)),$(error The dev stand is running and holds the ports of the test stand: run 'make stop' first))
 $(BUILD_JAR)
 $(DEV_ENVS) $(COMPOSE_CMD) build app
-$(TEST_STAND) down -v
-$(TEST_STAND) up -d --wait
+$(RESET_TEST_STAND)
 endef
 
 .PHONY: test test-smoke test-e2e test-load run stop compile clean clean-docker-data
@@ -55,11 +60,15 @@ test-e2e:
 	$(START_TEST_STAND)
 	$(GRADLEW) :tests:e2e:e2eTest
 
-# Gatling load tests against a clean test stand at http://localhost:8080, reading the inbox lag from its Postgres at
-# localhost:5432. Fails when a simulation breaks its SLO; HTML reports: tests/load/build/reports/gatling
+# Gatling load tests through http://localhost:8080 and the Kafka at localhost:9092 of a clean test stand, reading the
+# inbox from its Postgres at localhost:5432. Each simulation runs on a stand of its own, so what one leaves (thousands
+# of orders) doesn't load the next one; a new simulation needs a line here. Fails when a simulation breaks its SLO;
+# HTML reports: tests/load/build/reports/gatling
 test-load:
 	$(START_TEST_STAND)
-	$(GRADLEW) :tests:load:gatlingRun --all
+	$(GRADLEW) :tests:load:gatlingRun --simulation github.com.hukuta94.delivery.load.CreateOrderSimulation
+	$(RESET_TEST_STAND)
+	$(GRADLEW) :tests:load:gatlingRun --simulation github.com.hukuta94.delivery.load.BasketConfirmedConsumerSimulation
 
 # Builds and starts the dev stand, removing the test stand that holds the same ports.
 # Returns once every service is healthy (the app: /actuator/health is UP), so tests can start right after it

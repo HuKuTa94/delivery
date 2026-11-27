@@ -29,8 +29,9 @@ make test          # ./gradlew detekt test --rerun: Detekt first, then unit test
                    # needs Docker for *IT)
 make test-smoke    # tests:smoke against the app of a clean test stand on :8080
 make test-e2e      # tests:e2e through the Kafka :9092 and Postgres :5432 of a clean test stand
-make test-load     # tests:load: all Gatling simulations against a clean test stand on :8080, reading the inbox lag from
-                   # its Postgres :5432; fails on a broken SLO; HTML reports in tests/load/build/reports/gatling
+make test-load     # tests:load: the Gatling simulations listed in the Makefile through :8080 and Kafka :9092, each on
+                   # a clean test stand of its own, reading the inbox from its Postgres :5432; fails on a broken SLO;
+                   # HTML reports in tests/load/build/reports/gatling
 make test-smoke test-e2e test-load   # the suites in a row, each on a clean test stand; stops at the first failure
 make compile       # compileKotlin compileTestKotlin
 make run           # dev stand: build, remove the test stand, docker compose up --wait (returns once the app is healthy)

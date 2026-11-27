@@ -2,10 +2,13 @@ package github.com.hukuta94.delivery.load
 
 import java.sql.Connection
 import java.sql.DriverManager
+import java.sql.PreparedStatement
 import java.sql.ResultSet
 import java.sql.Types
 import java.time.Duration
 import java.time.LocalDateTime
+import kotlin.time.DurationUnit
+import kotlin.time.toKotlinDuration
 
 /**
  * Reads the inbox of the running application: when its messages were stored and when the relay processed them.
@@ -52,11 +55,7 @@ class InboxMessages(
     fun lagOfMessagesCreatedAfter(after: LocalDateTime?): InboxLag = connection
         .prepareStatement(LAG_SQL)
         .use { statement ->
-            if (after == null) {
-                statement.setNull(1, Types.TIMESTAMP)
-            } else {
-                statement.setObject(1, after)
-            }
+            statement.setCreatedAfter(after)
             statement.executeQuery().use { rows ->
                 rows.next()
                 InboxLag(
@@ -69,6 +68,32 @@ class InboxMessages(
                 )
             }
         }
+
+    /**
+     * @return number of messages created after [after] (of all messages when it is `null`) and when the first and
+     * the last of them were stored
+     */
+    fun messagesCreatedAfter(after: LocalDateTime?): StoredMessages = connection
+        .prepareStatement(STORED_SQL)
+        .use { statement ->
+            statement.setCreatedAfter(after)
+            statement.executeQuery().use { rows ->
+                rows.next()
+                StoredMessages(
+                    messages = rows.getInt("messages"),
+                    first = rows.getObject("first", LocalDateTime::class.java),
+                    last = rows.getObject("last", LocalDateTime::class.java),
+                )
+            }
+        }
+
+    private fun PreparedStatement.setCreatedAfter(after: LocalDateTime?) {
+        if (after == null) {
+            setNull(1, Types.TIMESTAMP)
+        } else {
+            setObject(1, after)
+        }
+    }
 
     private fun ResultSet.millis(column: String): Duration? = getObject(column, Double::class.javaObjectType)?.let {
         Duration.ofMillis(it.toLong())
@@ -100,6 +125,13 @@ class InboxMessages(
                 max(lag_millis) FILTER (WHERE processed) AS max
             FROM run
         """.trimIndent()
+
+        // The application sets created_at when it stores a message, so first..last is the time it took to store them
+        val STORED_SQL = """
+            SELECT count(*) AS messages, min(created_at) AS first, max(created_at) AS last
+            FROM inbox_messages
+            WHERE created_at > coalesce(?::timestamp, '-infinity'::timestamp)
+        """.trimIndent()
     }
 }
 
@@ -118,4 +150,22 @@ data class InboxLag(
         "p50 ${p50.inMillis()}, p95 ${p95.inMillis()}, p99 ${p99.inMillis()}, max ${max.inMillis()}"
 
     private fun Duration?.inMillis(): String = this?.let { "${it.toMillis()} ms" } ?: "-"
+}
+
+/**
+ * Messages stored in the inbox and when the first and the last of them were stored, `null` when there are none.
+ */
+data class StoredMessages(
+    val messages: Int,
+    val first: LocalDateTime?,
+    val last: LocalDateTime?,
+) {
+    override fun toString() = "$messages messages stored in the inbox, " +
+        "${perSecond()?.let { "%.0f".format(it) } ?: "-"} per second from the first to the last"
+
+    private fun perSecond(): Double? = if (first != null && last != null && last > first) {
+        messages / Duration.between(first, last).toKotlinDuration().toDouble(DurationUnit.SECONDS)
+    } else {
+        null
+    }
 }
