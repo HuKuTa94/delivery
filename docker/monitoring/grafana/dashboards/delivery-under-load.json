@@ -261,6 +261,129 @@
           "legendFormat": "{{action}} ({{cause}})"
         }
       ]
+    },
+    {
+      "id": 105, "type": "row", "title": "Postgres (postgres-exporter)", "collapsed": false, "panels": [],
+      "gridPos": {"x": 0, "y": 45, "w": 24, "h": 1}
+    },
+    {
+      "id": 13, "type": "timeseries", "title": "Connections by state",
+      "description": "idle in transaction: a transaction holds a connection (and its locks) without running a statement",
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "gridPos": {"x": 0, "y": 46, "w": 8, "h": 8},
+      "fieldConfig": {"defaults": {"unit": "short"}, "overrides": []},
+      "options": {"legend": {"displayMode": "list", "placement": "bottom", "showLegend": true}, "tooltip": {"mode": "multi", "sort": "desc"}},
+      "targets": [
+        {
+          "refId": "A", "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "expr": "sum by (state) (pg_stat_activity_count{datname=\"postgres\", state!=\"disabled\"})",
+          "legendFormat": "{{state}}"
+        }
+      ]
+    },
+    {
+      "id": 14, "type": "timeseries", "title": "Transactions per second",
+      "description": "rollback: failed transactions, e.g. a unique violation of a concurrent assignment",
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "gridPos": {"x": 8, "y": 46, "w": 8, "h": 8},
+      "fieldConfig": {"defaults": {"unit": "ops"}, "overrides": []},
+      "options": {"legend": {"displayMode": "list", "placement": "bottom", "showLegend": true}, "tooltip": {"mode": "multi", "sort": "desc"}},
+      "targets": [
+        {
+          "refId": "A", "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "expr": "sum(rate(pg_stat_database_xact_commit{datname=\"postgres\"}[$__rate_interval]))",
+          "legendFormat": "commit"
+        },
+        {
+          "refId": "B", "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "expr": "sum(rate(pg_stat_database_xact_rollback{datname=\"postgres\"}[$__rate_interval]))",
+          "legendFormat": "rollback"
+        },
+        {
+          "refId": "C", "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "expr": "sum(rate(pg_stat_database_deadlocks{datname=\"postgres\"}[$__rate_interval]))",
+          "legendFormat": "deadlock"
+        }
+      ]
+    },
+    {
+      "id": 15, "type": "timeseries", "title": "Locks by mode",
+      "description": "Lock waits longer than 200 ms are also written to the Postgres log (log_lock_waits)",
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "gridPos": {"x": 16, "y": 46, "w": 8, "h": 8},
+      "fieldConfig": {"defaults": {"unit": "short"}, "overrides": []},
+      "options": {"legend": {"displayMode": "list", "placement": "bottom", "showLegend": true}, "tooltip": {"mode": "multi", "sort": "desc"}},
+      "targets": [
+        {
+          "refId": "A", "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "expr": "sum by (mode) (pg_locks_count{datname=\"postgres\"})",
+          "legendFormat": "{{mode}}"
+        }
+      ]
+    },
+    {
+      "id": 16, "type": "timeseries", "title": "Statements by execution time per second (top 10)",
+      "description": "Seconds the database spends per second in each statement of the app (pg_stat_statements); 1 = one busy backend",
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "gridPos": {"x": 0, "y": 54, "w": 12, "h": 12},
+      "fieldConfig": {"defaults": {"unit": "s"}, "overrides": []},
+      "options": {"legend": {"displayMode": "table", "placement": "bottom", "showLegend": true, "calcs": ["mean", "max"], "sortBy": "Max", "sortDesc": true}, "tooltip": {"mode": "multi", "sort": "desc"}},
+      "targets": [
+        {
+          "refId": "A", "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "expr": "topk(10, rate(pg_stat_statements_seconds_total{datname=\"postgres\"}[$__rate_interval])) * on (queryid) group_left (query) pg_stat_statements_query_id",
+          "legendFormat": "{{query}}"
+        }
+      ]
+    },
+    {
+      "id": 17, "type": "timeseries", "title": "Statements by calls per second (top 10)",
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "gridPos": {"x": 12, "y": 54, "w": 12, "h": 12},
+      "fieldConfig": {"defaults": {"unit": "ops"}, "overrides": []},
+      "options": {"legend": {"displayMode": "table", "placement": "bottom", "showLegend": true, "calcs": ["mean", "max"], "sortBy": "Max", "sortDesc": true}, "tooltip": {"mode": "multi", "sort": "desc"}},
+      "targets": [
+        {
+          "refId": "A", "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "expr": "topk(10, rate(pg_stat_statements_calls_total{datname=\"postgres\"}[$__rate_interval])) * on (queryid) group_left (query) pg_stat_statements_query_id",
+          "legendFormat": "{{query}}"
+        }
+      ]
+    },
+    {
+      "id": 18, "type": "timeseries", "title": "Table scans per second",
+      "description": "seq: full scans of a table; idx: scans through an index",
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "gridPos": {"x": 0, "y": 66, "w": 12, "h": 8},
+      "fieldConfig": {"defaults": {"unit": "ops"}, "overrides": []},
+      "options": {"legend": {"displayMode": "list", "placement": "bottom", "showLegend": true}, "tooltip": {"mode": "multi", "sort": "desc"}},
+      "targets": [
+        {
+          "refId": "A", "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "expr": "sum by (relname) (rate(pg_stat_user_tables_seq_scan{datname=\"postgres\"}[$__rate_interval])) > 0",
+          "legendFormat": "seq {{relname}}"
+        },
+        {
+          "refId": "B", "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "expr": "sum by (relname) (rate(pg_stat_user_tables_idx_scan{datname=\"postgres\"}[$__rate_interval])) > 0",
+          "legendFormat": "idx {{relname}}"
+        }
+      ]
+    },
+    {
+      "id": 19, "type": "timeseries", "title": "Longest transaction",
+      "description": "Age of the oldest open transaction by state; the app sets idle_in_transaction_session_timeout to 10 s",
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "gridPos": {"x": 12, "y": 66, "w": 12, "h": 8},
+      "fieldConfig": {"defaults": {"unit": "s"}, "overrides": []},
+      "options": {"legend": {"displayMode": "list", "placement": "bottom", "showLegend": true}, "tooltip": {"mode": "multi", "sort": "desc"}},
+      "targets": [
+        {
+          "refId": "A", "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "expr": "max by (state) (pg_stat_activity_max_tx_duration{datname=\"postgres\", state=~\"active|idle in transaction.*\"})",
+          "legendFormat": "{{state}}"
+        }
+      ]
     }
   ]
 }

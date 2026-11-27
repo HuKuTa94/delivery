@@ -14,6 +14,16 @@ services:
       POSTGRES_DB: postgres
       POSTGRES_USER: username
       POSTGRES_PASSWORD: secret
+    # pg_stat_statements: statistics of every SQL statement, read by postgres-exporter;
+    # log_lock_waits + deadlock_timeout: the log names every lock wait longer than 200 ms with its statements
+    command:
+      - postgres
+      - -c
+      - shared_preload_libraries=pg_stat_statements
+      - -c
+      - log_lock_waits=on
+      - -c
+      - deadlock_timeout=200ms
     ports:
       - "5432:5432"
     volumes:
@@ -23,6 +33,19 @@ services:
       interval: 2s
       timeout: 2s
       retries: 30
+
+  # Creates the pg_stat_statements extension and the role of postgres-exporter (docker/monitoring/postgres/init.sql),
+  # then exits. It runs on every `up`, so a volume made before them gets them too
+  postgres-init:
+    image: postgres:15.3
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      PGPASSWORD: secret
+    volumes:
+      - ./docker/monitoring/postgres/init.sql:/init.sql:ro
+    command: ["psql", "-h", "postgres", "-U", "username", "-d", "postgres", "-v", "ON_ERROR_STOP=1", "-f", "/init.sql"]
 
   # Single-node KRaft cluster (broker + controller in one process, no ZooKeeper).
   # OUTSIDE (localhost:9092) is for clients on the host, e.g. the app started from the IDE with application.yml;
@@ -118,6 +141,22 @@ services:
       - ./docker/monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
     ports:
       - "9090:9090"
+
+  # Postgres statistics for Prometheus: connections by state, transactions, locks, table scans, the longest
+  # transaction and the costliest statements of the app (pg_stat_statements with their text, its own left out)
+  postgres-exporter:
+    image: prometheuscommunity/postgres-exporter:v0.21.1
+    depends_on:
+      postgres-init:
+        condition: service_completed_successfully
+    environment:
+      DATA_SOURCE_NAME: postgresql://exporter:exporter@postgres:5432/postgres?sslmode=disable
+    command:
+      - --collector.stat_statements
+      - --collector.stat_statements.include_query
+      # Long enough for the WHERE clause after the column list of an ORM select
+      - --collector.stat_statements.query_length=300
+      - --collector.stat_statements.exclude_users=exporter
 
   # Dashboards of the stand, http://localhost:3000: Delivery > Delivery under load. They open without a login
   # (Grafana lets an anonymous user only view); to edit or explore, sign in as admin / admin (a local stand only)
