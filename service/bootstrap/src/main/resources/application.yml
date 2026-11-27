@@ -29,6 +29,14 @@ delivery:
 server:
   port: 8080
 
+# Actuator over HTTP exposes only /actuator/health (the healthcheck of the app in docker-compose.yaml):
+# it answers once the application has started and is DOWN while the database is unreachable
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+
 spring:
   application:
     name: delivery application

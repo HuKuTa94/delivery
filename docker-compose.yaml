@@ -103,3 +103,9 @@ services:
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
     ports:
       - "8080:8080"
+    # Healthy once Actuator reports UP, so `up --wait` returns only when the app has started (Liquibase included)
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://localhost:8080/actuator/health"]
+      interval: 2s
+      timeout: 2s
+      retries: 60

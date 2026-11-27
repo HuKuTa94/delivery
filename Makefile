@@ -40,8 +40,9 @@ test-e2e:
 test-load:
 	$(GRADLEW) :tests:load:gatlingRun --all
 
+# Returns once every service is healthy (the app: /actuator/health is UP), so tests can start right after it
 run: build
-	$(DEV_ENVS) $(COMPOSE_CMD) up --build -d
+	$(DEV_ENVS) $(COMPOSE_CMD) up --build -d --wait
 
 stop:
 	$(COMPOSE_CMD) stop

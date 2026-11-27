@@ -108,6 +108,8 @@ Proto contracts: `service/api/kafka/src/main/proto`, `service/infrastructure/grp
   `GrpcConfiguration` (`GeoServiceGrpcClient`) or `InMemoryGeoLocationConfiguration` (`InMemoryGetLocation`, a random valid location).
   It is `in-memory` until a real Geo service is available.
 - Postgres `localhost:5432`, Kafka `localhost:9092`, Geo gRPC `localhost:8084`, HTTP `:8080`.
+- Actuator (bootstrap) exposes only `/actuator/health` over HTTP: the compose healthcheck of `app`, which
+  `docker compose up --wait` waits for.
 - Hardcoded values belong in config properties (see `RelayProperties`, `CorsProperties`).
 
 ## Adding a feature
