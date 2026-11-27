@@ -21,7 +21,8 @@ tasks {
         dependsOn("gatlingClasses")
     }
 
-    // Load tests need a running application (`make run`); the address defaults match docker-compose.yaml.
+    // Load tests need a running application (`make test-load` starts a clean test stand for them);
+    // the address defaults match docker-compose.yaml.
     // The plugin never considers gatlingRun up-to-date, so every call runs the simulations again
     gatlingRun {
         description = "Runs Gatling simulations against a running application and its Postgres " +

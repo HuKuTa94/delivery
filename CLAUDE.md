@@ -25,18 +25,20 @@ Never edit `**/build/` or `**/out/` (generated protobuf/gRPC and compiled classe
 ## Commands
 
 ```bash
-make test          # ./gradlew test --rerun detekt (always reruns tests; needs Docker for *IT)
-make test-smoke    # tests:smoke against the running app on :8080 (other address: -PbaseUrl=...)
-make test-e2e      # tests:e2e against the running app via its Kafka :9092 and Postgres :5432
-make test-load     # tests:load: all Gatling simulations against the running app on :8080, reading the inbox lag from
+make test          # ./gradlew detekt test --rerun: Detekt first, then unit tests and *IT (always reruns tests;
+                   # needs Docker for *IT)
+make test-smoke    # tests:smoke against the app of a clean test stand on :8080
+make test-e2e      # tests:e2e through the Kafka :9092 and Postgres :5432 of a clean test stand
+make test-load     # tests:load: all Gatling simulations against a clean test stand on :8080, reading the inbox lag from
                    # its Postgres :5432; fails on a broken SLO; HTML reports in tests/load/build/reports/gatling
-make build         # ./gradlew build bootJar -x test -x detekt
+make test-smoke test-e2e test-load   # the suites in a row, each on a clean test stand; stops at the first failure
 make compile       # compileKotlin compileTestKotlin
-make detekt        # static analysis only
-make run           # build, then docker compose up --wait (returns once the app on :8080 is healthy)
-make stop          # stop containers (data in named volumes is kept)
+make run           # dev stand: build, remove the test stand, docker compose up --wait (returns once the app is healthy)
+make stop          # stop both stands (data in their volumes is kept)
 make clean         # ./gradlew clean (build output only, Docker is untouched)
-make clean-docker-data   # docker compose down -v: removes containers AND the Postgres/Kafka data volumes
+make clean-docker-data   # down -v for both stands: removes containers AND the Postgres/Kafka data volumes
+./gradlew detekt build bootJar -x test   # Detekt, then the build without tests, as `run` and the suites do
+./gradlew detekt   # static analysis only
 ./gradlew :service:core:domain:test   # single module
 ./gradlew :tests:architecture:test
 ./gradlew :tests:load:gatlingRun --simulation <FQCN> -PordersPerSecond=50 -PdurationSeconds=300   # one simulation, other load
@@ -44,8 +46,11 @@ make clean-docker-data   # docker compose down -v: removes containers AND the Po
 
 On Windows use `gradlew.bat` (the Makefile auto-detects). Boot jar: `service/bootstrap/build/libs/delivery.jar`.
 
-`test-smoke`, `test-e2e` and `test-load` check the Docker image, not the sources: start it with `make run` and run
-`make run` again after code changes. Load runs leave their orders in the Postgres volume (`make clean-docker-data`).
+Stands: both run `docker-compose.yaml` with the shared `delivery-app` image and publish the same ports, so only one
+runs at a time. The dev stand (`make run`, project `delivery`) keeps its data. `test-smoke`, `test-e2e` and `test-load`
+build the image of the current sources and run on the test stand (project `delivery-test`, volumes of its own): each
+starts it from scratch, refuses to run while the dev stand is up (`make stop` first) and leaves it up afterwards to
+inspect its data. The suites' Gradle tasks called directly (e.g. one simulation above) hit whatever stand is running.
 
 ## Rules
 
